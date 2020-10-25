@@ -1,0 +1,1 @@
+-include gomk/main.mk
