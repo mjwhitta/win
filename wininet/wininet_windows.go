@@ -157,7 +157,7 @@ func HTTPSendRequestW(
 		lpcwstrHeaders,
 		uintptr(headersLen),
 		body,
-		uintptr(len(data)),
+		uintptr(dataLen),
 	)
 	if success == 0 {
 		return fmt.Errorf("HttpSendRequestW: %s", e.Error())

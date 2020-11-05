@@ -183,8 +183,10 @@ func sendRequest(
 
 	passwd, _ = uri.User.Password()
 
-	if port, e = strconv.ParseInt(uri.Port(), 10, 64); e != nil {
-		return 0, e
+	if uri.Port() != "" {
+		if port, e = strconv.ParseInt(uri.Port(), 10, 64); e != nil {
+			return 0, e
+		}
 	}
 
 	switch uri.Scheme {
@@ -208,7 +210,7 @@ func sendRequest(
 		uri.User.Username(),
 		passwd,
 		wininet.InternetServiceHTTP,
-		0,
+		flags,
 		0,
 	)
 	if e != nil {
@@ -226,7 +228,7 @@ func sendRequest(
 		flags,
 		0,
 	)
-	if reqHndl == 0 {
+	if e != nil {
 		return 0, e
 	}
 

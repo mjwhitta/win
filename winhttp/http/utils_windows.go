@@ -184,8 +184,10 @@ func sendRequest(
 		return 0, e
 	}
 
-	if port, e = strconv.ParseInt(uri.Port(), 10, 64); e != nil {
-		return 0, e
+	if uri.Port() != "" {
+		if port, e = strconv.ParseInt(uri.Port(), 10, 64); e != nil {
+			return 0, e
+		}
 	}
 
 	switch uri.Scheme {
@@ -221,7 +223,7 @@ func sendRequest(
 		"",
 		flags,
 	)
-	if reqHndl == 0 {
+	if e != nil {
 		return 0, e
 	}
 

@@ -22,11 +22,7 @@ func Head(dst string, headers map[string]string) (*Response, error) {
 }
 
 func init() {
-	var e error
-
-	if DefaultClient, e = NewClient(); e != nil {
-		panic(e)
-	}
+	DefaultClient, _ = NewClient()
 }
 
 // Post will make a POST request using the DefaultClient.
