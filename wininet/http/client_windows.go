@@ -1,6 +1,10 @@
 package http
 
-import "gitlab.com/mjwhitta/win/wininet"
+import (
+	"encoding/binary"
+
+	"gitlab.com/mjwhitta/win/wininet"
+)
 
 // NewClient will return a pointer to a new Client instnace that
 // simply wraps the net/http.Client type.
@@ -66,9 +70,32 @@ func (c *Client) request(
 	var e error
 	var reqHndl uintptr
 	var res *Response
+	var tmp []byte
 
-	reqHndl, e = sendRequest(c.hndl, method, dst, headers, data)
-	if e != nil {
+	if reqHndl, e = buildRequest(c.hndl, method, dst); e != nil {
+		return nil, e
+	}
+
+	if c.TLSClientConfig.InsecureSkipVerify {
+
+		tmp = make([]byte, 4)
+		binary.LittleEndian.PutUint32(
+			tmp,
+			uint32(wininet.SecuritySetMask),
+		)
+
+		e = wininet.InternetSetOptionW(
+			reqHndl,
+			wininet.InternetOptionSecurityFlags,
+			tmp,
+			len(tmp),
+		)
+		if e != nil {
+			return nil, e
+		}
+	}
+
+	if e = sendRequest(reqHndl, headers, data); e != nil {
 		return nil, e
 	}
 

@@ -11,6 +11,70 @@ import (
 	"gitlab.com/mjwhitta/win/wininet"
 )
 
+func buildRequest(
+	sessionHndl uintptr,
+	method string,
+	dst string,
+) (uintptr, error) {
+	var connHndl uintptr
+	var e error
+	var flags uintptr
+	var passwd string
+	var port int64
+	var reqHndl uintptr
+	var uri *url.URL
+
+	// Parse URL
+	if uri, e = url.Parse(dst); e != nil {
+		return 0, e
+	}
+
+	passwd, _ = uri.User.Password()
+
+	if uri.Port() != "" {
+		if port, e = strconv.ParseInt(uri.Port(), 10, 64); e != nil {
+			return 0, e
+		}
+	}
+
+	switch uri.Scheme {
+	case "https":
+		flags = wininet.InternetFlagSecure
+	}
+
+	// Create connection
+	connHndl, e = wininet.InternetConnectW(
+		sessionHndl,
+		uri.Hostname(),
+		int(port),
+		uri.User.Username(),
+		passwd,
+		wininet.InternetServiceHTTP,
+		flags,
+		0,
+	)
+	if e != nil {
+		return 0, e
+	}
+
+	// Create HTTP request
+	reqHndl, e = wininet.HTTPOpenRequestW(
+		connHndl,
+		method,
+		uri.Path,
+		"",
+		"",
+		[]string{},
+		flags,
+		0,
+	)
+	if e != nil {
+		return 0, e
+	}
+
+	return reqHndl, nil
+}
+
 func buildResponse(reqHndl uintptr) (*Response, error) {
 	var b []byte
 	var body io.ReadCloser
@@ -161,38 +225,11 @@ func readResponse(
 }
 
 func sendRequest(
-	sessionHndl uintptr,
-	method string,
-	dst string,
+	reqHndl uintptr,
 	headers map[string]string,
 	data []byte,
-) (uintptr, error) {
+) error {
 	var combinedHdrs string
-	var connHndl uintptr
-	var e error
-	var flags uintptr
-	var passwd string
-	var port int64
-	var reqHndl uintptr
-	var uri *url.URL
-
-	// Parse URL
-	if uri, e = url.Parse(dst); e != nil {
-		return 0, e
-	}
-
-	passwd, _ = uri.User.Password()
-
-	if uri.Port() != "" {
-		if port, e = strconv.ParseInt(uri.Port(), 10, 64); e != nil {
-			return 0, e
-		}
-	}
-
-	switch uri.Scheme {
-	case "https":
-		flags = wininet.InternetFlagSecure
-	}
 
 	// Combine headers
 	if headers != nil {
@@ -202,47 +239,12 @@ func sendRequest(
 		combinedHdrs = strings.TrimSpace(combinedHdrs)
 	}
 
-	// Create connection
-	connHndl, e = wininet.InternetConnectW(
-		sessionHndl,
-		uri.Hostname(),
-		int(port),
-		uri.User.Username(),
-		passwd,
-		wininet.InternetServiceHTTP,
-		flags,
-		0,
-	)
-	if e != nil {
-		return 0, e
-	}
-
-	// Create HTTP request
-	reqHndl, e = wininet.HTTPOpenRequestW(
-		connHndl,
-		method,
-		uri.Path,
-		"",
-		"",
-		"",
-		flags,
-		0,
-	)
-	if e != nil {
-		return 0, e
-	}
-
 	// Send HTTP request
-	e = wininet.HTTPSendRequestW(
+	return wininet.HTTPSendRequestW(
 		reqHndl,
 		combinedHdrs,
 		len([]byte(combinedHdrs)),
 		data,
 		len(data),
 	)
-	if e != nil {
-		return 0, e
-	}
-
-	return reqHndl, nil
 }

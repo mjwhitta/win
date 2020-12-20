@@ -11,6 +11,61 @@ import (
 	"gitlab.com/mjwhitta/win/winhttp"
 )
 
+func buildRequest(
+	sessionHndl uintptr,
+	method string,
+	dst string,
+) (uintptr, error) {
+	var connHndl uintptr
+	var e error
+	var flags uintptr
+	var port int64
+	var reqHndl uintptr
+	var uri *url.URL
+
+	// Parse URL
+	if uri, e = url.Parse(dst); e != nil {
+		return 0, e
+	}
+
+	if uri.Port() != "" {
+		if port, e = strconv.ParseInt(uri.Port(), 10, 64); e != nil {
+			return 0, e
+		}
+	}
+
+	switch uri.Scheme {
+	case "https":
+		flags = winhttp.WinhttpFlagSecure
+	}
+
+	// Create connection
+	connHndl, e = winhttp.Connect(
+		sessionHndl,
+		uri.Hostname(),
+		int(port),
+	)
+	if e != nil {
+		return 0, e
+	}
+
+	// Create HTTP request
+	reqHndl, e = winhttp.OpenRequest(
+		connHndl,
+		method,
+		uri.Path,
+		"",
+		"",
+		[]string{},
+		flags,
+	)
+	if e != nil {
+		return 0, e
+	}
+
+	return reqHndl, nil
+}
+
 func buildResponse(reqHndl uintptr) (*Response, error) {
 	var b []byte
 	var body io.ReadCloser
@@ -165,35 +220,11 @@ func readResponse(
 }
 
 func sendRequest(
-	sessionHndl uintptr,
-	method string,
-	dst string,
+	reqHndl uintptr,
 	headers map[string]string,
 	data []byte,
-) (uintptr, error) {
+) error {
 	var combinedHdrs string
-	var connHndl uintptr
-	var e error
-	var flags uintptr
-	var port int64
-	var reqHndl uintptr
-	var uri *url.URL
-
-	// Parse URL
-	if uri, e = url.Parse(dst); e != nil {
-		return 0, e
-	}
-
-	if uri.Port() != "" {
-		if port, e = strconv.ParseInt(uri.Port(), 10, 64); e != nil {
-			return 0, e
-		}
-	}
-
-	switch uri.Scheme {
-	case "https":
-		flags = winhttp.WinhttpFlagSecure
-	}
 
 	// Combine headers
 	if headers != nil {
@@ -203,41 +234,12 @@ func sendRequest(
 		combinedHdrs = strings.TrimSpace(combinedHdrs)
 	}
 
-	// Create connection
-	connHndl, e = winhttp.Connect(
-		sessionHndl,
-		uri.Hostname(),
-		int(port),
-	)
-	if e != nil {
-		return 0, e
-	}
-
-	// Create HTTP request
-	reqHndl, e = winhttp.OpenRequest(
-		connHndl,
-		method,
-		uri.Path,
-		"",
-		"",
-		"",
-		flags,
-	)
-	if e != nil {
-		return 0, e
-	}
-
 	// Send HTTP request
-	e = winhttp.SendRequest(
+	return winhttp.SendRequest(
 		reqHndl,
 		combinedHdrs,
 		len([]byte(combinedHdrs)),
 		data,
 		len(data),
 	)
-	if e != nil {
-		return 0, e
-	}
-
-	return reqHndl, nil
 }

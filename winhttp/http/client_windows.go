@@ -1,6 +1,10 @@
 package http
 
-import "gitlab.com/mjwhitta/win/winhttp"
+import (
+	"encoding/binary"
+
+	"gitlab.com/mjwhitta/win/winhttp"
+)
 
 // NewClient will return a pointer to a new Client instnace that
 // simply wraps the net/http.Client type.
@@ -66,9 +70,34 @@ func (c *Client) request(
 	var e error
 	var reqHndl uintptr
 	var res *Response
+	var tlsIgnore uintptr
+	var tmp []byte
 
-	reqHndl, e = sendRequest(c.hndl, method, dst, headers, data)
-	if e != nil {
+	if reqHndl, e = buildRequest(c.hndl, method, dst); e != nil {
+		return nil, e
+	}
+
+	if c.TLSClientConfig.InsecureSkipVerify {
+		tlsIgnore |= winhttp.SecurityFlagIgnoreUnknownCa
+		tlsIgnore |= winhttp.SecurityFlagIgnoreCertDateInvalid
+		tlsIgnore |= winhttp.SecurityFlagIgnoreCertCnInvalid
+		tlsIgnore |= winhttp.SecurityFlagIgnoreCertWrongUsage
+
+		tmp = make([]byte, 4)
+		binary.LittleEndian.PutUint32(tmp, uint32(tlsIgnore))
+
+		e = winhttp.SetOption(
+			reqHndl,
+			winhttp.WinhttpOptionSecurityFlags,
+			tmp,
+			len(tmp),
+		)
+		if e != nil {
+			return nil, e
+		}
+	}
+
+	if e = sendRequest(reqHndl, headers, data); e != nil {
 		return nil, e
 	}
 

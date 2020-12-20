@@ -16,7 +16,7 @@ func HTTPOpenRequestW(
 	objectName string,
 	version string,
 	referrer string,
-	acceptTypes string,
+	acceptTypes []string,
 	flags uintptr,
 	context uintptr,
 ) (uintptr, error) {
@@ -25,18 +25,23 @@ func HTTPOpenRequestW(
 	var lpcwstrReferrer uintptr
 	var lpcwstrVerb uintptr
 	var lpcwstrVersion uintptr
-	var lplpcwstrAcceptTypes uintptr
+	var lplpcwstrAcceptTypes []*uint16
 	var reqHndl uintptr
 	var tmp *uint16
 
 	// Convert to Windows types
-	if acceptTypes != "" {
-		tmp, e = windows.UTF16PtrFromString(acceptTypes)
+	lplpcwstrAcceptTypes = make([]*uint16, 1)
+	for _, theType := range acceptTypes {
+		if theType == "" {
+			continue
+		}
+
+		tmp, e = windows.UTF16PtrFromString(theType)
 		if e != nil {
 			return 0, e
 		}
 
-		lplpcwstrAcceptTypes = uintptr(unsafe.Pointer(&tmp))
+		lplpcwstrAcceptTypes = append(lplpcwstrAcceptTypes, tmp)
 	}
 
 	if objectName != "" {
@@ -77,7 +82,7 @@ func HTTPOpenRequestW(
 		lpcwstrObjectName,
 		lpcwstrVersion,
 		lpcwstrReferrer,
-		lplpcwstrAcceptTypes,
+		uintptr(unsafe.Pointer(&lplpcwstrAcceptTypes[0])),
 		flags,
 		context,
 	)
@@ -306,6 +311,34 @@ func InternetReadFile(
 	}
 
 	*buffer = b
+
+	return nil
+}
+
+// InternetSetOptionW is from wininet.h
+func InternetSetOptionW(
+	hndl uintptr,
+	opt uintptr,
+	val []byte,
+	valLen int,
+) error {
+	var e error
+	var success uintptr
+
+	// Pointer to data if provided
+	if valLen == 0 {
+		val = make([]byte, 1)
+	}
+
+	success, _, e = wininet.NewProc("InternetSetOptionW").Call(
+		hndl,
+		opt,
+		uintptr(unsafe.Pointer(&val[0])),
+		uintptr(valLen),
+	)
+	if success == 0 {
+		return fmt.Errorf("InternetSetOptionW: %s", e.Error())
+	}
 
 	return nil
 }

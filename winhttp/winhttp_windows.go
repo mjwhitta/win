@@ -104,11 +104,11 @@ func OpenRequest(
 	objectName string,
 	version string,
 	referrer string,
-	acceptTypes string,
+	acceptTypes []string,
 	flags uintptr,
 ) (uintptr, error) {
 	var e error
-	var ppwszAcceptTypes uintptr
+	var ppwszAcceptTypes []*uint16
 	var pwszObjectName uintptr
 	var pwszReferrer uintptr
 	var pwszVerb uintptr
@@ -117,13 +117,18 @@ func OpenRequest(
 	var tmp *uint16
 
 	// Convert to Windows types
-	if acceptTypes != "" {
-		tmp, e = windows.UTF16PtrFromString(acceptTypes)
+	ppwszAcceptTypes = make([]*uint16, 1)
+	for _, theType := range acceptTypes {
+		if theType == "" {
+			continue
+		}
+
+		tmp, e = windows.UTF16PtrFromString(theType)
 		if e != nil {
 			return 0, e
 		}
 
-		ppwszAcceptTypes = uintptr(unsafe.Pointer(&tmp))
+		ppwszAcceptTypes = append(ppwszAcceptTypes, tmp)
 	}
 
 	if objectName != "" {
@@ -164,7 +169,7 @@ func OpenRequest(
 		pwszObjectName,
 		pwszVersion,
 		pwszReferrer,
-		ppwszAcceptTypes,
+		uintptr(unsafe.Pointer(&ppwszAcceptTypes[0])),
 		flags,
 	)
 	if reqHndl == 0 {
@@ -309,6 +314,34 @@ func SendRequest(
 	)
 	if success == 0 {
 		return fmt.Errorf("WinHttpSendRequest: %s", e.Error())
+	}
+
+	return nil
+}
+
+// SetOption is WinHttpSetOption from winhttp.h
+func SetOption(
+	hndl uintptr,
+	opt uintptr,
+	val []byte,
+	valLen int,
+) error {
+	var e error
+	var success uintptr
+
+	// Pointer to data if provided
+	if valLen == 0 {
+		val = make([]byte, 1)
+	}
+
+	success, _, e = winhttp.NewProc("WinHttpSetOption").Call(
+		hndl,
+		opt,
+		uintptr(unsafe.Pointer(&val[0])),
+		uintptr(valLen),
+	)
+	if success == 0 {
+		return fmt.Errorf("WinHttpSetOption: %s", e.Error())
 	}
 
 	return nil

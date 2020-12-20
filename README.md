@@ -49,6 +49,8 @@ func main() {
     }
     var res *http.Response
 
+	http.DefaultClient.TLSClientConfig.InsecureSkipVerify = true
+
     if _, e = http.Get(dst, headers); e != nil {
         panic(e)
     }
