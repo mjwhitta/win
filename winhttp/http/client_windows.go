@@ -77,6 +77,64 @@ func (c *Client) request(
 		return nil, e
 	}
 
+	if c.Timeout > 0 {
+		tmp = make([]byte, 4)
+		binary.LittleEndian.PutUint32(
+			tmp,
+			uint32(c.Timeout.Milliseconds()),
+		)
+
+		e = winhttp.SetOption(
+			reqHndl,
+			winhttp.WinhttpOptionConnectTimeout,
+			tmp,
+			len(tmp),
+		)
+		if e != nil {
+			return nil, e
+		}
+
+		e = winhttp.SetOption(
+			reqHndl,
+			winhttp.WinhttpOptionReceiveResponseTimeout,
+			tmp,
+			len(tmp),
+		)
+		if e != nil {
+			return nil, e
+		}
+
+		e = winhttp.SetOption(
+			reqHndl,
+			winhttp.WinhttpOptionReceiveTimeout,
+			tmp,
+			len(tmp),
+		)
+		if e != nil {
+			return nil, e
+		}
+
+		e = winhttp.SetOption(
+			reqHndl,
+			winhttp.WinhttpOptionResolveTimeout,
+			tmp,
+			len(tmp),
+		)
+		if e != nil {
+			return nil, e
+		}
+
+		e = winhttp.SetOption(
+			reqHndl,
+			winhttp.WinhttpOptionSendTimeout,
+			tmp,
+			len(tmp),
+		)
+		if e != nil {
+			return nil, e
+		}
+	}
+
 	if c.TLSClientConfig.InsecureSkipVerify {
 		tlsIgnore |= winhttp.SecurityFlagIgnoreUnknownCa
 		tlsIgnore |= winhttp.SecurityFlagIgnoreCertDateInvalid

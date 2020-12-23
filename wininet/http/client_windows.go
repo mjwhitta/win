@@ -76,8 +76,45 @@ func (c *Client) request(
 		return nil, e
 	}
 
-	if c.TLSClientConfig.InsecureSkipVerify {
+	if c.Timeout > 0 {
+		tmp = make([]byte, 4)
+		binary.LittleEndian.PutUint32(
+			tmp,
+			uint32(c.Timeout.Milliseconds()),
+		)
 
+		e = wininet.InternetSetOptionW(
+			reqHndl,
+			wininet.InternetOptionConnectTimeout,
+			tmp,
+			len(tmp),
+		)
+		if e != nil {
+			return nil, e
+		}
+
+		e = wininet.InternetSetOptionW(
+			reqHndl,
+			wininet.InternetOptionReceiveTimeout,
+			tmp,
+			len(tmp),
+		)
+		if e != nil {
+			return nil, e
+		}
+
+		e = wininet.InternetSetOptionW(
+			reqHndl,
+			wininet.InternetOptionSendTimeout,
+			tmp,
+			len(tmp),
+		)
+		if e != nil {
+			return nil, e
+		}
+	}
+
+	if c.TLSClientConfig.InsecureSkipVerify {
 		tmp = make([]byte, 4)
 		binary.LittleEndian.PutUint32(
 			tmp,
