@@ -61,7 +61,7 @@ func buildRequest(
 	reqHndl, e = wininet.HTTPOpenRequestW(
 		connHndl,
 		method,
-		uri.Path,
+		uri.Path+"?"+uri.RawQuery,
 		"",
 		"",
 		[]string{},
