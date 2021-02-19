@@ -53,7 +53,7 @@ func buildRequest(
 	reqHndl, e = winhttp.OpenRequest(
 		connHndl,
 		method,
-		uri.Path,
+		uri.Path+"?"+uri.RawQuery,
 		"",
 		"",
 		[]string{},
