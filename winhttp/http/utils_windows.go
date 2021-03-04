@@ -50,6 +50,7 @@ func buildRequest(
 	}
 
 	// Create HTTP request
+	if uri.RawQuery != ""{
 	reqHndl, e = winhttp.OpenRequest(
 		connHndl,
 		method,
@@ -59,6 +60,17 @@ func buildRequest(
 		[]string{},
 		flags,
 	)
+	}else{
+		reqHndl, e = winhttp.OpenRequest(
+			connHndl,
+			method,
+			uri.Path,
+			"",
+			"",
+			[]string{},
+			flags,
+		)
+	}
 	if e != nil {
 		return 0, e
 	}
@@ -111,7 +123,8 @@ func buildResponse(reqHndl uintptr) (*Response, error) {
 	// Get Content-Length
 	b, e = queryResponse(reqHndl, winhttp.WinhttpQueryContentLength)
 	if e != nil {
-		return nil, e
+		b = []byte("1024")
+		//return nil, e
 	}
 
 	if contentLen, e = strconv.ParseInt(string(b), 10, 64); e != nil {
