@@ -58,6 +58,7 @@ func buildRequest(
 	}
 
 	// Create HTTP request
+	if uri.RawQuery != ""{
 	reqHndl, e = wininet.HTTPOpenRequestW(
 		connHndl,
 		method,
@@ -68,6 +69,18 @@ func buildRequest(
 		flags,
 		0,
 	)
+	}else{
+		reqHndl, e = wininet.HTTPOpenRequestW(
+		connHndl,
+		method,
+		uri.Path,
+		"",
+		"",
+		[]string{},
+		flags,
+		0,
+	)
+	}
 	if e != nil {
 		return 0, e
 	}
@@ -113,9 +126,10 @@ func buildResponse(reqHndl uintptr) (*Response, error) {
 	}
 
 	// Get Content-Length
-	b, e = queryResponse(reqHndl, wininet.HTTPQueryContentLength)
+	b, e = queryResponse(reqHndl, winhttp.WinhttpQueryContentLength)
 	if e != nil {
-		return nil, e
+		b = []byte("1024")
+		//return nil, e
 	}
 
 	if contentLen, e = strconv.ParseInt(string(b), 10, 64); e != nil {
