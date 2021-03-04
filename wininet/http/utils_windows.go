@@ -68,7 +68,7 @@ func buildRequest(
 		[]string{},
 		flags,
 		0,
-	)
+		)
 	}else{
 		reqHndl, e = wininet.HTTPOpenRequestW(
 		connHndl,
@@ -79,7 +79,7 @@ func buildRequest(
 		[]string{},
 		flags,
 		0,
-	)
+		)
 	}
 	if e != nil {
 		return 0, e
