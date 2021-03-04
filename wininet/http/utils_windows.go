@@ -21,6 +21,7 @@ func buildRequest(
 	var flags uintptr
 	var passwd string
 	var port int64
+	var query string
 	var reqHndl uintptr
 	var uri *url.URL
 
@@ -57,11 +58,16 @@ func buildRequest(
 		return 0, e
 	}
 
+	// Send query string too
+	if uri.RawQuery != "" {
+		query = "?" + uri.RawQuery
+	}
+
 	// Create HTTP request
 	reqHndl, e = wininet.HTTPOpenRequestW(
 		connHndl,
 		method,
-		uri.Path,
+		uri.Path+query,
 		"",
 		"",
 		[]string{},

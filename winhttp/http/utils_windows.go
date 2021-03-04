@@ -20,6 +20,7 @@ func buildRequest(
 	var e error
 	var flags uintptr
 	var port int64
+	var query string
 	var reqHndl uintptr
 	var uri *url.URL
 
@@ -49,11 +50,16 @@ func buildRequest(
 		return 0, e
 	}
 
+	// Send query string too
+	if uri.RawQuery != "" {
+		query = "?" + uri.RawQuery
+	}
+
 	// Create HTTP request
 	reqHndl, e = winhttp.OpenRequest(
 		connHndl,
 		method,
-		uri.Path,
+		uri.Path+query,
 		"",
 		"",
 		[]string{},

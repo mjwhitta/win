@@ -36,7 +36,7 @@ import (
     "io/ioutil"
 
     "gitlab.com/mjwhitta/log"
-    "gitlab.com/mjwhitta/win/winhttp/http" // Chose if you need NTLM
+    "gitlab.com/mjwhitta/win/winhttp/http" // Choose if you need NTLM
     //"gitlab.com/mjwhitta/win/wininet/http"
 )
 
