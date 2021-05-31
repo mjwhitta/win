@@ -120,12 +120,13 @@ func buildResponse(reqHndl uintptr) (*Response, error) {
 
 	// Get Content-Length
 	b, e = queryResponse(reqHndl, wininet.HTTPQueryContentLength)
-	if e != nil {
-		return nil, e
-	}
-
-	if contentLen, e = strconv.ParseInt(string(b), 10, 64); e != nil {
-		return nil, e
+	if e == nil {
+		contentLen, e = strconv.ParseInt(string(b), 10, 64)
+		if e != nil {
+			return nil, e
+		}
+	} else {
+		contentLen = 0
 	}
 
 	// Read response body
