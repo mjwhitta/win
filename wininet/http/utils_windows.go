@@ -63,6 +63,9 @@ func buildRequest(
 		query = "?" + uri.RawQuery
 	}
 
+	// Allow NTLM auth
+	flags |= wininet.InternetFlagKeepConnection
+
 	// Create HTTP request
 	reqHndl, e = wininet.HTTPOpenRequestW(
 		connHndl,

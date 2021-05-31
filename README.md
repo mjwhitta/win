@@ -6,16 +6,18 @@
 
 ## What is this?
 
-This Go module wraps WinHttp and WinInet functions and includes HTTP
+This Go module wraps WinHTTP and WinINet functions and includes HTTP
 clients that use those functions to make HTTP requests. Hopefully,
-this makes it easier to make HTTP requests in Go on Windows. WinHttp
-can even handle NTLM authentication automatically for you.
+this makes it easier to make HTTP requests in Go on Windows. WinHTTP
+(and theoretically WinINet) can even handle NTLM authentication
+automatically for you.
 
-Microsoft recommends WinInet over WinHttp unless you're writing a
-Windows service. I haven't yet found a way to get NTLM auth working
-with WinInet, so I would recommend WinHttp for now.
+Microsoft recommends [WinINet over WinHTTP] unless you're writing a
+Windows service.
 
 **Note:** This is probably beta quality at best.
+
+[WinINet over WinHTTP]: https://docs.microsoft.com/en-us/windows/win32/wininet/wininet-vs-winhttp
 
 ## How to install
 
@@ -36,8 +38,8 @@ import (
     "io/ioutil"
 
     "gitlab.com/mjwhitta/log"
-    "gitlab.com/mjwhitta/win/winhttp/http" // Choose if you need NTLM
-    //"gitlab.com/mjwhitta/win/wininet/http"
+    // "gitlab.com/mjwhitta/win/winhttp/http"
+    "gitlab.com/mjwhitta/win/wininet/http"
 )
 
 func main() {
@@ -49,7 +51,7 @@ func main() {
     }
     var res *http.Response
 
-	http.DefaultClient.TLSClientConfig.InsecureSkipVerify = true
+    http.DefaultClient.TLSClientConfig.InsecureSkipVerify = true
 
     if _, e = http.Get(dst, headers); e != nil {
         panic(e)
@@ -83,13 +85,13 @@ func main() {
 
 ## TODO
 
-- WinHttp
+- WinHTTP
     - `CONNECT`
     - `DELETE`
     - `OPTIONS`
     - `PATCH`
     - `TRACE`
-- WinInet
+- WinINet
     - FTP client
     - HTTP client
         - `CONNECT`
