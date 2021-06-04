@@ -4,5 +4,5 @@ go 1.15
 
 require (
 	gitlab.com/mjwhitta/pathname v1.0.8
-	golang.org/x/sys v0.0.0-20210531080801-fdfd190a6549
+	golang.org/x/sys v0.0.0-20210603125802-9665404d3644
 )
