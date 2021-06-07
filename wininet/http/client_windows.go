@@ -31,8 +31,9 @@ func NewClient() (*Client, error) {
 func (c *Client) Get(
 	dst string,
 	headers map[string]string,
+	data []byte,
 ) (*Response, error) {
-	return c.request(MethodGet, dst, headers, nil)
+	return c.request(MethodGet, dst, headers, data)
 }
 
 // Head will make a HEAD request using Wininet.dll.

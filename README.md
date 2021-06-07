@@ -53,7 +53,7 @@ func main() {
 
     http.DefaultClient.TLSClientConfig.InsecureSkipVerify = true
 
-    if _, e = http.Get(dst, headers); e != nil {
+    if _, e = http.Get(dst, headers, nil); e != nil {
         panic(e)
     }
 

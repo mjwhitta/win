@@ -6,13 +6,14 @@ import "fmt"
 
 // NewClient is only supported on Windows.
 func NewClient() (*Client, error) {
-	return nil, fmt.Errorf("Unsupported OS")
+	return &Client{}, fmt.Errorf("Unsupported OS")
 }
 
 // Get is only supported on Windows.
 func (c *Client) Get(
 	dst string,
 	headers map[string]string,
+	data []byte,
 ) (*Response, error) {
 	return nil, fmt.Errorf("Unsupported OS")
 }

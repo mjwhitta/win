@@ -12,8 +12,12 @@ const (
 )
 
 // Get will make a GET request using the DefaultClient.
-func Get(dst string, headers map[string]string) (*Response, error) {
-	return DefaultClient.Get(dst, headers)
+func Get(
+	dst string,
+	headers map[string]string,
+	data []byte,
+) (*Response, error) {
+	return DefaultClient.Get(dst, headers, data)
 }
 
 // Head will make a HEAD request using the DefaultClient.
