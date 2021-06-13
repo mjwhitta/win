@@ -35,9 +35,9 @@ Minimal example:
 package main
 
 import (
+    "fmt"
     "io/ioutil"
 
-    "gitlab.com/mjwhitta/log"
     // "gitlab.com/mjwhitta/win/winhttp/http"
     "gitlab.com/mjwhitta/win/wininet/http"
 )
@@ -67,14 +67,14 @@ func main() {
         }
     }
 
-    log.Info(res.Status)
+    fmt.Println(res.Status)
     for k, vs := range res.Header {
         for _, v := range vs {
-            log.SubInfof("%s: %s", k, v)
+            fmt.Printf("%s: %s\n", k, v)
         }
     }
     if len(b) > 0 {
-        log.Good(string(b))
+        fmt.Println(string(b))
     }
 }
 ```

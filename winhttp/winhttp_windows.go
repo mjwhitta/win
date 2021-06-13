@@ -179,6 +179,25 @@ func OpenRequest(
 	return reqHndl, nil
 }
 
+// QueryDataAvailable is WinHttpQueryDataAvailable from winhttp.h
+func QueryDataAvailable(
+	reqHndl uintptr,
+	bytesAvailable *int64,
+) error {
+	var e error
+	var success uintptr
+
+	success, _, e = winhttp.NewProc("WinHttpQueryDataAvailable").Call(
+		reqHndl,
+		uintptr(unsafe.Pointer(bytesAvailable)),
+	)
+	if success == 0 {
+		return fmt.Errorf("WinHttpQueryDataAvailable: %s", e.Error())
+	}
+
+	return nil
+}
+
 // QueryHeaders is WinHttpQueryHeaders from winhttp.h
 func QueryHeaders(
 	reqHndl uintptr,

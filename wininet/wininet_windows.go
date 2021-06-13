@@ -283,6 +283,29 @@ func InternetOpenW(
 	return sessionHndl, nil
 }
 
+// InternetQueryDataAvailable is from wininet.h
+func InternetQueryDataAvailable(
+	reqHndl uintptr,
+	bytesAvailable *int64,
+) error {
+	var e error
+	var success uintptr
+
+	success, _, e = wininet.NewProc(
+		"InternetQueryDataAvailable",
+	).Call(
+		reqHndl,
+		uintptr(unsafe.Pointer(bytesAvailable)),
+		0,
+		0,
+	)
+	if success == 0 {
+		return fmt.Errorf("InternetQueryDataAvailable: %s", e.Error())
+	}
+
+	return nil
+}
+
 // InternetReadFile is from wininet.h
 func InternetReadFile(
 	reqHndl uintptr,

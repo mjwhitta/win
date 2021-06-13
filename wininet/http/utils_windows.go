@@ -121,19 +121,8 @@ func buildResponse(reqHndl uintptr) (*Response, error) {
 		return nil, e
 	}
 
-	// Get Content-Length
-	b, e = queryResponse(reqHndl, wininet.HTTPQueryContentLength)
-	if e == nil {
-		contentLen, e = strconv.ParseInt(string(b), 10, 64)
-		if e != nil {
-			return nil, e
-		}
-	} else {
-		contentLen = 0
-	}
-
 	// Read response body
-	if body, e = readResponse(reqHndl, contentLen); e != nil {
+	if body, contentLen, e = readResponse(reqHndl); e != nil {
 		return nil, e
 	}
 
@@ -218,20 +207,43 @@ func queryResponse(reqHndl uintptr, info uintptr) ([]byte, error) {
 	return buffer, nil
 }
 
-func readResponse(
-	reqHndl uintptr,
-	contentLen int64,
-) (io.ReadCloser, error) {
+func readResponse(reqHndl uintptr) (io.ReadCloser, int64, error) {
 	var b []byte
-	var n int64
+	var chunk []byte
+	var chunkLen int64
+	var contentLen int64
 	var e error
+	var n int64
 
-	e = wininet.InternetReadFile(reqHndl, &b, contentLen, &n)
-	if e != nil {
-		return nil, e
+	// Get Content-Length and body of repsonse
+	for {
+		// Get next chunk size
+		e = wininet.InternetQueryDataAvailable(reqHndl, &chunkLen)
+		if e != nil {
+			break
+		}
+
+		// Stop, if finished
+		if chunkLen == 0 {
+			break
+		}
+
+		// Read next chunk
+		e = wininet.InternetReadFile(reqHndl, &chunk, chunkLen, &n)
+		if e != nil {
+			break
+		}
+
+		// Update fields
+		contentLen += chunkLen
+		b = append(b, chunk...)
 	}
 
-	return ioutil.NopCloser(bytes.NewReader(b)), nil
+	if e != nil {
+		return nil, 0, e
+	}
+
+	return ioutil.NopCloser(bytes.NewReader(b)), contentLen, nil
 }
 
 func sendRequest(
