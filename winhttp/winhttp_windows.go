@@ -2,12 +2,51 @@ package winhttp
 
 import (
 	"fmt"
+	"strings"
 	"unsafe"
 
 	"golang.org/x/sys/windows"
 )
 
 var winhttp *windows.LazyDLL = windows.NewLazySystemDLL("Winhttp")
+
+// AddRequestHeaders is WinHttpAddRequestHeaders from winhttp.h
+func AddRequestHeaders(
+	reqHndl uintptr,
+	header string,
+	addMethod uintptr,
+) error {
+	var e error
+	var ok uintptr
+	var pswzHeader uintptr
+	var tmp *uint16
+
+	if header == "" {
+		// Weird, just do nothing
+		return nil
+	}
+
+	header = strings.TrimSpace(header) + "\r\n"
+
+	// Convert to Windows types
+	if tmp, e = windows.UTF16PtrFromString(header); e != nil {
+		return e
+	}
+
+	pswzHeader = uintptr(unsafe.Pointer(tmp))
+
+	ok, _, e = winhttp.NewProc("WinHttpAddRequestHeaders").Call(
+		reqHndl,
+		pswzHeader,
+		uintptr(len(header)),
+		addMethod,
+	)
+	if ok == 0 {
+		return fmt.Errorf("WinHttpAddRequestHeaders: %s", e.Error())
+	}
+
+	return nil
+}
 
 // Connect is WinHttpConnect from winhttp.h
 func Connect(
@@ -205,7 +244,7 @@ func QueryHeaders(
 	name string,
 	buffer *[]byte,
 	bufferLen *int,
-	index int,
+	index *int,
 ) error {
 	var b []uint16
 	var e error
@@ -236,7 +275,7 @@ func QueryHeaders(
 		pwszName,
 		uintptr(unsafe.Pointer(&b[0])),
 		uintptr(unsafe.Pointer(bufferLen)),
-		uintptr(index),
+		uintptr(unsafe.Pointer(index)),
 	)
 	if success == 0 {
 		return fmt.Errorf("WinHttpQueryHeaders: %s", e.Error())

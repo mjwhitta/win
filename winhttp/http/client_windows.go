@@ -27,69 +27,30 @@ func NewClient() (*Client, error) {
 	return c, nil
 }
 
-// Get will make a GET request using Winhttp.dll.
-func (c *Client) Get(
-	dst string,
-	headers map[string]string,
-	data []byte,
-) (*Response, error) {
-	return c.request(MethodGet, dst, headers, data)
-}
-
-// Head will make a HEAD request using Winhttp.dll.
-func (c *Client) Head(
-	dst string,
-	headers map[string]string,
-) (*Response, error) {
-	return c.request(MethodHead, dst, headers, nil)
-}
-
-// Post will make a POST request using Winhttp.dll.
-func (c *Client) Post(
-	dst string,
-	headers map[string]string,
-	data []byte,
-) (*Response, error) {
-	return c.request(MethodPost, dst, headers, data)
-}
-
-// Put will make a PUT request using Winhttp.dll.
-func (c *Client) Put(
-	dst string,
-	headers map[string]string,
-	data []byte,
-) (*Response, error) {
-	return c.request(MethodPut, dst, headers, data)
-}
-
-func (c *Client) request(
-	method string,
-	dst string,
-	headers map[string]string,
-	data []byte,
-) (*Response, error) {
+// Do will send the HTTP request and return an HTTP response.
+func (c *Client) Do(r *Request) (*Response, error) {
+	var b []byte
 	var e error
 	var reqHndl uintptr
 	var res *Response
 	var tlsIgnore uintptr
-	var tmp []byte
 
-	if reqHndl, e = buildRequest(c.hndl, method, dst); e != nil {
+	if reqHndl, e = buildRequest(c.hndl, r); e != nil {
 		return nil, e
 	}
 
 	if c.Timeout > 0 {
-		tmp = make([]byte, 4)
+		b = make([]byte, 4)
 		binary.LittleEndian.PutUint32(
-			tmp,
+			b,
 			uint32(c.Timeout.Milliseconds()),
 		)
 
 		e = winhttp.SetOption(
 			reqHndl,
 			winhttp.WinhttpOptionConnectTimeout,
-			tmp,
-			len(tmp),
+			b,
+			len(b),
 		)
 		if e != nil {
 			return nil, e
@@ -98,8 +59,8 @@ func (c *Client) request(
 		e = winhttp.SetOption(
 			reqHndl,
 			winhttp.WinhttpOptionReceiveResponseTimeout,
-			tmp,
-			len(tmp),
+			b,
+			len(b),
 		)
 		if e != nil {
 			return nil, e
@@ -108,8 +69,8 @@ func (c *Client) request(
 		e = winhttp.SetOption(
 			reqHndl,
 			winhttp.WinhttpOptionReceiveTimeout,
-			tmp,
-			len(tmp),
+			b,
+			len(b),
 		)
 		if e != nil {
 			return nil, e
@@ -118,8 +79,8 @@ func (c *Client) request(
 		e = winhttp.SetOption(
 			reqHndl,
 			winhttp.WinhttpOptionResolveTimeout,
-			tmp,
-			len(tmp),
+			b,
+			len(b),
 		)
 		if e != nil {
 			return nil, e
@@ -128,8 +89,8 @@ func (c *Client) request(
 		e = winhttp.SetOption(
 			reqHndl,
 			winhttp.WinhttpOptionSendTimeout,
-			tmp,
-			len(tmp),
+			b,
+			len(b),
 		)
 		if e != nil {
 			return nil, e
@@ -142,27 +103,52 @@ func (c *Client) request(
 		tlsIgnore |= winhttp.SecurityFlagIgnoreCertCnInvalid
 		tlsIgnore |= winhttp.SecurityFlagIgnoreCertWrongUsage
 
-		tmp = make([]byte, 4)
-		binary.LittleEndian.PutUint32(tmp, uint32(tlsIgnore))
+		b = make([]byte, 4)
+		binary.LittleEndian.PutUint32(b, uint32(tlsIgnore))
 
 		e = winhttp.SetOption(
 			reqHndl,
 			winhttp.WinhttpOptionSecurityFlags,
-			tmp,
-			len(tmp),
+			b,
+			len(b),
 		)
 		if e != nil {
 			return nil, e
 		}
 	}
 
-	if e = sendRequest(reqHndl, headers, data); e != nil {
+	if e = sendRequest(reqHndl, r); e != nil {
 		return nil, e
 	}
 
-	if res, e = buildResponse(reqHndl); e != nil {
+	if res, e = buildResponse(reqHndl, r); e != nil {
 		return nil, e
 	}
 
 	return res, nil
+}
+
+// Get will make a GET request using Winhttp.dll.
+func (c *Client) Get(url string) (*Response, error) {
+	return c.Do(NewRequest(MethodGet, url))
+}
+
+// Head will make a HEAD request using Winhttp.dll.
+func (c *Client) Head(url string) (*Response, error) {
+	return c.Do(NewRequest(MethodHead, url))
+}
+
+// Post will make a POST request using Winhttp.dll.
+func (c *Client) Post(
+	url string,
+	contentType string,
+	body []byte,
+) (*Response, error) {
+	var r *Request = NewRequest(MethodPost, url, body)
+
+	if contentType != "" {
+		r.Headers["Content-Type"] = contentType
+	}
+
+	return c.Do(r)
 }

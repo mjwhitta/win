@@ -49,15 +49,22 @@ func main() {
     var headers = map[string]string{
         "User-Agent": "testing, testing, 1, 2, 3...",
     }
+    var req *http.Request
     var res *http.Response
 
     http.DefaultClient.TLSClientConfig.InsecureSkipVerify = true
 
-    if _, e = http.Get(dst, headers, nil); e != nil {
+    if _, e = http.Get(dst); e != nil {
         panic(e)
     }
 
-    if res, e = http.Post(dst, headers, []byte("test")); e != nil {
+    req = http.NewRequest(http.MethodPost, dst, []byte("test"))
+    req.AddCookie(&http.Cookie{Name: "chocolatechip", Value: "tasty"})
+    req.AddCookie(&http.Cookie{Name: "oatmealraisin", Value: "gross"})
+    req.AddCookie(&http.Cookie{Name: "snickerdoodle", Value: "yummy"})
+    req.Headers = headers
+
+    if res, e = http.DefaultClient.Do(req); e != nil {
         panic(e)
     }
 
@@ -76,6 +83,15 @@ func main() {
     if len(b) > 0 {
         fmt.Println(string(b))
     }
+
+    if len(res.Cookies()) > 0 {
+        fmt.Println()
+        fmt.Println("# COOKIEJAR")
+    }
+
+    for _, cookie := range res.Cookies() {
+        fmt.Printf("%s = %s\n", cookie.Name, cookie.Value)
+    }
 }
 ```
 
@@ -85,17 +101,8 @@ func main() {
 
 ## TODO
 
-- WinHTTP
-    - `CONNECT`
-    - `DELETE`
-    - `OPTIONS`
-    - `PATCH`
-    - `TRACE`
+- Mirror `net/http` as close as possible
+    - CookieJar for the Client
+    - etc...
 - WinINet
     - FTP client
-    - HTTP client
-        - `CONNECT`
-        - `DELETE`
-        - `OPTIONS`
-        - `PATCH`
-        - `TRACE`

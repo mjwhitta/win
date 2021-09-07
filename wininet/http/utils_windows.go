@@ -11,11 +11,7 @@ import (
 	"gitlab.com/mjwhitta/win/wininet"
 )
 
-func buildRequest(
-	sessionHndl uintptr,
-	method string,
-	dst string,
-) (uintptr, error) {
+func buildRequest(sessionHndl uintptr, r *Request) (uintptr, error) {
 	var connHndl uintptr
 	var e error
 	var flags uintptr
@@ -26,7 +22,7 @@ func buildRequest(
 	var uri *url.URL
 
 	// Parse URL
-	if uri, e = url.Parse(dst); e != nil {
+	if uri, e = url.Parse(r.URL); e != nil {
 		return 0, e
 	}
 
@@ -69,7 +65,7 @@ func buildRequest(
 	// Create HTTP request
 	reqHndl, e = wininet.HTTPOpenRequestW(
 		connHndl,
-		method,
+		r.Method,
 		uri.Path+query,
 		"",
 		"",
@@ -84,7 +80,9 @@ func buildRequest(
 	return reqHndl, nil
 }
 
-func buildResponse(reqHndl uintptr) (*Response, error) {
+var cookies []*Cookie
+
+func buildResponse(reqHndl uintptr, req *Request) (*Response, error) {
 	var b []byte
 	var body io.ReadCloser
 	var code int64
@@ -98,7 +96,7 @@ func buildResponse(reqHndl uintptr) (*Response, error) {
 	var status string
 
 	// Get status code
-	b, e = queryResponse(reqHndl, wininet.HTTPQueryStatusCode)
+	b, e = queryResponse(reqHndl, wininet.HTTPQueryStatusCode, 0)
 	if e != nil {
 		return nil, e
 	}
@@ -109,11 +107,16 @@ func buildResponse(reqHndl uintptr) (*Response, error) {
 	}
 
 	// Get status text
-	b, e = queryResponse(reqHndl, wininet.HTTPQueryStatusText)
+	b, e = queryResponse(reqHndl, wininet.HTTPQueryStatusText, 0)
 	if e != nil {
 		return nil, e
 	} else if len(b) > 0 {
 		status += " " + string(b)
+	}
+
+	// Parse cookies
+	if cookies, e = getCookies(reqHndl); e != nil {
+		return nil, e
 	}
 
 	// Parse headers and proto
@@ -137,7 +140,41 @@ func buildResponse(reqHndl uintptr) (*Response, error) {
 		StatusCode:    int(code),
 	}
 
+	// Concat all cookies
+	for _, c := range req.Cookies() {
+		res.AddCookie(c)
+	}
+
+	for _, c := range cookies {
+		res.AddCookie(c)
+	}
+
 	return res, nil
+}
+
+func getCookies(reqHndl uintptr) ([]*Cookie, error) {
+	var b []byte
+	var cookies []*Cookie
+	var e error
+	var tmp []string
+
+	// Get cookies
+	for i := 0; e == nil; i++ {
+		b, e = queryResponse(
+			reqHndl,
+			wininet.HTTPQuerySetCookie,
+			i,
+		)
+		if e == nil {
+			tmp = strings.SplitN(string(b), "=", 2)
+			cookies = append(
+				cookies,
+				&Cookie{Name: tmp[0], Value: tmp[1]},
+			)
+		}
+	}
+
+	return cookies, nil
 }
 
 func getHeaders(
@@ -152,7 +189,7 @@ func getHeaders(
 	var tmp []string
 
 	// Get headers
-	b, e = queryResponse(reqHndl, wininet.HTTPQueryRawHeadersCRLF)
+	b, e = queryResponse(reqHndl, wininet.HTTPQueryRawHeadersCRLF, 0)
 	if e != nil {
 		return "", 0, 0, nil, e
 	}
@@ -189,16 +226,26 @@ func getHeaders(
 	return proto, int(major), int(minor), hdrs, nil
 }
 
-func queryResponse(reqHndl uintptr, info uintptr) ([]byte, error) {
+func queryResponse(reqHndl, info uintptr, idx int) ([]byte, error) {
 	var buffer []byte
 	var e error
 	var size int
 
-	e = wininet.HTTPQueryInfoW(reqHndl, info, &buffer, &size, 0)
+	if idx < 0 {
+		idx = 0
+	}
+
+	e = wininet.HTTPQueryInfoW(reqHndl, info, &buffer, &size, &idx)
 	if e != nil {
 		buffer = make([]byte, size)
 
-		e = wininet.HTTPQueryInfoW(reqHndl, info, &buffer, &size, 0)
+		e = wininet.HTTPQueryInfoW(
+			reqHndl,
+			info,
+			&buffer,
+			&size,
+			&idx,
+		)
 		if e != nil {
 			return []byte{}, e
 		}
@@ -215,7 +262,7 @@ func readResponse(reqHndl uintptr) (io.ReadCloser, int64, error) {
 	var e error
 	var n int64
 
-	// Get Content-Length and body of repsonse
+	// Get Content-Length and body of response
 	for {
 		// Get next chunk size
 		e = wininet.InternetQueryDataAvailable(reqHndl, &chunkLen)
@@ -246,27 +293,55 @@ func readResponse(reqHndl uintptr) (io.ReadCloser, int64, error) {
 	return ioutil.NopCloser(bytes.NewReader(b)), contentLen, nil
 }
 
-func sendRequest(
-	reqHndl uintptr,
-	headers map[string]string,
-	data []byte,
-) error {
-	var combinedHdrs string
+func sendRequest(reqHndl uintptr, r *Request) error {
+	var e error
+	var method uintptr
 
-	// Combine headers
-	if headers != nil {
-		for k, v := range headers {
-			combinedHdrs += "\n\r" + k + ": " + v
+	// Process cookies
+	method = wininet.HTTPAddreqFlagAdd
+	// FIXME why doesn't this work here?!
+	// method |= wininet.HTTPAddreqFlagCoalesceWithSemicolon
+
+	// FIXME This is a dumb hack
+	wininet.HTTPAddRequestHeadersW(
+		reqHndl,
+		"Cookie: ignore=ignore",
+		wininet.HTTPAddreqFlagAddIfNew,
+	)
+	// End dumb hack
+
+	for _, c := range r.Cookies() {
+		e = wininet.HTTPAddRequestHeadersW(
+			reqHndl,
+			"Cookie: "+c.Name+"="+c.Value,
+			method,
+		)
+		if e != nil {
+			return e
 		}
-		combinedHdrs = strings.TrimSpace(combinedHdrs)
+	}
+
+	// Process headers
+	method = wininet.HTTPAddreqFlagAdd
+	method |= wininet.HTTPAddreqFlagReplace
+
+	for k, v := range r.Headers {
+		e = wininet.HTTPAddRequestHeadersW(
+			reqHndl,
+			k+": "+v,
+			method,
+		)
+		if e != nil {
+			return e
+		}
 	}
 
 	// Send HTTP request
 	return wininet.HTTPSendRequestW(
 		reqHndl,
-		combinedHdrs,
-		len([]byte(combinedHdrs)),
-		data,
-		len(data),
+		"",
+		0,
+		r.Body,
+		len(r.Body),
 	)
 }
