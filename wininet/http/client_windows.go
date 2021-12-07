@@ -2,9 +2,20 @@ package http
 
 import (
 	"encoding/binary"
+	"time"
 
 	"gitlab.com/mjwhitta/win/wininet"
 )
+
+// Client is a struct containing relevant metadata to make HTTP
+// requests.
+type Client struct {
+	hndl            uintptr
+	Timeout         time.Duration
+	TLSClientConfig struct {
+		InsecureSkipVerify bool
+	}
+}
 
 // NewClient will return a pointer to a new Client instnace that
 // simply wraps the net/http.Client type.

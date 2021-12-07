@@ -42,7 +42,10 @@ func AddRequestHeaders(
 		addMethod,
 	)
 	if ok == 0 {
-		return fmt.Errorf("WinHttpAddRequestHeaders: %s", e.Error())
+		return fmt.Errorf(
+			"winhttp: WinHttpAddRequestHeaders: %s",
+			e.Error(),
+		)
 	}
 
 	return nil
@@ -75,7 +78,7 @@ func Connect(
 		0,
 	)
 	if connHndl == 0 {
-		return 0, fmt.Errorf("WinHttpConnect: %s", e.Error())
+		return 0, fmt.Errorf("winhttp: WinHttpConnect: %s", e.Error())
 	}
 
 	return connHndl, nil
@@ -130,7 +133,7 @@ func Open(
 		flags,
 	)
 	if sessionHndl == 0 {
-		return 0, fmt.Errorf("WinHttpOpen: %s", e.Error())
+		return 0, fmt.Errorf("winhttp: WinHttpOpen: %s", e.Error())
 	}
 
 	return sessionHndl, nil
@@ -212,7 +215,10 @@ func OpenRequest(
 		flags,
 	)
 	if reqHndl == 0 {
-		return 0, fmt.Errorf("WinHttpOpenRequst: %s", e.Error())
+		return 0, fmt.Errorf(
+			"winhttp: WinHttpOpenRequst: %s",
+			e.Error(),
+		)
 	}
 
 	return reqHndl, nil
@@ -231,7 +237,10 @@ func QueryDataAvailable(
 		uintptr(unsafe.Pointer(bytesAvailable)),
 	)
 	if success == 0 {
-		return fmt.Errorf("WinHttpQueryDataAvailable: %s", e.Error())
+		return fmt.Errorf(
+			"winhttp: WinHttpQueryDataAvailable: %s",
+			e.Error(),
+		)
 	}
 
 	return nil
@@ -278,7 +287,10 @@ func QueryHeaders(
 		uintptr(unsafe.Pointer(index)),
 	)
 	if success == 0 {
-		return fmt.Errorf("WinHttpQueryHeaders: %s", e.Error())
+		return fmt.Errorf(
+			"winhttp: WinHttpQueryHeaders: %s",
+			e.Error(),
+		)
 	}
 
 	*buffer = []byte(windows.UTF16ToString(b))
@@ -310,7 +322,7 @@ func ReadData(
 		uintptr(unsafe.Pointer(bytesRead)),
 	)
 	if success == 0 {
-		return fmt.Errorf("WinHttpReadData: %s", e.Error())
+		return fmt.Errorf("winhttp: WinHttpReadData: %s", e.Error())
 	}
 
 	*buffer = b
@@ -328,7 +340,10 @@ func ReceiveResponse(reqHndl uintptr) error {
 		0,
 	)
 	if success == 0 {
-		return fmt.Errorf("WinHttpReceiveResponse: %s", e.Error())
+		return fmt.Errorf(
+			"winhttp: WinHttpReceiveResponse: %s",
+			e.Error(),
+		)
 	}
 
 	return nil
@@ -371,7 +386,10 @@ func SendRequest(
 		uintptr(dataLen),
 	)
 	if success == 0 {
-		return fmt.Errorf("WinHttpSendRequest: %s", e.Error())
+		return fmt.Errorf(
+			"winhttp: WinHttpSendRequest: %s",
+			e.Error(),
+		)
 	}
 
 	return nil
@@ -399,7 +417,7 @@ func SetOption(
 		uintptr(valLen),
 	)
 	if success == 0 {
-		return fmt.Errorf("WinHttpSetOption: %s", e.Error())
+		return fmt.Errorf("winhttp: WinHttpSetOption: %s", e.Error())
 	}
 
 	return nil

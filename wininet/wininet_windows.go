@@ -42,7 +42,10 @@ func HTTPAddRequestHeadersW(
 		addMethod,
 	)
 	if ok == 0 {
-		return fmt.Errorf("HttpAddRequestHeadersW: %s", e.Error())
+		return fmt.Errorf(
+			"wininet: HttpAddRequestHeadersW: %s",
+			e.Error(),
+		)
 	}
 
 	return nil
@@ -126,7 +129,10 @@ func HTTPOpenRequestW(
 		context,
 	)
 	if reqHndl == 0 {
-		return 0, fmt.Errorf("HttpOpenRequest: %s", e.Error())
+		return 0, fmt.Errorf(
+			"wininet: HttpOpenRequest: %s",
+			e.Error(),
+		)
 	}
 
 	return reqHndl, nil
@@ -159,7 +165,7 @@ func HTTPQueryInfoW(
 		uintptr(unsafe.Pointer(index)),
 	)
 	if success == 0 {
-		return fmt.Errorf("HttpQueryInfoW: %s", e.Error())
+		return fmt.Errorf("wininet: HttpQueryInfoW: %s", e.Error())
 	}
 
 	tmp = windows.UTF16ToString(b)
@@ -204,7 +210,7 @@ func HTTPSendRequestW(
 		uintptr(dataLen),
 	)
 	if success == 0 {
-		return fmt.Errorf("HttpSendRequestW: %s", e.Error())
+		return fmt.Errorf("wininet: HttpSendRequestW: %s", e.Error())
 	}
 
 	return nil
@@ -264,7 +270,10 @@ func InternetConnectW(
 		context,
 	)
 	if connHndl == 0 {
-		return 0, fmt.Errorf("InternetConnectW: %s", e.Error())
+		return 0, fmt.Errorf(
+			"wininet: InternetConnectW: %s",
+			e.Error(),
+		)
 	}
 
 	return connHndl, nil
@@ -316,7 +325,7 @@ func InternetOpenW(
 		flags,
 	)
 	if sessionHndl == 0 {
-		return 0, fmt.Errorf("InternetOpenW: %s", e.Error())
+		return 0, fmt.Errorf("wininet: InternetOpenW: %s", e.Error())
 	}
 
 	return sessionHndl, nil
@@ -339,7 +348,10 @@ func InternetQueryDataAvailable(
 		0,
 	)
 	if success == 0 {
-		return fmt.Errorf("InternetQueryDataAvailable: %s", e.Error())
+		return fmt.Errorf(
+			"wininet: InternetQueryDataAvailable: %s",
+			e.Error(),
+		)
 	}
 
 	return nil
@@ -369,7 +381,7 @@ func InternetReadFile(
 		uintptr(unsafe.Pointer(bytesRead)),
 	)
 	if success == 0 {
-		return fmt.Errorf("InternetReadFile: %s", e.Error())
+		return fmt.Errorf("wininet: InternetReadFile: %s", e.Error())
 	}
 
 	*buffer = b
@@ -399,7 +411,10 @@ func InternetSetOptionW(
 		uintptr(valLen),
 	)
 	if success == 0 {
-		return fmt.Errorf("InternetSetOptionW: %s", e.Error())
+		return fmt.Errorf(
+			"wininet: InternetSetOptionW: %s",
+			e.Error(),
+		)
 	}
 
 	return nil

@@ -1,13 +1,13 @@
 package http
 
-import "errors"
+import "fmt"
 
 // DefaultClient is the default client similar to net/http.
 var DefaultClient *Client
 
 // ErrNoCookie is returned by Request's Cookie method when a cookie is
 // not found.
-var ErrNoCookie = errors.New("http: named cookie not present")
+var ErrNoCookie = fmt.Errorf("http: named cookie not present")
 
 // Common HTTP methods.
 const (
