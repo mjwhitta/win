@@ -8,6 +8,7 @@ import (
 	"sort"
 	"strings"
 
+	"gitlab.com/mjwhitta/errors"
 	"gitlab.com/mjwhitta/pathname"
 )
 
@@ -24,14 +25,18 @@ func format(str string) string {
 	return str
 }
 
-func genFile(pkg string, cache map[string]string, lines [][]string) {
+func genFile(
+	pkg string,
+	cache map[string]string,
+	lines [][]string,
+) error {
 	var e error
 	var file string = "generated.go"
 	var g *os.File
 	var sorted []string
 
 	if g, e = os.Create(file); e != nil {
-		fmt.Printf("Failed to create %s: %s", file, e.Error())
+		return errors.Newf("failed to create %s: %w", file, e)
 	}
 	defer g.Close()
 
@@ -44,6 +49,7 @@ func genFile(pkg string, cache map[string]string, lines [][]string) {
 	for k := range cache {
 		sorted = append(sorted, k)
 	}
+
 	sort.Slice(
 		sorted,
 		func(i int, j int) bool {
@@ -83,6 +89,8 @@ func genFile(pkg string, cache map[string]string, lines [][]string) {
 	}
 
 	g.WriteString(")\n")
+
+	return nil
 }
 
 func init() {
@@ -105,17 +113,21 @@ func main() {
 			continue
 		}
 
-		processFile(&cache, &lines, arg)
+		if e := processFile(&cache, &lines, arg); e != nil {
+			panic(e)
+		}
 	}
 
-	genFile(flag.Arg(0), cache, lines)
+	if e := genFile(flag.Arg(0), cache, lines); e != nil {
+		panic(e)
+	}
 }
 
 func processFile(
 	cache *map[string]string,
 	lines *[][]string,
 	file string,
-) {
+) error {
 	var b []byte
 	var e error
 	var f *os.File
@@ -123,12 +135,12 @@ func processFile(
 	var tmp []string
 
 	if f, e = os.Open(pathname.ExpandPath(file)); e != nil {
-		fmt.Printf("Failed to open %s: %s", file, e.Error())
+		return errors.Newf("failed to open %s: %w", file, e)
 	}
 	defer f.Close()
 
 	if b, e = ioutil.ReadAll(f); e != nil {
-		fmt.Printf("Failed to read %s: %s", file, e.Error())
+		return errors.Newf("failed to read %s: %w", file, e)
 	}
 
 	for _, line := range strings.Split(string(b), "\n") {
@@ -166,4 +178,6 @@ func processFile(
 		(*cache)[tmp[0]] = format(tmp[0])
 		*lines = append(*lines, []string{format(tmp[0]), tmp[1]})
 	}
+
+	return nil
 }

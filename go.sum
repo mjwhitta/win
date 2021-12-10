@@ -1,4 +1,6 @@
+gitlab.com/mjwhitta/errors v1.0.0 h1:rivvgv4HCdIJ6Y6kFfPcirzKnBRewkjgsOktR0Uaj8g=
+gitlab.com/mjwhitta/errors v1.0.0/go.mod h1:5mFayhs7rnrBmc6kd3d1l1YaAY4is/IjYNVmCtJc0lU=
 gitlab.com/mjwhitta/pathname v1.0.9 h1:5nXh0FniuMxB1Bpc5hC2ZtRlff8HnDOvn8lfDVIa5Pg=
 gitlab.com/mjwhitta/pathname v1.0.9/go.mod h1:89jSeygMgYX/2gzfrZ6nC9yV8tjVbYrmMd6hk6FaHf8=
-golang.org/x/sys v0.0.0-20211205182925-97ca703d548d h1:FjkYO/PPp4Wi0EAUOVLxePm7qVW4r4ctbWpURyuOD0E=
-golang.org/x/sys v0.0.0-20211205182925-97ca703d548d/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
+golang.org/x/sys v0.0.0-20211210111614-af8b64212486 h1:5hpz5aRr+W1erYCL5JRhSUBJRph7l9XkNveoExlrKYk=
+golang.org/x/sys v0.0.0-20211210111614-af8b64212486/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=

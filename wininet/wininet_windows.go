@@ -1,11 +1,12 @@
 package wininet
 
 import (
-	"fmt"
 	"strings"
 	"unsafe"
 
 	"golang.org/x/sys/windows"
+
+	"gitlab.com/mjwhitta/errors"
 )
 
 var wininet *windows.LazyDLL = windows.NewLazySystemDLL("Wininet")
@@ -18,6 +19,7 @@ func HTTPAddRequestHeadersW(
 ) error {
 	var e error
 	var ok uintptr
+	var proc string = "HttpAddRequestHeadersW"
 	var pswzHeader uintptr
 	var tmp *uint16
 
@@ -30,22 +32,19 @@ func HTTPAddRequestHeadersW(
 
 	// Convert to Windows types
 	if tmp, e = windows.UTF16PtrFromString(header); e != nil {
-		return e
+		return convertFail(header, e)
 	}
 
 	pswzHeader = uintptr(unsafe.Pointer(tmp))
 
-	ok, _, e = wininet.NewProc("HttpAddRequestHeadersW").Call(
+	ok, _, e = wininet.NewProc(proc).Call(
 		reqHndl,
 		pswzHeader,
 		uintptr(len(header)),
 		addMethod,
 	)
 	if ok == 0 {
-		return fmt.Errorf(
-			"wininet: HttpAddRequestHeadersW: %s",
-			e.Error(),
-		)
+		return errors.Newf("%s: %w", proc, e)
 	}
 
 	return nil
@@ -68,6 +67,7 @@ func HTTPOpenRequestW(
 	var lpcwstrVerb uintptr
 	var lpcwstrVersion uintptr
 	var lplpcwstrAcceptTypes []*uint16
+	var proc string = "HttpOpenRequestW"
 	var reqHndl uintptr
 	var tmp *uint16
 
@@ -80,7 +80,7 @@ func HTTPOpenRequestW(
 
 		tmp, e = windows.UTF16PtrFromString(theType)
 		if e != nil {
-			return 0, e
+			return 0, convertFail(theType, e)
 		}
 
 		lplpcwstrAcceptTypes = append(lplpcwstrAcceptTypes, tmp)
@@ -88,7 +88,7 @@ func HTTPOpenRequestW(
 
 	if objectName != "" {
 		if tmp, e = windows.UTF16PtrFromString(objectName); e != nil {
-			return 0, e
+			return 0, convertFail(objectName, e)
 		}
 
 		lpcwstrObjectName = uintptr(unsafe.Pointer(tmp))
@@ -96,7 +96,7 @@ func HTTPOpenRequestW(
 
 	if referrer != "" {
 		if tmp, e = windows.UTF16PtrFromString(referrer); e != nil {
-			return 0, e
+			return 0, convertFail(referrer, e)
 		}
 
 		lpcwstrReferrer = uintptr(unsafe.Pointer(tmp))
@@ -104,7 +104,7 @@ func HTTPOpenRequestW(
 
 	if verb != "" {
 		if tmp, e = windows.UTF16PtrFromString(verb); e != nil {
-			return 0, e
+			return 0, convertFail(verb, e)
 		}
 
 		lpcwstrVerb = uintptr(unsafe.Pointer(tmp))
@@ -112,13 +112,13 @@ func HTTPOpenRequestW(
 
 	if version != "" {
 		if tmp, e = windows.UTF16PtrFromString(version); e != nil {
-			return 0, e
+			return 0, convertFail(version, e)
 		}
 
 		lpcwstrVersion = uintptr(unsafe.Pointer(tmp))
 	}
 
-	reqHndl, _, e = wininet.NewProc("HttpOpenRequestW").Call(
+	reqHndl, _, e = wininet.NewProc(proc).Call(
 		connHndl,
 		lpcwstrVerb,
 		lpcwstrObjectName,
@@ -129,10 +129,7 @@ func HTTPOpenRequestW(
 		context,
 	)
 	if reqHndl == 0 {
-		return 0, fmt.Errorf(
-			"wininet: HttpOpenRequest: %s",
-			e.Error(),
-		)
+		return 0, errors.Newf("%s: %w", proc, e)
 	}
 
 	return reqHndl, nil
@@ -148,6 +145,7 @@ func HTTPQueryInfoW(
 ) error {
 	var b []uint16
 	var e error
+	var proc string = "HttpQueryInfoW"
 	var success uintptr
 	var tmp string
 
@@ -157,7 +155,7 @@ func HTTPQueryInfoW(
 		b = make([]uint16, 1)
 	}
 
-	success, _, e = wininet.NewProc("HttpQueryInfoW").Call(
+	success, _, e = wininet.NewProc(proc).Call(
 		reqHndl,
 		info,
 		uintptr(unsafe.Pointer(&b[0])),
@@ -165,7 +163,7 @@ func HTTPQueryInfoW(
 		uintptr(unsafe.Pointer(index)),
 	)
 	if success == 0 {
-		return fmt.Errorf("wininet: HttpQueryInfoW: %s", e.Error())
+		return errors.Newf("%s: %w", proc, e)
 	}
 
 	tmp = windows.UTF16ToString(b)
@@ -185,6 +183,7 @@ func HTTPSendRequestW(
 	var body uintptr
 	var e error
 	var lpcwstrHeaders uintptr
+	var proc string = "HttpSendRequestW"
 	var success uintptr
 	var tmp *uint16
 
@@ -196,13 +195,13 @@ func HTTPSendRequestW(
 	// Convert to Windows types
 	if headersLen > 0 {
 		if tmp, e = windows.UTF16PtrFromString(headers); e != nil {
-			return e
+			return convertFail(headers, e)
 		}
 
 		lpcwstrHeaders = uintptr(unsafe.Pointer(tmp))
 	}
 
-	success, _, e = wininet.NewProc("HttpSendRequestW").Call(
+	success, _, e = wininet.NewProc(proc).Call(
 		reqHndl,
 		lpcwstrHeaders,
 		uintptr(headersLen),
@@ -210,7 +209,7 @@ func HTTPSendRequestW(
 		uintptr(dataLen),
 	)
 	if success == 0 {
-		return fmt.Errorf("wininet: HttpSendRequestW: %s", e.Error())
+		return errors.Newf("%s: %w", proc, e)
 	}
 
 	return nil
@@ -232,12 +231,13 @@ func InternetConnectW(
 	var lpcwstrServerName uintptr
 	var lpcwstrUserName uintptr
 	var lpcwstrPassword uintptr
+	var proc string = "InternetConnectW"
 	var tmp *uint16
 
 	// Convert to Windows types
 	if password != "" {
 		if tmp, e = windows.UTF16PtrFromString(password); e != nil {
-			return 0, e
+			return 0, convertFail(password, e)
 		}
 
 		lpcwstrPassword = uintptr(unsafe.Pointer(tmp))
@@ -245,7 +245,7 @@ func InternetConnectW(
 
 	if serverName != "" {
 		if tmp, e = windows.UTF16PtrFromString(serverName); e != nil {
-			return 0, e
+			return 0, convertFail(serverName, e)
 		}
 
 		lpcwstrServerName = uintptr(unsafe.Pointer(tmp))
@@ -253,13 +253,13 @@ func InternetConnectW(
 
 	if username != "" {
 		if tmp, e = windows.UTF16PtrFromString(username); e != nil {
-			return 0, e
+			return 0, convertFail(username, e)
 		}
 
 		lpcwstrUserName = uintptr(unsafe.Pointer(tmp))
 	}
 
-	connHndl, _, e = wininet.NewProc("InternetConnectW").Call(
+	connHndl, _, e = wininet.NewProc(proc).Call(
 		sessionHndl,
 		lpcwstrServerName,
 		uintptr(serverPort),
@@ -270,10 +270,7 @@ func InternetConnectW(
 		context,
 	)
 	if connHndl == 0 {
-		return 0, fmt.Errorf(
-			"wininet: InternetConnectW: %s",
-			e.Error(),
-		)
+		return 0, errors.Newf("%s: %w", proc, e)
 	}
 
 	return connHndl, nil
@@ -291,33 +288,37 @@ func InternetOpenW(
 	var lpszAgent uintptr
 	var lpszProxy uintptr
 	var lpszProxyBypass uintptr
+	var proc string = "InternetOpenW"
 	var sessionHndl uintptr
 	var tmp *uint16
 
 	// Convert to Windows types
 	if userAgent != "" {
 		if tmp, e = windows.UTF16PtrFromString(userAgent); e != nil {
-			return 0, e
+			return 0, convertFail(userAgent, e)
 		}
+
 		lpszAgent = uintptr(unsafe.Pointer(tmp))
 	}
 
 	if proxy != "" {
 		if tmp, e = windows.UTF16PtrFromString(proxy); e != nil {
-			return 0, e
+			return 0, convertFail(proxy, e)
 		}
+
 		lpszProxy = uintptr(unsafe.Pointer(tmp))
 	}
 
 	if proxyBypass != "" {
 		tmp, e = windows.UTF16PtrFromString(proxyBypass)
 		if e != nil {
-			return 0, e
+			return 0, convertFail(proxyBypass, e)
 		}
+
 		lpszProxyBypass = uintptr(unsafe.Pointer(tmp))
 	}
 
-	sessionHndl, _, e = wininet.NewProc("InternetOpenW").Call(
+	sessionHndl, _, e = wininet.NewProc(proc).Call(
 		lpszAgent,
 		accessType,
 		lpszProxy,
@@ -325,7 +326,7 @@ func InternetOpenW(
 		flags,
 	)
 	if sessionHndl == 0 {
-		return 0, fmt.Errorf("wininet: InternetOpenW: %s", e.Error())
+		return 0, errors.Newf("%s: %w", proc, e)
 	}
 
 	return sessionHndl, nil
@@ -337,21 +338,17 @@ func InternetQueryDataAvailable(
 	bytesAvailable *int64,
 ) error {
 	var e error
+	var proc string = "InternetQueryDataAvailable"
 	var success uintptr
 
-	success, _, e = wininet.NewProc(
-		"InternetQueryDataAvailable",
-	).Call(
+	success, _, e = wininet.NewProc(proc).Call(
 		reqHndl,
 		uintptr(unsafe.Pointer(bytesAvailable)),
 		0,
 		0,
 	)
 	if success == 0 {
-		return fmt.Errorf(
-			"wininet: InternetQueryDataAvailable: %s",
-			e.Error(),
-		)
+		return errors.Newf("%s: %w", proc, e)
 	}
 
 	return nil
@@ -366,6 +363,7 @@ func InternetReadFile(
 ) error {
 	var b []byte
 	var e error
+	var proc string = "InternetReadFile"
 	var success uintptr
 
 	if bytesToRead > 0 {
@@ -374,14 +372,14 @@ func InternetReadFile(
 		b = make([]byte, 1)
 	}
 
-	success, _, e = wininet.NewProc("InternetReadFile").Call(
+	success, _, e = wininet.NewProc(proc).Call(
 		reqHndl,
 		uintptr(unsafe.Pointer(&b[0])),
 		uintptr(bytesToRead),
 		uintptr(unsafe.Pointer(bytesRead)),
 	)
 	if success == 0 {
-		return fmt.Errorf("wininet: InternetReadFile: %s", e.Error())
+		return errors.Newf("%s: %w", proc, e)
 	}
 
 	*buffer = b
@@ -397,6 +395,7 @@ func InternetSetOptionW(
 	valLen int,
 ) error {
 	var e error
+	var proc string = "InternetSetOptionW"
 	var success uintptr
 
 	// Pointer to data if provided
@@ -404,17 +403,14 @@ func InternetSetOptionW(
 		val = make([]byte, 1)
 	}
 
-	success, _, e = wininet.NewProc("InternetSetOptionW").Call(
+	success, _, e = wininet.NewProc(proc).Call(
 		hndl,
 		opt,
 		uintptr(unsafe.Pointer(&val[0])),
 		uintptr(valLen),
 	)
 	if success == 0 {
-		return fmt.Errorf(
-			"wininet: InternetSetOptionW: %s",
-			e.Error(),
-		)
+		return errors.Newf("%s: %w", proc, e)
 	}
 
 	return nil
