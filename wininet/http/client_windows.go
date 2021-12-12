@@ -4,6 +4,7 @@ import (
 	"encoding/binary"
 	"time"
 
+	"gitlab.com/mjwhitta/errors"
 	"gitlab.com/mjwhitta/win/wininet"
 )
 

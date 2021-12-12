@@ -8,6 +8,7 @@ import (
 	"strconv"
 	"strings"
 
+	"gitlab.com/mjwhitta/errors"
 	"gitlab.com/mjwhitta/win/winhttp"
 )
 
@@ -254,7 +255,8 @@ func queryResponse(reqHndl, info uintptr, idx int) ([]byte, error) {
 			&idx,
 		)
 		if e != nil {
-			return []byte{}, errors.New("failed to query info: %w", e)
+			e = errors.Newf("failed to query info: %w", e)
+			return []byte{}, e
 		}
 	}
 
