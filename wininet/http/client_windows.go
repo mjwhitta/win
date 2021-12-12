@@ -32,7 +32,7 @@ func NewClient() (*Client, error) {
 		0,
 	)
 	if e != nil {
-		return nil, e
+		return nil, errors.Newf("failed to create session: %w", e)
 	}
 
 	return c, nil
@@ -63,6 +63,7 @@ func (c *Client) Do(r *Request) (*Response, error) {
 			len(b),
 		)
 		if e != nil {
+			e = errors.Newf("failed to set connect timeout: %w", e)
 			return nil, e
 		}
 
@@ -73,6 +74,7 @@ func (c *Client) Do(r *Request) (*Response, error) {
 			len(b),
 		)
 		if e != nil {
+			e = errors.Newf("failed to set receive timeout: %w", e)
 			return nil, e
 		}
 
@@ -83,6 +85,7 @@ func (c *Client) Do(r *Request) (*Response, error) {
 			len(b),
 		)
 		if e != nil {
+			e = errors.Newf("failed to set send timeout: %w", e)
 			return nil, e
 		}
 	}
@@ -101,6 +104,7 @@ func (c *Client) Do(r *Request) (*Response, error) {
 			len(b),
 		)
 		if e != nil {
+			e = errors.Newf("failed to set security flags: %w", e)
 			return nil, e
 		}
 	}

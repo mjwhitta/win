@@ -22,11 +22,12 @@ func buildRequest(sessionHndl uintptr, r *Request) (uintptr, error) {
 
 	// Parse URL
 	if uri, e = url.Parse(r.URL); e != nil {
-		return 0, e
+		return 0, errors.Newf("failed to parse url %s: %w", r.URL, e)
 	}
 
 	if uri.Port() != "" {
 		if port, e = strconv.ParseInt(uri.Port(), 10, 64); e != nil {
+			e = errors.Newf("port %s invalid: %w", uri.Port(), e)
 			return 0, e
 		}
 	}
@@ -43,7 +44,7 @@ func buildRequest(sessionHndl uintptr, r *Request) (uintptr, error) {
 		int(port),
 	)
 	if e != nil {
-		return 0, e
+		return 0, errors.Newf("failed to create connection: %w", e)
 	}
 
 	// Send query string too
@@ -62,7 +63,7 @@ func buildRequest(sessionHndl uintptr, r *Request) (uintptr, error) {
 		flags,
 	)
 	if e != nil {
-		return 0, e
+		return 0, errors.Newf("failed to open request: %w", e)
 	}
 
 	return reqHndl, nil
@@ -84,7 +85,7 @@ func buildResponse(reqHndl uintptr, req *Request) (*Response, error) {
 
 	// Get response
 	if e = winhttp.ReceiveResponse(reqHndl); e != nil {
-		return nil, e
+		return nil, errors.Newf("failed to get response: %w", e)
 	}
 
 	// Get status code
@@ -95,7 +96,7 @@ func buildResponse(reqHndl uintptr, req *Request) (*Response, error) {
 
 	status = string(b)
 	if code, e = strconv.ParseInt(status, 10, 64); e != nil {
-		return nil, e
+		return nil, errors.Newf("status %s invalid: %w", status, e)
 	}
 
 	// Get status text
@@ -107,9 +108,7 @@ func buildResponse(reqHndl uintptr, req *Request) (*Response, error) {
 	}
 
 	// Parse cookies
-	if cookies, e = getCookies(reqHndl); e != nil {
-		return nil, e
-	}
+	cookies = getCookies(reqHndl)
 
 	// Parse headers and proto
 	if proto, major, minor, hdrs, e = getHeaders(reqHndl); e != nil {
@@ -144,29 +143,31 @@ func buildResponse(reqHndl uintptr, req *Request) (*Response, error) {
 	return res, nil
 }
 
-func getCookies(reqHndl uintptr) ([]*Cookie, error) {
+func getCookies(reqHndl uintptr) []*Cookie {
 	var b []byte
 	var cookies []*Cookie
 	var e error
 	var tmp []string
 
 	// Get cookies
-	for i := 0; e == nil; i++ {
+	for i := 0; ; i++ {
 		b, e = queryResponse(
 			reqHndl,
 			winhttp.WinhttpQuerySetCookie,
 			i,
 		)
-		if e == nil {
-			tmp = strings.SplitN(string(b), "=", 2)
-			cookies = append(
-				cookies,
-				&Cookie{Name: tmp[0], Value: tmp[1]},
-			)
+		if e != nil {
+			break
 		}
+
+		tmp = strings.SplitN(string(b), "=", 2)
+		cookies = append(
+			cookies,
+			&Cookie{Name: tmp[0], Value: tmp[1]},
+		)
 	}
 
-	return cookies, nil
+	return cookies
 }
 
 func getHeaders(
@@ -208,11 +209,13 @@ func getHeaders(
 
 				major, e = strconv.ParseInt(tmp[0], 10, 64)
 				if e != nil {
+					e = errors.Newf("invalid HTTP version: %w", e)
 					return "", 0, 0, nil, e
 				}
 
 				minor, e = strconv.ParseInt(tmp[1], 10, 64)
 				if e != nil {
+					e = errors.Newf("invalid HTTP version: %w", e)
 					return "", 0, 0, nil, e
 				}
 			}
@@ -251,7 +254,7 @@ func queryResponse(reqHndl, info uintptr, idx int) ([]byte, error) {
 			&idx,
 		)
 		if e != nil {
-			return []byte{}, e
+			return []byte{}, errors.New("failed to query info: %w", e)
 		}
 	}
 
@@ -271,6 +274,7 @@ func readResponse(reqHndl uintptr) (io.ReadCloser, int64, error) {
 		// Get next chunk size
 		e = winhttp.QueryDataAvailable(reqHndl, &chunkLen)
 		if e != nil {
+			e = errors.Newf("failed to query data available: %w", e)
 			break
 		}
 
@@ -282,6 +286,7 @@ func readResponse(reqHndl uintptr) (io.ReadCloser, int64, error) {
 		// Read next chunk
 		e = winhttp.ReadData(reqHndl, &chunk, chunkLen, &n)
 		if e != nil {
+			e = errors.Newf("failed to read data: %w", e)
 			break
 		}
 
@@ -312,7 +317,7 @@ func sendRequest(reqHndl uintptr, r *Request) error {
 			method,
 		)
 		if e != nil {
-			return e
+			return errors.Newf("failed to add cookies: %w", e)
 		}
 	}
 
@@ -327,16 +332,21 @@ func sendRequest(reqHndl uintptr, r *Request) error {
 			method,
 		)
 		if e != nil {
-			return e
+			return errors.Newf("failed to add request headers: %w", e)
 		}
 	}
 
 	// Send HTTP request
-	return winhttp.SendRequest(
+	e = winhttp.SendRequest(
 		reqHndl,
 		"",
 		0,
 		r.Body,
 		len(r.Body),
 	)
+	if e != nil {
+		return errors.Newf("failed to send request: %w", e)
+	}
+
+	return nil
 }
