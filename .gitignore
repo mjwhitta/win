@@ -1,6 +1,7 @@
 *.profile
 *.test
+.tags
 build
-cmd/*
+cover.out
 local
 tags
