@@ -109,7 +109,11 @@ func main() {
 	}
 
 	for i, arg := range flag.Args() {
-		if (i == 0) || !pathname.DoesExist(arg) {
+		if i == 0 {
+			continue
+		} else if ok, e := pathname.DoesExist(arg); e != nil {
+			continue
+		} else if !ok {
 			continue
 		}
 
