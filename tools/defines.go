@@ -29,6 +29,10 @@ func format(str string) string {
 
 	// Capitalize every part
 	for i := range tmp {
+		if tmp[i] == "" {
+			continue
+		}
+
 		tmp[i] = strings.ToUpper(tmp[i][0:1]) + tmp[i][1:]
 	}
 
