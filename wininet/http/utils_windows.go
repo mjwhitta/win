@@ -7,8 +7,8 @@ import (
 	"strconv"
 	"strings"
 
-	"gitlab.com/mjwhitta/errors"
-	"gitlab.com/mjwhitta/win/wininet"
+	"github.com/mjwhitta/errors"
+	"github.com/mjwhitta/win/wininet"
 )
 
 func buildRequest(sessionHndl uintptr, r *Request) (uintptr, error) {

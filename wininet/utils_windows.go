@@ -1,6 +1,6 @@
 package wininet
 
-import "gitlab.com/mjwhitta/errors"
+import "github.com/mjwhitta/errors"
 
 func convertFail(str string, e error) error {
 	return errors.Newf(

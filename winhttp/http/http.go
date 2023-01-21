@@ -1,6 +1,6 @@
 package http
 
-import "gitlab.com/mjwhitta/errors"
+import "github.com/mjwhitta/errors"
 
 // DefaultClient is the default client similar to net/http.
 var DefaultClient *Client

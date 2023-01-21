@@ -3,7 +3,7 @@
 
 package http
 
-import "gitlab.com/mjwhitta/errors"
+import "github.com/mjwhitta/errors"
 
 // Client is an empty struct, if not Windows.
 type Client struct{}

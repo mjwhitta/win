@@ -1,9 +1,9 @@
-module gitlab.com/mjwhitta/win
+module github.com/mjwhitta/win
 
-go 1.17
+go 1.19
 
 require (
-	gitlab.com/mjwhitta/errors v1.0.0
-	gitlab.com/mjwhitta/pathname v1.2.1
-	golang.org/x/sys v0.0.0-20220804214406-8e32c043e418
+	github.com/mjwhitta/errors v1.0.1
+	github.com/mjwhitta/pathname v1.2.3
+	golang.org/x/sys v0.4.0
 )

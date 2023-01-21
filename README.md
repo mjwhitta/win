@@ -2,7 +2,7 @@
 
 <a href="https://www.buymeacoffee.com/mjwhitta">🍪 Buy me a cookie</a>
 
-[![Go Report Card](https://goreportcard.com/badge/gitlab.com/mjwhitta/win)](https://goreportcard.com/report/gitlab.com/mjwhitta/win)
+[![Go Report Card](https://goreportcard.com/badge/github.com/mjwhitta/win)](https://goreportcard.com/report/github.com/mjwhitta/win)
 
 ## What is this?
 
@@ -24,7 +24,7 @@ Windows service.
 Open a terminal and run the following:
 
 ```
-$ go get --ldflags="-s -w" --trimpath -u gitlab.com/mjwhitta/win
+$ go get --ldflags="-s -w" --trimpath -u github.com/mjwhitta/win
 ```
 
 ## Usage
@@ -38,8 +38,8 @@ import (
     "fmt"
     "io"
 
-    // "gitlab.com/mjwhitta/win/winhttp/http"
-    "gitlab.com/mjwhitta/win/wininet/http"
+    // "github.com/mjwhitta/win/winhttp/http"
+    "github.com/mjwhitta/win/wininet/http"
 )
 
 func main() {
@@ -97,7 +97,7 @@ func main() {
 
 ## Links
 
-- [Source](https://gitlab.com/mjwhitta/win)
+- [Source](https://github.com/mjwhitta/win)
 
 ## TODO
 

@@ -6,7 +6,7 @@ import (
 
 	"golang.org/x/sys/windows"
 
-	"gitlab.com/mjwhitta/errors"
+	"github.com/mjwhitta/errors"
 )
 
 var wininet *windows.LazyDLL = windows.NewLazySystemDLL("Wininet")

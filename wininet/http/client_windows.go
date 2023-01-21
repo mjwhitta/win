@@ -4,8 +4,8 @@ import (
 	"encoding/binary"
 	"time"
 
-	"gitlab.com/mjwhitta/errors"
-	"gitlab.com/mjwhitta/win/wininet"
+	"github.com/mjwhitta/errors"
+	"github.com/mjwhitta/win/wininet"
 )
 
 // Client is a struct containing relevant metadata to make HTTP
