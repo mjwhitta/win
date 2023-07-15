@@ -1,12 +1,20 @@
 //go:build !windows
-// +build !windows
 
-package http
+package winhttp
 
-import "github.com/mjwhitta/errors"
+import (
+	"time"
+
+	"github.com/mjwhitta/errors"
+)
 
 // Client is an empty struct, if not Windows.
-type Client struct{}
+type Client struct {
+	Timeout         time.Duration
+	TLSClientConfig struct {
+		InsecureSkipVerify bool
+	}
+}
 
 // NewClient is only supported on Windows.
 func NewClient() (*Client, error) {

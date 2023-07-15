@@ -1,4 +1,4 @@
-package http
+package wininet
 
 import "github.com/mjwhitta/errors"
 

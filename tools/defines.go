@@ -54,6 +54,7 @@ func genFile(
 	var e error
 	var f *os.File
 	var fn string = "generated.go"
+	var out []string
 	var sorted []string
 
 	if f, e = os.Create(fn); e != nil {
@@ -88,11 +89,13 @@ func genFile(
 		}
 
 		if strings.HasPrefix(l[1], "\"") {
-			f.WriteString(
+			out = append(
+				out,
 				fmt.Sprintf("\t%s string = %s\n", l[0], l[1]),
 			)
 		} else if strings.HasPrefix(l[1], "L\"") {
-			f.WriteString(
+			out = append(
+				out,
 				fmt.Sprintf(
 					"\t%s string = %s\n",
 					l[0],
@@ -103,14 +106,27 @@ func genFile(
 			l[1] = strings.Replace(l[1], "TEXT(", "", 1)
 			l[1] = strings.Replace(l[1], ")", "", 1)
 
-			f.WriteString(
+			out = append(
+				out,
 				fmt.Sprintf("\t%s string = %s\n", l[0], l[1]),
 			)
 		} else {
-			f.WriteString(
+			out = append(
+				out,
 				fmt.Sprintf("\t%s uintptr = %s\n", l[0], l[1]),
 			)
 		}
+	}
+
+	sort.Slice(
+		out,
+		func(i int, j int) bool {
+			return strings.ToLower(out[i]) < strings.ToLower(out[j])
+		},
+	)
+
+	for _, line := range out {
+		f.WriteString(line)
 	}
 
 	f.WriteString(")\n")
@@ -136,10 +152,16 @@ func main() {
 	for i, arg := range flag.Args() {
 		if i == 0 {
 			continue
-		} else if ok, e := pathname.DoesExist(arg); e != nil {
+		}
+
+		arg = "/usr/x86_64-w64-mingw32/include/" + arg
+
+		if ok, e := pathname.DoesExist(arg); e != nil {
 			fmt.Println(e.Error())
+			os.Exit(1)
 		} else if !ok {
 			fmt.Printf("file %s not found\n", arg)
+			os.Exit(1)
 		}
 
 		if e := processFile(&cache, &lines, arg); e != nil {

@@ -1,11 +1,11 @@
-package http
+package winhttp
 
 import (
 	"encoding/binary"
 	"time"
 
 	"github.com/mjwhitta/errors"
-	"github.com/mjwhitta/win/winhttp"
+	w32 "github.com/mjwhitta/win/api"
 )
 
 // Client is a struct containing relevant metadata to make HTTP
@@ -25,9 +25,9 @@ func NewClient() (*Client, error) {
 	var e error
 
 	// Create session
-	c.hndl, e = winhttp.Open(
+	c.hndl, e = w32.WinHTTPOpen(
 		"Go-http-client/1.1",
-		winhttp.WinhttpAccessTypeAutomaticProxy,
+		w32.WinhttpAccessTypeAutomaticProxy,
 		"",
 		"",
 		0,
@@ -58,9 +58,9 @@ func (c *Client) Do(r *Request) (*Response, error) {
 			uint32(c.Timeout.Milliseconds()),
 		)
 
-		e = winhttp.SetOption(
+		e = w32.WinHTTPSetOption(
 			reqHndl,
-			winhttp.WinhttpOptionConnectTimeout,
+			w32.WinhttpOptionConnectTimeout,
 			b,
 			len(b),
 		)
@@ -69,9 +69,9 @@ func (c *Client) Do(r *Request) (*Response, error) {
 			return nil, e
 		}
 
-		e = winhttp.SetOption(
+		e = w32.WinHTTPSetOption(
 			reqHndl,
-			winhttp.WinhttpOptionReceiveResponseTimeout,
+			w32.WinhttpOptionReceiveResponseTimeout,
 			b,
 			len(b),
 		)
@@ -80,9 +80,9 @@ func (c *Client) Do(r *Request) (*Response, error) {
 			return nil, e
 		}
 
-		e = winhttp.SetOption(
+		e = w32.WinHTTPSetOption(
 			reqHndl,
-			winhttp.WinhttpOptionReceiveTimeout,
+			w32.WinhttpOptionReceiveTimeout,
 			b,
 			len(b),
 		)
@@ -91,9 +91,9 @@ func (c *Client) Do(r *Request) (*Response, error) {
 			return nil, e
 		}
 
-		e = winhttp.SetOption(
+		e = w32.WinHTTPSetOption(
 			reqHndl,
-			winhttp.WinhttpOptionResolveTimeout,
+			w32.WinhttpOptionResolveTimeout,
 			b,
 			len(b),
 		)
@@ -102,9 +102,9 @@ func (c *Client) Do(r *Request) (*Response, error) {
 			return nil, e
 		}
 
-		e = winhttp.SetOption(
+		e = w32.WinHTTPSetOption(
 			reqHndl,
-			winhttp.WinhttpOptionSendTimeout,
+			w32.WinhttpOptionSendTimeout,
 			b,
 			len(b),
 		)
@@ -115,17 +115,17 @@ func (c *Client) Do(r *Request) (*Response, error) {
 	}
 
 	if c.TLSClientConfig.InsecureSkipVerify {
-		tlsIgnore |= winhttp.SecurityFlagIgnoreUnknownCa
-		tlsIgnore |= winhttp.SecurityFlagIgnoreCertDateInvalid
-		tlsIgnore |= winhttp.SecurityFlagIgnoreCertCnInvalid
-		tlsIgnore |= winhttp.SecurityFlagIgnoreCertWrongUsage
+		tlsIgnore |= w32.SecurityFlagIgnoreUnknownCa
+		tlsIgnore |= w32.SecurityFlagIgnoreCertDateInvalid
+		tlsIgnore |= w32.SecurityFlagIgnoreCertCnInvalid
+		tlsIgnore |= w32.SecurityFlagIgnoreCertWrongUsage
 
 		b = make([]byte, 4)
 		binary.LittleEndian.PutUint32(b, uint32(tlsIgnore))
 
-		e = winhttp.SetOption(
+		e = w32.WinHTTPSetOption(
 			reqHndl,
-			winhttp.WinhttpOptionSecurityFlags,
+			w32.WinhttpOptionSecurityFlags,
 			b,
 			len(b),
 		)
@@ -146,17 +146,17 @@ func (c *Client) Do(r *Request) (*Response, error) {
 	return res, nil
 }
 
-// Get will make a GET request using Winhttp.dll.
+// Get will make a GET request using w32.WinHTTPdll.
 func (c *Client) Get(url string) (*Response, error) {
 	return c.Do(NewRequest(MethodGet, url))
 }
 
-// Head will make a HEAD request using Winhttp.dll.
+// Head will make a HEAD request using w32.WinHTTPdll.
 func (c *Client) Head(url string) (*Response, error) {
 	return c.Do(NewRequest(MethodHead, url))
 }
 
-// Post will make a POST request using Winhttp.dll.
+// Post will make a POST request using w32.WinHTTPdll.
 func (c *Client) Post(
 	url string,
 	contentType string,

@@ -1,4 +1,4 @@
-package http
+package winhttp
 
 import "github.com/mjwhitta/errors"
 

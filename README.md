@@ -7,14 +7,14 @@
 
 ## What is this?
 
-This Go module wraps WinHTTP and WinINet functions and includes HTTP
-clients that use those functions to make HTTP requests. Hopefully,
-this makes it easier to make HTTP requests in Go on Windows. WinHTTP
-(and theoretically WinINet) can even handle NTLM authentication
-automatically for you.
+This Go modules started as a simple "drop-in" replacement of
+`net/http` so that you can use WinHTTP and WinINet on Windows for
+better proxy support, with NTLM authentication. Microsoft recommends
+[WinINet over WinHTTP] unless you're writing a Windows service.
 
-Microsoft recommends [WinINet over WinHTTP] unless you're writing a
-Windows service.
+It has been expanded to include multiple Windows API functions and
+constants. There are also some helpers for converting Go/Windows types
+and debugging DLLs.
 
 **Note:** This is probably beta quality at best.
 
@@ -39,8 +39,8 @@ import (
     "fmt"
     "io"
 
-    // "github.com/mjwhitta/win/winhttp/http"
-    "github.com/mjwhitta/win/wininet/http"
+    // http "github.com/mjwhitta/win/winhttp"
+    http "github.com/mjwhitta/win/wininet"
 )
 
 func main() {

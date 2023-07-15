@@ -1,4 +1,4 @@
-package winhttp
+package api
 
 import (
 	"strings"
@@ -7,12 +7,13 @@ import (
 	"golang.org/x/sys/windows"
 
 	"github.com/mjwhitta/errors"
+	"github.com/mjwhitta/win/types"
 )
 
 var winhttp *windows.LazyDLL = windows.NewLazySystemDLL("Winhttp")
 
-// AddRequestHeaders is WinHttpAddRequestHeaders from winhttp.h
-func AddRequestHeaders(
+// WinHTTPAddRequestHeaders is WinHttpAddRequestHeaders from winhttp.h
+func WinHTTPAddRequestHeaders(
 	reqHndl uintptr,
 	header string,
 	addMethod uintptr,
@@ -20,8 +21,6 @@ func AddRequestHeaders(
 	var e error
 	var ok uintptr
 	var proc string = "WinHttpAddRequestHeaders"
-	var pswzHeader uintptr
-	var tmp *uint16
 
 	if header == "" {
 		// Weird, just do nothing
@@ -30,16 +29,9 @@ func AddRequestHeaders(
 
 	header = strings.TrimSpace(header) + "\r\n"
 
-	// Convert to Windows types
-	if tmp, e = windows.UTF16PtrFromString(header); e != nil {
-		return convertFail(header, e)
-	}
-
-	pswzHeader = uintptr(unsafe.Pointer(tmp))
-
 	ok, _, e = winhttp.NewProc(proc).Call(
 		reqHndl,
-		pswzHeader,
+		types.LpCwstr(header),
 		uintptr(len(header)),
 		addMethod,
 	)
@@ -50,8 +42,8 @@ func AddRequestHeaders(
 	return nil
 }
 
-// Connect is WinHttpConnect from winhttp.h
-func Connect(
+// WinHTTPConnect is WinHttpConnect from winhttp.h
+func WinHTTPConnect(
 	sessionHndl uintptr,
 	serverName string,
 	serverPort int,
@@ -59,21 +51,10 @@ func Connect(
 	var connHndl uintptr
 	var e error
 	var proc string = "WinHttpConnect"
-	var pswzServerName uintptr
-	var tmp *uint16
-
-	// Convert to Windows types
-	if serverName != "" {
-		if tmp, e = windows.UTF16PtrFromString(serverName); e != nil {
-			return 0, convertFail(serverName, e)
-		}
-
-		pswzServerName = uintptr(unsafe.Pointer(tmp))
-	}
 
 	connHndl, _, e = winhttp.NewProc(proc).Call(
 		sessionHndl,
-		pswzServerName,
+		types.LpCwstr(serverName),
 		uintptr(serverPort),
 		0,
 	)
@@ -84,8 +65,8 @@ func Connect(
 	return connHndl, nil
 }
 
-// Open is WinHttpOpen from winhttp.h
-func Open(
+// WinHTTPOpen is WinHttpOpen from winhttp.h
+func WinHTTPOpen(
 	userAgent string,
 	accessType uintptr,
 	proxy string,
@@ -94,43 +75,13 @@ func Open(
 ) (uintptr, error) {
 	var e error
 	var proc string = "WinHttpOpen"
-	var pszAgent uintptr
-	var pszProxy uintptr
-	var pszProxyBypass uintptr
 	var sessionHndl uintptr
-	var tmp *uint16
-
-	// Convert to Windows types
-	if userAgent != "" {
-		if tmp, e = windows.UTF16PtrFromString(userAgent); e != nil {
-			return 0, convertFail(userAgent, e)
-		}
-
-		pszAgent = uintptr(unsafe.Pointer(tmp))
-	}
-
-	if proxy != "" {
-		if tmp, e = windows.UTF16PtrFromString(proxy); e != nil {
-			return 0, convertFail(proxy, e)
-		}
-
-		pszProxy = uintptr(unsafe.Pointer(tmp))
-	}
-
-	if proxyBypass != "" {
-		tmp, e = windows.UTF16PtrFromString(proxyBypass)
-		if e != nil {
-			return 0, convertFail(proxyBypass, e)
-		}
-
-		pszProxyBypass = uintptr(unsafe.Pointer(tmp))
-	}
 
 	sessionHndl, _, e = winhttp.NewProc(proc).Call(
-		pszAgent,
+		types.LpCwstr(userAgent),
 		accessType,
-		pszProxy,
-		pszProxyBypass,
+		types.LpCwstr(proxy),
+		types.LpCwstr(proxyBypass),
 		flags,
 	)
 	if sessionHndl == 0 {
@@ -140,8 +91,8 @@ func Open(
 	return sessionHndl, nil
 }
 
-// OpenRequest is WinHttpOpenRequest from winhttp.h
-func OpenRequest(
+// WinHTTPOpenRequest is WinHttpOpenRequest from winhttp.h
+func WinHTTPOpenRequest(
 	connHndl uintptr,
 	verb string,
 	objectName string,
@@ -153,12 +104,7 @@ func OpenRequest(
 	var e error
 	var ppwszAcceptTypes []*uint16
 	var proc string = "WinHttpOpenRequest"
-	var pwszObjectName uintptr
-	var pwszReferrer uintptr
-	var pwszVerb uintptr
-	var pwszVersion uintptr
 	var reqHndl uintptr
-	var tmp *uint16
 
 	// Convert to Windows types
 	ppwszAcceptTypes = make([]*uint16, 1)
@@ -167,52 +113,18 @@ func OpenRequest(
 			continue
 		}
 
-		tmp, e = windows.UTF16PtrFromString(theType)
-		if e != nil {
-			return 0, convertFail(theType, e)
-		}
-
-		ppwszAcceptTypes = append(ppwszAcceptTypes, tmp)
-	}
-
-	if objectName != "" {
-		if tmp, e = windows.UTF16PtrFromString(objectName); e != nil {
-			return 0, convertFail(objectName, e)
-		}
-
-		pwszObjectName = uintptr(unsafe.Pointer(tmp))
-	}
-
-	if referrer != "" {
-		if tmp, e = windows.UTF16PtrFromString(referrer); e != nil {
-			return 0, convertFail(referrer, e)
-		}
-
-		pwszReferrer = uintptr(unsafe.Pointer(tmp))
-	}
-
-	if verb != "" {
-		if tmp, e = windows.UTF16PtrFromString(verb); e != nil {
-			return 0, convertFail(verb, e)
-		}
-
-		pwszVerb = uintptr(unsafe.Pointer(tmp))
-	}
-
-	if version != "" {
-		if tmp, e = windows.UTF16PtrFromString(version); e != nil {
-			return 0, convertFail(version, e)
-		}
-
-		pwszVersion = uintptr(unsafe.Pointer(tmp))
+		ppwszAcceptTypes = append(
+			ppwszAcceptTypes,
+			types.Cwstr(theType),
+		)
 	}
 
 	reqHndl, _, e = winhttp.NewProc(proc).Call(
 		connHndl,
-		pwszVerb,
-		pwszObjectName,
-		pwszVersion,
-		pwszReferrer,
+		types.LpCwstr(verb),
+		types.LpCwstr(objectName),
+		types.LpCwstr(version),
+		types.LpCwstr(referrer),
 		uintptr(unsafe.Pointer(&ppwszAcceptTypes[0])),
 		flags,
 	)
@@ -223,8 +135,8 @@ func OpenRequest(
 	return reqHndl, nil
 }
 
-// QueryDataAvailable is WinHttpQueryDataAvailable from winhttp.h
-func QueryDataAvailable(reqHndl uintptr, bytesToRead *int64) error {
+// WinHTTPQueryDataAvailable is WinHttpQueryDataAvailable from winhttp.h
+func WinHTTPQueryDataAvailable(reqHndl uintptr, bytesToRead *int64) error {
 	var e error
 	var proc string = "WinHttpQueryDataAvailable"
 	var success uintptr
@@ -240,8 +152,8 @@ func QueryDataAvailable(reqHndl uintptr, bytesToRead *int64) error {
 	return nil
 }
 
-// QueryHeaders is WinHttpQueryHeaders from winhttp.h
-func QueryHeaders(
+// WinHTTPQueryHeaders is WinHttpQueryHeaders from winhttp.h
+func WinHTTPQueryHeaders(
 	reqHndl uintptr,
 	info uintptr,
 	name string,
@@ -254,7 +166,6 @@ func QueryHeaders(
 	var proc string = "WinHttpQueryHeaders"
 	var pwszName uintptr
 	var success uintptr
-	var tmp *uint16
 
 	// Convert to Windows types
 	if *bufferLen > 0 {
@@ -264,11 +175,7 @@ func QueryHeaders(
 	}
 
 	if (name != "") && (info == WinhttpQueryCustom) {
-		if tmp, e = windows.UTF16PtrFromString(name); e != nil {
-			return convertFail(name, e)
-		}
-
-		pwszName = uintptr(unsafe.Pointer(tmp))
+		pwszName = types.LpCwstr(name)
 	} else {
 		pwszName = WinhttpHeaderNameByIndex
 	}
@@ -290,8 +197,8 @@ func QueryHeaders(
 	return nil
 }
 
-// ReadData is WinHttpReadData from winhttp.h
-func ReadData(
+// WinHTTPReadData is WinHttpReadData from winhttp.h
+func WinHTTPReadData(
 	reqHndl uintptr,
 	buffer *[]byte,
 	bytesToRead int64,
@@ -323,8 +230,8 @@ func ReadData(
 	return nil
 }
 
-// ReceiveResponse is WinHttpReceiveResponse from winhttp.h
-func ReceiveResponse(reqHndl uintptr) error {
+// WinHTTPReceiveResponse is WinHttpReceiveResponse from winhttp.h
+func WinHTTPReceiveResponse(reqHndl uintptr) error {
 	var e error
 	var proc string = "WinHttpReceiveResponse"
 	var success uintptr
@@ -337,8 +244,8 @@ func ReceiveResponse(reqHndl uintptr) error {
 	return nil
 }
 
-// SendRequest is WinHttpSendRequest from winhttp.h
-func SendRequest(
+// WinHTTPSendRequest is WinHttpSendRequest from winhttp.h
+func WinHTTPSendRequest(
 	reqHndl uintptr,
 	headers string,
 	headersLen int,
@@ -348,27 +255,16 @@ func SendRequest(
 	var body uintptr
 	var e error
 	var proc string = "WinHttpSendRequest"
-	var pwszHeaders uintptr
 	var success uintptr
-	var tmp *uint16
 
 	// Pointer to data if provided
 	if (data != nil) && (len(data) > 0) {
 		body = uintptr(unsafe.Pointer(&data[0]))
 	}
 
-	// Convert to Windows types
-	if headers != "" {
-		if tmp, e = windows.UTF16PtrFromString(headers); e != nil {
-			return convertFail(headers, e)
-		}
-
-		pwszHeaders = uintptr(unsafe.Pointer(tmp))
-	}
-
 	success, _, e = winhttp.NewProc(proc).Call(
 		reqHndl,
-		pwszHeaders,
+		types.LpCwstr(headers),
 		uintptr(headersLen),
 		body,
 		uintptr(dataLen),
@@ -381,8 +277,8 @@ func SendRequest(
 	return nil
 }
 
-// SetOption is WinHttpSetOption from winhttp.h
-func SetOption(hndl, opt uintptr, val []byte, valLen int) error {
+// WinHTTPSetOption is WinHttpSetOption from winhttp.h
+func WinHTTPSetOption(hndl, opt uintptr, val []byte, valLen int) error {
 	var e error
 	var proc string = "WinHttpSetOption"
 	var success uintptr
