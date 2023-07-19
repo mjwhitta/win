@@ -26,8 +26,8 @@ func NewClient() (*Client, error) {
 
 	// Create session
 	c.hndl, e = w32.WinHTTPOpen(
-		"Go-http-client/1.1",
-		w32.WinhttpAccessTypeAutomaticProxy,
+		"Go-http-client/1.1", // TODO make this configurable
+		w32.Winhttp.WinhttpAccessTypeAutomaticProxy,
 		"",
 		"",
 		0,
@@ -60,7 +60,7 @@ func (c *Client) Do(r *Request) (*Response, error) {
 
 		e = w32.WinHTTPSetOption(
 			reqHndl,
-			w32.WinhttpOptionConnectTimeout,
+			w32.Winhttp.WinhttpOptionConnectTimeout,
 			b,
 			len(b),
 		)
@@ -71,7 +71,7 @@ func (c *Client) Do(r *Request) (*Response, error) {
 
 		e = w32.WinHTTPSetOption(
 			reqHndl,
-			w32.WinhttpOptionReceiveResponseTimeout,
+			w32.Winhttp.WinhttpOptionReceiveResponseTimeout,
 			b,
 			len(b),
 		)
@@ -82,7 +82,7 @@ func (c *Client) Do(r *Request) (*Response, error) {
 
 		e = w32.WinHTTPSetOption(
 			reqHndl,
-			w32.WinhttpOptionReceiveTimeout,
+			w32.Winhttp.WinhttpOptionReceiveTimeout,
 			b,
 			len(b),
 		)
@@ -93,7 +93,7 @@ func (c *Client) Do(r *Request) (*Response, error) {
 
 		e = w32.WinHTTPSetOption(
 			reqHndl,
-			w32.WinhttpOptionResolveTimeout,
+			w32.Winhttp.WinhttpOptionResolveTimeout,
 			b,
 			len(b),
 		)
@@ -104,7 +104,7 @@ func (c *Client) Do(r *Request) (*Response, error) {
 
 		e = w32.WinHTTPSetOption(
 			reqHndl,
-			w32.WinhttpOptionSendTimeout,
+			w32.Winhttp.WinhttpOptionSendTimeout,
 			b,
 			len(b),
 		)
@@ -115,17 +115,17 @@ func (c *Client) Do(r *Request) (*Response, error) {
 	}
 
 	if c.TLSClientConfig.InsecureSkipVerify {
-		tlsIgnore |= w32.SecurityFlagIgnoreUnknownCa
-		tlsIgnore |= w32.SecurityFlagIgnoreCertDateInvalid
-		tlsIgnore |= w32.SecurityFlagIgnoreCertCnInvalid
-		tlsIgnore |= w32.SecurityFlagIgnoreCertWrongUsage
+		tlsIgnore |= w32.Winhttp.SecurityFlagIgnoreUnknownCa
+		tlsIgnore |= w32.Winhttp.SecurityFlagIgnoreCertDateInvalid
+		tlsIgnore |= w32.Winhttp.SecurityFlagIgnoreCertCnInvalid
+		tlsIgnore |= w32.Winhttp.SecurityFlagIgnoreCertWrongUsage
 
 		b = make([]byte, 4)
 		binary.LittleEndian.PutUint32(b, uint32(tlsIgnore))
 
 		e = w32.WinHTTPSetOption(
 			reqHndl,
-			w32.WinhttpOptionSecurityFlags,
+			w32.Winhttp.WinhttpOptionSecurityFlags,
 			b,
 			len(b),
 		)
@@ -146,17 +146,17 @@ func (c *Client) Do(r *Request) (*Response, error) {
 	return res, nil
 }
 
-// Get will make a GET request using w32.WinHTTPdll.
+// Get will make a GET request using WinHTTP.dll.
 func (c *Client) Get(url string) (*Response, error) {
 	return c.Do(NewRequest(MethodGet, url))
 }
 
-// Head will make a HEAD request using w32.WinHTTPdll.
+// Head will make a HEAD request using WinHTTP.dll.
 func (c *Client) Head(url string) (*Response, error) {
 	return c.Do(NewRequest(MethodHead, url))
 }
 
-// Post will make a POST request using w32.WinHTTPdll.
+// Post will make a POST request using WinHTTP.dll.
 func (c *Client) Post(
 	url string,
 	contentType string,

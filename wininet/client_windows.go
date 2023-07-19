@@ -26,8 +26,8 @@ func NewClient() (*Client, error) {
 
 	// Create session
 	c.hndl, e = w32.InternetOpenW(
-		"Go-http-client/1.1",
-		w32.InternetOpenTypePreconfig,
+		"Go-http-client/1.1", // TODO make this configurable
+		w32.Wininet.InternetOpenTypePreconfig,
 		"",
 		"",
 		0,
@@ -59,7 +59,7 @@ func (c *Client) Do(r *Request) (*Response, error) {
 
 		e = w32.InternetSetOptionW(
 			reqHndl,
-			w32.InternetOptionConnectTimeout,
+			w32.Wininet.InternetOptionConnectTimeout,
 			b,
 			len(b),
 		)
@@ -70,7 +70,7 @@ func (c *Client) Do(r *Request) (*Response, error) {
 
 		e = w32.InternetSetOptionW(
 			reqHndl,
-			w32.InternetOptionReceiveTimeout,
+			w32.Wininet.InternetOptionReceiveTimeout,
 			b,
 			len(b),
 		)
@@ -81,7 +81,7 @@ func (c *Client) Do(r *Request) (*Response, error) {
 
 		e = w32.InternetSetOptionW(
 			reqHndl,
-			w32.InternetOptionSendTimeout,
+			w32.Wininet.InternetOptionSendTimeout,
 			b,
 			len(b),
 		)
@@ -95,12 +95,12 @@ func (c *Client) Do(r *Request) (*Response, error) {
 		b = make([]byte, 4)
 		binary.LittleEndian.PutUint32(
 			b,
-			uint32(w32.SecuritySetMask),
+			uint32(w32.Wininet.SecuritySetMask),
 		)
 
 		e = w32.InternetSetOptionW(
 			reqHndl,
-			w32.InternetOptionSecurityFlags,
+			w32.Wininet.InternetOptionSecurityFlags,
 			b,
 			len(b),
 		)
@@ -121,17 +121,17 @@ func (c *Client) Do(r *Request) (*Response, error) {
 	return res, nil
 }
 
-// Get will make a GET request using w32.dll.
+// Get will make a GET request using WinINet.dll.
 func (c *Client) Get(url string) (*Response, error) {
 	return c.Do(NewRequest(MethodGet, url))
 }
 
-// Head will make a HEAD request using w32.dll.
+// Head will make a HEAD request using WinINet.dll.
 func (c *Client) Head(url string) (*Response, error) {
 	return c.Do(NewRequest(MethodHead, url))
 }
 
-// Post will make a POST request using w32.dll.
+// Post will make a POST request using WinINet.dll.
 func (c *Client) Post(
 	url string,
 	contentType string,

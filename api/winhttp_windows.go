@@ -174,10 +174,10 @@ func WinHTTPQueryHeaders(
 		b = make([]uint16, 1)
 	}
 
-	if (name != "") && (info == WinhttpQueryCustom) {
+	if (name != "") && (info == Winhttp.WinhttpQueryCustom) {
 		pwszName = types.LpCwstr(name)
 	} else {
-		pwszName = WinhttpHeaderNameByIndex
+		pwszName = Winhttp.WinhttpHeaderNameByIndex
 	}
 
 	success, _, e = winhttp.NewProc(proc).Call(

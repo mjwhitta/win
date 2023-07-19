@@ -37,7 +37,7 @@ func buildRequest(sessionHndl uintptr, r *Request) (uintptr, error) {
 
 	switch uri.Scheme {
 	case "https":
-		flags = w32.InternetFlagSecure
+		flags = w32.Wininet.InternetFlagSecure
 	}
 
 	// Create connection
@@ -47,7 +47,7 @@ func buildRequest(sessionHndl uintptr, r *Request) (uintptr, error) {
 		int(port),
 		uri.User.Username(),
 		passwd,
-		w32.InternetServiceHTTP,
+		w32.Wininet.InternetServiceHTTP,
 		flags,
 		0,
 	)
@@ -61,7 +61,7 @@ func buildRequest(sessionHndl uintptr, r *Request) (uintptr, error) {
 	}
 
 	// Allow NTLM auth
-	flags |= w32.InternetFlagKeepConnection
+	flags |= w32.Wininet.InternetFlagKeepConnection
 
 	// Create HTTP request
 	reqHndl, e = w32.HTTPOpenRequestW(
@@ -97,7 +97,7 @@ func buildResponse(reqHndl uintptr, req *Request) (*Response, error) {
 	var status string
 
 	// Get status code
-	b, e = queryResponse(reqHndl, w32.HTTPQueryStatusCode, 0)
+	b, e = queryResponse(reqHndl, w32.Wininet.HTTPQueryStatusCode, 0)
 	if e != nil {
 		return nil, e
 	}
@@ -108,7 +108,7 @@ func buildResponse(reqHndl uintptr, req *Request) (*Response, error) {
 	}
 
 	// Get status text
-	b, e = queryResponse(reqHndl, w32.HTTPQueryStatusText, 0)
+	b, e = queryResponse(reqHndl, w32.Wininet.HTTPQueryStatusText, 0)
 	if e != nil {
 		return nil, e
 	} else if len(b) > 0 {
@@ -161,7 +161,7 @@ func getCookies(reqHndl uintptr) []*Cookie {
 	for i := 0; ; i++ {
 		b, e = queryResponse(
 			reqHndl,
-			w32.HTTPQuerySetCookie,
+			w32.Wininet.HTTPQuerySetCookie,
 			i,
 		)
 		if e != nil {
@@ -190,7 +190,11 @@ func getHeaders(
 	var tmp []string
 
 	// Get headers
-	b, e = queryResponse(reqHndl, w32.HTTPQueryRawHeadersCRLF, 0)
+	b, e = queryResponse(
+		reqHndl,
+		w32.Wininet.HTTPQueryRawHeadersCRLF,
+		0,
+	)
 	if e != nil {
 		return "", 0, 0, nil, e
 	}
@@ -304,15 +308,15 @@ func sendRequest(reqHndl uintptr, r *Request) error {
 	var method uintptr
 
 	// Process cookies
-	method = w32.HTTPAddreqFlagAdd
+	method = w32.Wininet.HTTPAddreqFlagAdd
 	// FIXME why doesn't this work here?!
-	// method |= w32.HTTPAddreqFlagCoalesceWithSemicolon
+	// method |= w32.Wininet.HTTPAddreqFlagCoalesceWithSemicolon
 
 	// FIXME This is a dumb hack
 	w32.HTTPAddRequestHeadersW(
 		reqHndl,
 		"Cookie: ignore=ignore",
-		w32.HTTPAddreqFlagAddIfNew,
+		w32.Wininet.HTTPAddreqFlagAddIfNew,
 	)
 	// End dumb hack
 
@@ -328,7 +332,8 @@ func sendRequest(reqHndl uintptr, r *Request) error {
 	}
 
 	// Process headers
-	method = w32.HTTPAddreqFlagAdd | w32.HTTPAddreqFlagReplace
+	method = w32.Wininet.HTTPAddreqFlagAdd
+	method |= w32.Wininet.HTTPAddreqFlagReplace
 
 	for k, v := range r.Headers {
 		e = w32.HTTPAddRequestHeadersW(

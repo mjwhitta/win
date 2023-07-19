@@ -34,7 +34,7 @@ func buildRequest(sessionHndl uintptr, r *Request) (uintptr, error) {
 
 	switch uri.Scheme {
 	case "https":
-		flags = w32.WinhttpFlagSecure
+		flags = w32.Winhttp.WinhttpFlagSecure
 	}
 
 	// Create connection
@@ -89,7 +89,11 @@ func buildResponse(reqHndl uintptr, req *Request) (*Response, error) {
 	}
 
 	// Get status code
-	b, e = queryResponse(reqHndl, w32.WinhttpQueryStatusCode, 0)
+	b, e = queryResponse(
+		reqHndl,
+		w32.Winhttp.WinhttpQueryStatusCode,
+		0,
+	)
 	if e != nil {
 		return nil, e
 	}
@@ -100,7 +104,11 @@ func buildResponse(reqHndl uintptr, req *Request) (*Response, error) {
 	}
 
 	// Get status text
-	b, e = queryResponse(reqHndl, w32.WinhttpQueryStatusText, 0)
+	b, e = queryResponse(
+		reqHndl,
+		w32.Winhttp.WinhttpQueryStatusText,
+		0,
+	)
 	if e != nil {
 		return nil, e
 	} else if len(b) > 0 {
@@ -153,7 +161,7 @@ func getCookies(reqHndl uintptr) []*Cookie {
 	for i := 0; ; i++ {
 		b, e = queryResponse(
 			reqHndl,
-			w32.WinhttpQuerySetCookie,
+			w32.Winhttp.WinhttpQuerySetCookie,
 			i,
 		)
 		if e != nil {
@@ -184,7 +192,7 @@ func getHeaders(
 	// Get headers
 	b, e = queryResponse(
 		reqHndl,
-		w32.WinhttpQueryRawHeadersCRLF,
+		w32.Winhttp.WinhttpQueryRawHeadersCRLF,
 		0,
 	)
 	if e != nil {
@@ -308,8 +316,8 @@ func sendRequest(reqHndl uintptr, r *Request) error {
 	var method uintptr
 
 	// Process cookies
-	method = w32.WinhttpAddreqFlagAdd
-	method |= w32.WinhttpAddreqFlagCoalesceWithSemicolon
+	method = w32.Winhttp.WinhttpAddreqFlagAdd
+	method |= w32.Winhttp.WinhttpAddreqFlagCoalesceWithSemicolon
 
 	for _, c := range r.Cookies() {
 		e = w32.WinHTTPAddRequestHeaders(
@@ -323,7 +331,8 @@ func sendRequest(reqHndl uintptr, r *Request) error {
 	}
 
 	// Process headers
-	method = w32.WinhttpAddreqFlagAdd | w32.WinhttpAddreqFlagReplace
+	method = w32.Winhttp.WinhttpAddreqFlagAdd
+	method |= w32.Winhttp.WinhttpAddreqFlagReplace
 
 	for k, v := range r.Headers {
 		e = w32.WinHTTPAddRequestHeaders(
