@@ -116,6 +116,9 @@ var skipRStarts = map[string][]string{
 		"extern",
 		"void",
 	},
+	"accctrl.h": {
+		"LocalFree",
+	},
 	"ddeml.h": {
 		"CALLBACK",
 	},
