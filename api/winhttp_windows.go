@@ -135,8 +135,11 @@ func WinHTTPOpenRequest(
 	return reqHndl, nil
 }
 
-// WinHTTPQueryDataAvailable is WinHttpQueryDataAvailable from winhttp.h
-func WinHTTPQueryDataAvailable(reqHndl uintptr, bytesToRead *int64) error {
+// WinHTTPQueryDataAvailable is WinHttpQueryDataAvailable from
+// winhttp.h
+func WinHTTPQueryDataAvailable(
+	reqHndl uintptr, bytesToRead *int64,
+) error {
 	var e error
 	var proc string = "WinHttpQueryDataAvailable"
 	var success uintptr
@@ -278,7 +281,9 @@ func WinHTTPSendRequest(
 }
 
 // WinHTTPSetOption is WinHttpSetOption from winhttp.h
-func WinHTTPSetOption(hndl, opt uintptr, val []byte, valLen int) error {
+func WinHTTPSetOption(
+	hndl, opt uintptr, val []byte, valLen int,
+) error {
 	var e error
 	var proc string = "WinHttpSetOption"
 	var success uintptr

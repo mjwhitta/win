@@ -183,7 +183,7 @@ func getHeaders(
 ) (string, int, int, map[string][]string, error) {
 	var b []byte
 	var e error
-	var hdrs = map[string][]string{}
+	var hdrs map[string][]string = map[string][]string{}
 	var major int64
 	var minor int64
 	var proto string

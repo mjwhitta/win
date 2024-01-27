@@ -21,7 +21,7 @@ type Client struct {
 // NewClient will return a pointer to a new Client instance that
 // simply wraps the net/http.Client type.
 func NewClient() (*Client, error) {
-	var c = &Client{}
+	var c *Client = &Client{}
 	var e error
 
 	// Create session

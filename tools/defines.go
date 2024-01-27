@@ -33,22 +33,25 @@ var cache = map[string][]*cacheEntry{
 var lookup = map[string]*cacheEntry{}
 
 // Regular expressions
-var bitwisenot = regexp.MustCompile(`\~`)
-var camel = regexp.MustCompile(`[A-Z][a-z]+[A-Z][a-z]+`)
-var comment = regexp.MustCompile(`\s*\/\*.*\*\/\s*`)
-var fixcast = regexp.MustCompile(
-	`\([A-Za-z_]+\)\s*(\(?\-?[0-9A-Fa-fXx]+|NULL)`,
+var (
+	bitwisenot = regexp.MustCompile(`\~`)
+	camel      = regexp.MustCompile(`[A-Z][a-z]+[A-Z][a-z]+`)
+	comment    = regexp.MustCompile(`\s*\/\*.*\*\/\s*`)
+	fixcast    = regexp.MustCompile(
+		`\([A-Za-z_]+\)\s*(\(?\-?[0-9A-Fa-fXx]+|NULL)`,
+	)
+	fixhex        = regexp.MustCompile(`(0[Xx][0-9A-Fa-f]+)[LlUu]+`)
+	fixlen        = regexp.MustCompile(`(len\(.+?\))`)
+	fixmsabi      = regexp.MustCompile(`__MSABI_LONG([^)]+)`)
+	fixnum        = regexp.MustCompile(`(\d+)[LlUu]+`)
+	fixsizeof     = regexp.MustCompile(`sizeof\s*\(`)
+	spaces        = regexp.MustCompile(`\s+`)
+	uselessOpRepl = []*regexp.Regexp{
+		regexp.MustCompile(`\s*\^\s*0([^x])`), // ^ 0
+		regexp.MustCompile(`\s*\|\s*0([^x])`), // | 0
+	}
 )
-var fixhex = regexp.MustCompile(`(0[Xx][0-9A-Fa-f]+)[LlUu]+`)
-var fixlen = regexp.MustCompile(`(len\(.+?\))`)
-var fixmsabi = regexp.MustCompile(`__MSABI_LONG([^)]+)`)
-var fixnum = regexp.MustCompile(`(\d+)[LlUu]+`)
-var fixsizeof = regexp.MustCompile(`sizeof\s*\(`)
-var spaces = regexp.MustCompile(`\s+`)
-var uselessOpRepl = []*regexp.Regexp{
-	regexp.MustCompile(`\s*\^\s*0([^x])`), // ^ 0
-	regexp.MustCompile(`\s*\|\s*0([^x])`), // | 0
-}
+
 var uselessOpRm = []*regexp.Regexp{
 	regexp.MustCompile(`\s*\^\s*\(0\)`),             // ^ (0)
 	regexp.MustCompile(`\s*\|\s*\(0\)`),             // | (0)
@@ -76,6 +79,7 @@ var skipLContains = map[string][]string{
 		"XSTATE_MASK_ALLOWED",
 	},
 }
+
 var skipRContains = map[string][]string{
 	"": {
 		"__declspec",
@@ -109,6 +113,7 @@ var skipRContains = map[string][]string{
 		"MAKEINTATOM(",
 	},
 }
+
 var skipRStarts = map[string][]string{
 	"": {
 		":",
@@ -685,7 +690,7 @@ func processTypedef(fn string, l string) {
 	var next string = "0"
 	var rhs string
 	var tmp []string
-	var vals = map[string]string{}
+	var vals map[string]string = map[string]string{}
 
 	for _, d := range strings.Split(l, ",") {
 		d = strings.TrimSpace(d)
