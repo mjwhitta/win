@@ -11,7 +11,9 @@ import (
 
 // Privilege contains information about a Windows privilege.
 type Privilege struct {
+	Attributes  uint32
 	Description string
+	LUID        uint64
 	Name        string
 	State       string
 }
@@ -66,6 +68,8 @@ func Privileges(access ...windows.Token) ([]Privilege, error) {
 			return nil, errors.Newf("failed to read LUID: %w", e)
 		}
 
+		privs[i].LUID = luid
+
 		if privs[i].Name, e = getPrivName(luid); e != nil {
 			return nil, e
 		}
@@ -80,6 +84,8 @@ func Privileges(access ...windows.Token) ([]Privilege, error) {
 			e = errors.Newf("failed to read attributes: %w", e)
 			return nil, e
 		}
+
+		privs[i].Attributes = attrs
 
 		privs[i].State = "Disabled"
 		if (attrs & windows.SE_PRIVILEGE_ENABLED) > 0 {
