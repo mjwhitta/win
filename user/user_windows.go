@@ -51,6 +51,7 @@ func Whoami(access ...windows.Token) (string, error) {
 	var groups [][]string
 	var id *ID
 	var lines []string
+	var privs [][]string
 
 	if id, e = Identity(tokenOrDefault(access)); e != nil {
 		return "", e
@@ -85,6 +86,23 @@ func Whoami(access ...windows.Token) (string, error) {
 			"GROUP INFORMATION",
 			[]string{"Group Name", "Type", "SID", "Attributes"},
 			groups,
+		),
+	)
+
+	// Privileges info
+	for _, priv := range id.Privileges {
+		privs = append(
+			privs,
+			[]string{priv.Name, priv.Description, priv.State},
+		)
+	}
+
+	lines = append(
+		lines,
+		output(
+			"PRIVILEGES INFORMATION",
+			[]string{"Privilege Name", "Description", "State"},
+			privs,
 		),
 	)
 

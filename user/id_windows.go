@@ -4,9 +4,10 @@ import "golang.org/x/sys/windows"
 
 // ID contains information about a Windows user.
 type ID struct {
-	Groups []Group
-	Name   string
-	SID    string
+	Groups     []Group
+	Name       string
+	Privileges []Privilege
+	SID        string
 }
 
 // Identity will return a pointer to a new ID instance containing the
@@ -15,7 +16,9 @@ type ID struct {
 func Identity(access ...windows.Token) (*ID, error) {
 	var e error
 	var groups []Group
+	var id *ID
 	var name string
+	var privs []Privilege
 	var sid string
 
 	if name, e = Name(); e != nil {
@@ -30,5 +33,10 @@ func Identity(access ...windows.Token) (*ID, error) {
 		return nil, e
 	}
 
-	return &ID{Groups: groups, Name: name, SID: sid}, nil
+	if privs, e = Privileges(tokenOrDefault(access)); e != nil {
+		return nil, e
+	}
+
+	id = &ID{Groups: groups, Name: name, Privileges: privs, SID: sid}
+	return id, nil
 }

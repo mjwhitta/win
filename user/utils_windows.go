@@ -4,8 +4,10 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/mjwhitta/errors"
 	"golang.org/x/sys/windows"
+
+	"github.com/mjwhitta/errors"
+	w32 "github.com/mjwhitta/win/api"
 )
 
 func getGroupAttrs(attributes uint32) ([]string, error) {
@@ -94,6 +96,42 @@ func getGroupNameAndType(sid *windows.SID) (string, string, error) {
 	}
 
 	return name, acctype, nil
+}
+
+func getPrivName(luid uint64) (string, error) {
+	var b []byte
+	var e error
+	var n int
+
+	if e = w32.LookupPrivilegeName("", luid, &b, &n); e != nil {
+		b = make([]byte, n)
+		if e = w32.LookupPrivilegeName("", luid, &b, &n); e != nil {
+			e = errors.Newf("failed to lookup privilege name: %w", e)
+			return "", e
+		}
+	}
+
+	return string(b), nil
+}
+
+func getPrivDesc(name string) (string, error) {
+	var b []byte
+	var e error
+	var n int
+
+	e = w32.LookupPrivilegeDisplayName("", name, &b, &n)
+	if e != nil {
+		b = make([]byte, n)
+		e = w32.LookupPrivilegeDisplayName("", name, &b, &n)
+		if e != nil {
+			return "", errors.Newf(
+				"failed to lookup privilege description: %w",
+				e,
+			)
+		}
+	}
+
+	return string(b), nil
 }
 
 func output(section string, hdrs []string, data [][]string) string {
