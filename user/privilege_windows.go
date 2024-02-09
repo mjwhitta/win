@@ -4,8 +4,9 @@ import (
 	"bytes"
 	"encoding/binary"
 
-	"github.com/mjwhitta/errors"
 	"golang.org/x/sys/windows"
+
+	"github.com/mjwhitta/errors"
 )
 
 // Privilege contains information about a Windows privilege.

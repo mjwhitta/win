@@ -1,8 +1,9 @@
 package user
 
 import (
-	"github.com/mjwhitta/errors"
 	"golang.org/x/sys/windows"
+
+	"github.com/mjwhitta/errors"
 )
 
 // Group contains information about a Windows group.

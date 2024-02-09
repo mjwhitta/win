@@ -3,8 +3,9 @@ package user
 import (
 	"strings"
 
-	"github.com/mjwhitta/errors"
 	"golang.org/x/sys/windows"
+
+	"github.com/mjwhitta/errors"
 )
 
 // Name will return the name of the current user.
