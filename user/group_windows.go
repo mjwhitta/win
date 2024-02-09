@@ -1,0 +1,67 @@
+package user
+
+import (
+	"github.com/mjwhitta/errors"
+	"golang.org/x/sys/windows"
+)
+
+// Group contains information about a Windows group.
+type Group struct {
+	Attrs []string
+	Name  string
+	SID   string
+	Type  string
+}
+
+// Groups returns an array of Groups associated with the provided
+// process token. If no token is provided, it defaults to the current
+// process.
+func Groups(processToken ...windows.Token) ([]Group, error) {
+	var acctype string
+	var attrs []string
+	var e error
+	var groups []Group
+	var name string
+	var t windows.Token
+	var tg *windows.Tokengroups
+
+	if len(processToken) == 0 {
+		t = windows.GetCurrentProcessToken()
+	} else {
+		t = processToken[0]
+	}
+
+	if tg, e = t.GetTokenGroups(); e != nil {
+		e = errors.Newf("failed to get token groups: %w", e)
+		return nil, e
+	}
+
+	for _, g := range tg.AllGroups() {
+		if name, acctype, e = getGroupNameAndType(g.Sid); e != nil {
+			return nil, e
+		}
+
+		if name == "" {
+			continue
+		}
+
+		attrs = []string{}
+		if acctype != "Label" {
+			if attrs, e = getGroupAttrs(g.Attributes); e != nil {
+				return nil, e
+			}
+		}
+
+		groups = append(
+			groups,
+			Group{
+				Attrs: attrs,
+				Name:  name,
+				SID:   g.Sid.String(),
+				Type:  acctype,
+			},
+		)
+	}
+
+	return groups, nil
+}
