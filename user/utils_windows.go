@@ -156,3 +156,11 @@ func output(section string, hdrs []string, data [][]string) string {
 
 	return strings.Join(lines, "\n")
 }
+
+func tokenOrDefault(access []windows.Token) windows.Token {
+	if len(access) == 0 {
+		return windows.GetCurrentProcessToken()
+	}
+
+	return access[0]
+}

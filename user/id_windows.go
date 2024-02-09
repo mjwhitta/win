@@ -10,30 +10,23 @@ type ID struct {
 }
 
 // Identity will return a pointer to a new ID instance containing the
-// user information for the provided process token. If no token is
+// user information for the provided access token. If no token is
 // provided, it defaults to the current process.
-func Identity(processToken ...windows.Token) (*ID, error) {
+func Identity(access ...windows.Token) (*ID, error) {
 	var e error
 	var groups []Group
 	var name string
 	var sid string
-	var t windows.Token
-
-	if len(processToken) == 0 {
-		t = windows.GetCurrentProcessToken()
-	} else {
-		t = processToken[0]
-	}
 
 	if name, e = Name(); e != nil {
 		return nil, e
 	}
 
-	if sid, e = SID(t); e != nil {
+	if sid, e = SID(tokenOrDefault(access)); e != nil {
 		return nil, e
 	}
 
-	if groups, e = Groups(t); e != nil {
+	if groups, e = Groups(tokenOrDefault(access)); e != nil {
 		return nil, e
 	}
 

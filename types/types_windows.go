@@ -22,3 +22,27 @@ func LpCwstr(str string) uintptr {
 
 	return uintptr(unsafe.Pointer(Cwstr(str)))
 }
+
+// Utf16LE will convert a Go string to a utf16 array that is little
+// endian byte-ordered. It will then return a Go []byte. The output
+// can then be base64 encoded for use with PowerShell's encoded
+// command functionality.
+func Utf16LE(str string) ([]byte, error) {
+	var b []byte
+	var e error
+	var u []uint16
+
+	if u, e = windows.UTF16FromString(str); e != nil {
+		return nil, e
+	}
+
+	for i, c := range u {
+		if i == len(u)-1 {
+			break
+		}
+
+		b = append(b, byte(c), '\x00')
+	}
+
+	return b, nil
+}

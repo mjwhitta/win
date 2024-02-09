@@ -30,20 +30,13 @@ func Name() (string, error) {
 }
 
 // SID will return the SID for the user associated with the provided
-// process token. If no token is provided, it defaults to the current
+// access token. If no token is provided, it defaults to the current
 // process.
-func SID(processToken ...windows.Token) (string, error) {
+func SID(access ...windows.Token) (string, error) {
 	var e error
-	var t windows.Token
 	var tu *windows.Tokenuser
 
-	if len(processToken) == 0 {
-		t = windows.GetCurrentProcessToken()
-	} else {
-		t = processToken[0]
-	}
-
-	if tu, e = t.GetTokenUser(); e != nil {
+	if tu, e = tokenOrDefault(access).GetTokenUser(); e != nil {
 		return "", errors.Newf("failed to get token user: %w", e)
 	}
 
@@ -51,14 +44,15 @@ func SID(processToken ...windows.Token) (string, error) {
 }
 
 // Whoami will return output that very nearly (if not exactly) matches
-// the "whoami.exe /all" output.
-func Whoami() (string, error) {
+// the "whoami.exe /all" output. If no access token is provided, it
+// defaults to the current process.
+func Whoami(access ...windows.Token) (string, error) {
 	var e error
 	var groups [][]string
 	var id *ID
 	var lines []string
 
-	if id, e = Identity(); e != nil {
+	if id, e = Identity(tokenOrDefault(access)); e != nil {
 		return "", e
 	}
 
