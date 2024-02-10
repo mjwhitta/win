@@ -90,6 +90,18 @@ func Privileges(access ...windows.Token) ([]Privilege, error) {
 	return privs, nil
 }
 
+// Disable will adjust token privileges to disable the Privilege.
+func (p *Privilege) Disable() error {
+	// TODO
+	return errors.New("not implemented")
+}
+
+// Enable will adjust token privileges to enable the Privilege.
+func (p *Privilege) Enable() error {
+	// TODO
+	return errors.New("not implemented")
+}
+
 // Enabled will return whether or not the Privilege has been enabled.
 func (p *Privilege) Enabled() bool {
 	return p.Attributes&windows.SE_PRIVILEGE_ENABLED > 0

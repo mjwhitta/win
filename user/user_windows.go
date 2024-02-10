@@ -45,73 +45,71 @@ func SID(access ...windows.Token) (string, error) {
 }
 
 // Whoami will return output that very nearly (if not exactly) matches
-// the "whoami.exe /all" output. If no access token is provided, it
+// the "whoami.exe" output. If no access token is provided, it
 // defaults to the current process.
 func Whoami(access ...windows.Token) (string, error) {
 	var e error
-	var groups [][]string
 	var id *ID
-	var lines []string
-	var privs [][]string
-	var state string
 
 	if id, e = Identity(tokenOrDefault(access)); e != nil {
 		return "", e
 	}
 
-	// User info
-	lines = append(
-		lines,
-		output(
-			"USER INFORMATION",
-			[]string{"User Name", "SID"},
-			[][]string{{id.Name, id.SID}},
-		),
-	)
+	return id.Whoami(), nil
+}
 
-	// Group info
-	for _, group := range id.Groups {
-		groups = append(
-			groups,
-			[]string{
-				group.Name,
-				group.Type,
-				group.SID,
-				strings.Join(group.Attrs, ", "),
-			},
-		)
+// WhoamiAll will return output that very nearly (if not exactly)
+// matches the "whoami.exe /all" output. If no access token is
+// provided, it defaults to the current process.
+func WhoamiAll(access ...windows.Token) (string, error) {
+	var e error
+	var id *ID
+
+	if id, e = Identity(tokenOrDefault(access)); e != nil {
+		return "", e
 	}
 
-	lines = append(
-		lines,
-		output(
-			"GROUP INFORMATION",
-			[]string{"Group Name", "Type", "SID", "Attributes"},
-			groups,
-		),
-	)
+	return id.WhoamiAll(), nil
+}
 
-	// Privileges info
-	for _, priv := range id.Privileges {
-		state = "Disabled"
-		if priv.Enabled() {
-			state = "Enabled"
-		}
+// WhoamiGroups will return output that very nearly (if not exactly)
+// matches the "whoami.exe /groups" output. If no access token is
+// provided, it defaults to the current process.
+func WhoamiGroups(access ...windows.Token) (string, error) {
+	var e error
+	var id *ID
 
-		privs = append(
-			privs,
-			[]string{priv.Name, priv.Description, state},
-		)
+	if id, e = Identity(tokenOrDefault(access)); e != nil {
+		return "", e
 	}
 
-	lines = append(
-		lines,
-		output(
-			"PRIVILEGES INFORMATION",
-			[]string{"Privilege Name", "Description", "State"},
-			privs,
-		),
-	)
+	return id.WhoamiGroups(), nil
+}
 
-	return strings.Join(lines, "\n"), nil
+// WhoamiPriv will return output that very nearly (if not exactly)
+// matches the "whoami.exe /priv" output. If no access token is
+// provided, it defaults to the current process.
+func WhoamiPriv(access ...windows.Token) (string, error) {
+	var e error
+	var id *ID
+
+	if id, e = Identity(tokenOrDefault(access)); e != nil {
+		return "", e
+	}
+
+	return id.WhoamiPriv(), nil
+}
+
+// WhoamiUser will return output that very nearly (if not exactly)
+// matches the "whoami.exe /user" output. If no access token is
+// provided, it defaults to the current process.
+func WhoamiUser(access ...windows.Token) (string, error) {
+	var e error
+	var id *ID
+
+	if id, e = Identity(tokenOrDefault(access)); e != nil {
+		return "", e
+	}
+
+	return id.WhoamiUser(), nil
 }

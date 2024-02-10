@@ -185,7 +185,6 @@ func output(section string, hdrs []string, data [][]string) string {
 
 		lines = append(lines, line)
 	}
-	lines = append(lines, "")
 
 	// Print
 	for i, line := range lines {
