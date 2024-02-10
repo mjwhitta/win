@@ -15,7 +15,6 @@ type Privilege struct {
 	Description string
 	LUID        uint64
 	Name        string
-	State       string
 }
 
 // Privileges returns an array of Privileges associated with the
@@ -86,12 +85,29 @@ func Privileges(access ...windows.Token) ([]Privilege, error) {
 		}
 
 		privs[i].Attributes = attrs
-
-		privs[i].State = "Disabled"
-		if (attrs & windows.SE_PRIVILEGE_ENABLED) > 0 {
-			privs[i].State = "Enabled"
-		}
 	}
 
 	return privs, nil
+}
+
+// Enabled will return whether or not the Privilege has been enabled.
+func (p *Privilege) Enabled() bool {
+	return p.Attributes&windows.SE_PRIVILEGE_ENABLED > 0
+}
+
+// EnabledByDefault will return whether or not the Privilege is
+// enabled by default.
+func (p *Privilege) EnabledByDefault() bool {
+	return p.Attributes&windows.SE_PRIVILEGE_ENABLED_BY_DEFAULT > 0
+}
+
+// Removed will return whether or not the Privilege has been removed.
+func (p *Privilege) Removed() bool {
+	return p.Attributes&windows.SE_PRIVILEGE_REMOVED > 0
+}
+
+// UsedForAccess will return whether or not the Privilege is used for
+// access.
+func (p *Privilege) UsedForAccess() bool {
+	return p.Attributes&windows.SE_PRIVILEGE_USED_FOR_ACCESS > 0
 }
