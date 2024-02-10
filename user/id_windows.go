@@ -40,3 +40,29 @@ func Identity(access ...windows.Token) (*ID, error) {
 	id = &ID{Groups: groups, Name: name, Privileges: privs, SID: sid}
 	return id, nil
 }
+
+// HasPrivilege will search the associated Privileges for one with the
+// provided name. The returned bool should be checked before using the
+// returned Privilege.
+func (i *ID) HasPrivilege(name string) (Privilege, bool) {
+	for _, priv := range i.Privileges {
+		if priv.Name == name {
+			return priv, true
+		}
+	}
+
+	return Privilege{}, false
+}
+
+// InGroup will search the associated Groups for one with the provided
+// name. The returned bool should be checked before using the returned
+// Group.
+func (i *ID) InGroup(name string) (Group, bool) {
+	for _, group := range i.Groups {
+		if group.Name == name {
+			return group, true
+		}
+	}
+
+	return Group{}, false
+}
