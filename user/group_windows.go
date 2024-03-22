@@ -35,7 +35,7 @@ func Groups(access ...windows.Token) ([]Group, error) {
 			return nil, e
 		}
 
-		if name == "" {
+		if acctype == "" {
 			continue
 		}
 

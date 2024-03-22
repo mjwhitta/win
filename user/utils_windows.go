@@ -49,15 +49,10 @@ func getGroupNameAndType(sid *windows.SID) (string, string, error) {
 	var account string
 	var acctype string
 	var domain string
-	var e error
 	var name string
 	var theType uint32
 
-	account, domain, theType, e = sid.LookupAccount(".")
-	if e != nil {
-		e = errors.Newf("failed to get SID for account: %w", e)
-		return "", "", e
-	}
+	account, domain, theType, _ = sid.LookupAccount(".")
 
 	if account == "None" {
 		return "", "", nil
@@ -74,7 +69,7 @@ func getGroupNameAndType(sid *windows.SID) (string, string, error) {
 
 	switch theType {
 	case 0:
-		acctype = "Unknown"
+		acctype = "Unknown SID type"
 	case 1:
 		acctype = "user"
 	case 2:
@@ -188,7 +183,7 @@ func output(section string, hdrs []string, data [][]string) string {
 
 	// Print
 	for i, line := range lines {
-		lines[i] = strings.TrimSpace(line)
+		lines[i] = strings.TrimRight(line, " ")
 	}
 
 	return strings.Join(lines, "\n")
