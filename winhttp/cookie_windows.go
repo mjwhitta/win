@@ -1,3 +1,5 @@
+//go:build windows
+
 package winhttp
 
 // Cookie represents an HTTP cookie sent in the Cookie header of an

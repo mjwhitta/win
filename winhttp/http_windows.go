@@ -1,3 +1,5 @@
+//go:build windows
+
 package winhttp
 
 import "github.com/mjwhitta/errors"

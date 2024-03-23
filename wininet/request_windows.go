@@ -1,4 +1,6 @@
-package winhttp
+//go:build windows
+
+package wininet
 
 // Request is a struct containing common HTTP request data.
 type Request struct {
