@@ -17,7 +17,7 @@ type Response struct {
 	StatusCode    int
 }
 
-// AddCookie will add a Cookie to the Request.
+// AddCookie will add a Cookie to the Response.
 func (r *Response) AddCookie(cookie *Cookie) {
 	for i, c := range r.cookies {
 		if cookie.Name == c.Name {

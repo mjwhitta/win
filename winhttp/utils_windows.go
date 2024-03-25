@@ -5,6 +5,7 @@ package winhttp
 import (
 	"bytes"
 	"io"
+	"net/http"
 	"net/url"
 	"strconv"
 	"strings"
@@ -13,7 +14,9 @@ import (
 	w32 "github.com/mjwhitta/win/api"
 )
 
-func buildRequest(sessionHndl uintptr, r *Request) (uintptr, error) {
+func buildRequest(
+	sessionHndl uintptr, req *Request,
+) (uintptr, error) {
 	var connHndl uintptr
 	var e error
 	var flags uintptr
@@ -23,8 +26,9 @@ func buildRequest(sessionHndl uintptr, r *Request) (uintptr, error) {
 	var uri *url.URL
 
 	// Parse URL
-	if uri, e = url.Parse(r.URL); e != nil {
-		return 0, errors.Newf("failed to parse url %s: %w", r.URL, e)
+	if uri, e = url.Parse(req.URL); e != nil {
+		e = errors.Newf("failed to parse url %s: %w", req.URL, e)
+		return 0, e
 	}
 
 	if uri.Port() != "" {
@@ -57,7 +61,7 @@ func buildRequest(sessionHndl uintptr, r *Request) (uintptr, error) {
 	// Create HTTP request
 	reqHndl, e = w32.WinHTTPOpenRequest(
 		connHndl,
-		r.Method,
+		req.Method,
 		uri.Path+query,
 		"",
 		"",
@@ -157,7 +161,6 @@ func getCookies(reqHndl uintptr) []*Cookie {
 	var b []byte
 	var cookies []*Cookie
 	var e error
-	var tmp []string
 
 	// Get cookies
 	for i := 0; ; i++ {
@@ -170,11 +173,7 @@ func getCookies(reqHndl uintptr) []*Cookie {
 			break
 		}
 
-		tmp = strings.SplitN(string(b), "=", 2)
-		cookies = append(
-			cookies,
-			&Cookie{Name: tmp[0], Value: tmp[1]},
-		)
+		cookies = append(cookies, &Cookie{parseCookie(string(b))})
 	}
 
 	return cookies
@@ -201,7 +200,7 @@ func getHeaders(
 		return "", 0, 0, nil, e
 	}
 
-	for _, hdr := range strings.Split(string(b), "\r\n") {
+	for _, hdr := range strings.Split(string(b), "\req\n") {
 		tmp = strings.SplitN(hdr, ": ", 2)
 
 		if len(tmp) == 2 {
@@ -233,6 +232,16 @@ func getHeaders(
 	}
 
 	return proto, int(major), int(minor), hdrs, nil
+}
+
+func parseCookie(raw string) http.Cookie {
+	var hdr http.Header = http.Header{}
+	var req *http.Request
+
+	hdr.Add("Cookie", raw)
+	req = &http.Request{Header: hdr}
+
+	return *req.Cookies()[0]
 }
 
 func queryResponse(reqHndl, info uintptr, idx int) ([]byte, error) {
@@ -313,7 +322,21 @@ func readResponse(reqHndl uintptr) (io.ReadCloser, int64, error) {
 	return io.NopCloser(bytes.NewReader(b)), contentLen, nil
 }
 
-func sendRequest(reqHndl uintptr, r *Request) error {
+func retrieveCookies(jar http.CookieJar, uri *url.URL) []*Cookie {
+	var tmp []*Cookie
+
+	if jar == nil {
+		return nil
+	}
+
+	for _, cookie := range jar.Cookies(uri) {
+		tmp = append(tmp, &Cookie{*cookie})
+	}
+
+	return tmp
+}
+
+func sendRequest(reqHndl uintptr, req *Request) error {
 	var e error
 	var method uintptr
 
@@ -321,7 +344,7 @@ func sendRequest(reqHndl uintptr, r *Request) error {
 	method = w32.Winhttp.WinhttpAddreqFlagAdd
 	method |= w32.Winhttp.WinhttpAddreqFlagCoalesceWithSemicolon
 
-	for _, c := range r.Cookies() {
+	for _, c := range req.Cookies() {
 		e = w32.WinHTTPAddRequestHeaders(
 			reqHndl,
 			"Cookie: "+c.Name+"="+c.Value,
@@ -336,7 +359,7 @@ func sendRequest(reqHndl uintptr, r *Request) error {
 	method = w32.Winhttp.WinhttpAddreqFlagAdd
 	method |= w32.Winhttp.WinhttpAddreqFlagReplace
 
-	for k, v := range r.Headers {
+	for k, v := range req.Headers {
 		e = w32.WinHTTPAddRequestHeaders(
 			reqHndl,
 			k+": "+v,
@@ -352,12 +375,34 @@ func sendRequest(reqHndl uintptr, r *Request) error {
 		reqHndl,
 		"",
 		0,
-		r.Body,
-		len(r.Body),
+		req.Body,
+		len(req.Body),
 	)
 	if e != nil {
 		return errors.Newf("failed to send request: %w", e)
 	}
 
 	return nil
+}
+
+func storeCookies(
+	jar http.CookieJar, uri *url.URL, cookies []*Cookie,
+) {
+	var tmp []*http.Cookie
+
+	if jar == nil {
+		return
+	}
+
+	for _, cookie := range cookies {
+		tmp = append(
+			tmp,
+			&http.Cookie{
+				Name:  cookie.Name,
+				Value: cookie.Value,
+			},
+		)
+	}
+
+	jar.SetCookies(uri, tmp)
 }

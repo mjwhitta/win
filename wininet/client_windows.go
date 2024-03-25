@@ -4,6 +4,8 @@ package wininet
 
 import (
 	"encoding/binary"
+	"net/http"
+	"net/url"
 	"time"
 
 	"github.com/mjwhitta/errors"
@@ -14,6 +16,7 @@ import (
 // requests.
 type Client struct {
 	hndl            uintptr
+	Jar             http.CookieJar
 	Timeout         time.Duration
 	TLSClientConfig struct {
 		InsecureSkipVerify bool
@@ -42,13 +45,23 @@ func NewClient() (*Client, error) {
 }
 
 // Do will send the HTTP request and return an HTTP response.
-func (c *Client) Do(r *Request) (*Response, error) {
+func (c *Client) Do(req *Request) (*Response, error) {
 	var b []byte
 	var e error
 	var reqHndl uintptr
 	var res *Response
+	var uri *url.URL
 
-	if reqHndl, e = buildRequest(c.hndl, r); e != nil {
+	if uri, e = url.Parse(req.URL); e != nil {
+		e = errors.Newf("failed to parse URL: %w", e)
+		return nil, e
+	}
+
+	for _, cookie := range retrieveCookies(c.Jar, uri) {
+		req.AddCookie(cookie)
+	}
+
+	if reqHndl, e = buildRequest(c.hndl, req); e != nil {
 		return nil, e
 	}
 
@@ -112,13 +125,15 @@ func (c *Client) Do(r *Request) (*Response, error) {
 		}
 	}
 
-	if e = sendRequest(reqHndl, r); e != nil {
+	if e = sendRequest(reqHndl, req); e != nil {
 		return nil, e
 	}
 
-	if res, e = buildResponse(reqHndl, r); e != nil {
+	if res, e = buildResponse(reqHndl, req); e != nil {
 		return nil, e
 	}
+
+	storeCookies(c.Jar, uri, res.Cookies())
 
 	return res, nil
 }
@@ -139,11 +154,11 @@ func (c *Client) Post(
 	contentType string,
 	body []byte,
 ) (*Response, error) {
-	var r *Request = NewRequest(MethodPost, url, body)
+	var req *Request = NewRequest(MethodPost, url, body)
 
 	if contentType != "" {
-		r.Headers["Content-Type"] = contentType
+		req.Headers["Content-Type"] = contentType
 	}
 
-	return c.Do(r)
+	return c.Do(req)
 }
