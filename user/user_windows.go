@@ -30,14 +30,14 @@ func Name() (string, error) {
 	return strings.ToLower(windows.UTF16PtrToString(name)), nil
 }
 
-// SID will return the SID for the user associated with the provided
-// access token. If no token is provided, it defaults to the current
-// process.
-func SID(access ...windows.Token) (string, error) {
+// SID will return the SID of the user for the process token
+// associated with the provided process handle. If no handle is
+// provided, it defaults to the current process.
+func SID(proc ...windows.Handle) (string, error) {
 	var e error
 	var tu *windows.Tokenuser
 
-	if tu, e = tokenOrDefault(access).GetTokenUser(); e != nil {
+	if tu, e = tokenOrDefault(proc).GetTokenUser(); e != nil {
 		return "", errors.Newf("failed to get token user: %w", e)
 	}
 
@@ -45,13 +45,13 @@ func SID(access ...windows.Token) (string, error) {
 }
 
 // Whoami will return output that very nearly (if not exactly) matches
-// the "whoami.exe" output. If no access token is provided, it
+// the "whoami.exe" output. If no process handle is provided, it
 // defaults to the current process.
-func Whoami(access ...windows.Token) (string, error) {
+func Whoami(proc ...windows.Handle) (string, error) {
 	var e error
 	var id *ID
 
-	if id, e = Identity(tokenOrDefault(access)); e != nil {
+	if id, e = Identity(proc...); e != nil {
 		return "", e
 	}
 
@@ -59,13 +59,13 @@ func Whoami(access ...windows.Token) (string, error) {
 }
 
 // WhoamiAll will return output that very nearly (if not exactly)
-// matches the "whoami.exe /all" output. If no access token is
+// matches the "whoami.exe /all" output. If no process handle is
 // provided, it defaults to the current process.
-func WhoamiAll(access ...windows.Token) (string, error) {
+func WhoamiAll(proc ...windows.Handle) (string, error) {
 	var e error
 	var id *ID
 
-	if id, e = Identity(tokenOrDefault(access)); e != nil {
+	if id, e = Identity(proc...); e != nil {
 		return "", e
 	}
 
@@ -73,13 +73,13 @@ func WhoamiAll(access ...windows.Token) (string, error) {
 }
 
 // WhoamiGroups will return output that very nearly (if not exactly)
-// matches the "whoami.exe /groups" output. If no access token is
+// matches the "whoami.exe /groups" output. If no process handle is
 // provided, it defaults to the current process.
-func WhoamiGroups(access ...windows.Token) (string, error) {
+func WhoamiGroups(proc ...windows.Handle) (string, error) {
 	var e error
 	var id *ID
 
-	if id, e = Identity(tokenOrDefault(access)); e != nil {
+	if id, e = Identity(proc...); e != nil {
 		return "", e
 	}
 
@@ -87,13 +87,13 @@ func WhoamiGroups(access ...windows.Token) (string, error) {
 }
 
 // WhoamiPriv will return output that very nearly (if not exactly)
-// matches the "whoami.exe /priv" output. If no access token is
+// matches the "whoami.exe /priv" output. If no process handle is
 // provided, it defaults to the current process.
-func WhoamiPriv(access ...windows.Token) (string, error) {
+func WhoamiPriv(proc ...windows.Handle) (string, error) {
 	var e error
 	var id *ID
 
-	if id, e = Identity(tokenOrDefault(access)); e != nil {
+	if id, e = Identity(proc...); e != nil {
 		return "", e
 	}
 
@@ -101,13 +101,13 @@ func WhoamiPriv(access ...windows.Token) (string, error) {
 }
 
 // WhoamiUser will return output that very nearly (if not exactly)
-// matches the "whoami.exe /user" output. If no access token is
+// matches the "whoami.exe /user" output. If no process handle is
 // provided, it defaults to the current process.
-func WhoamiUser(access ...windows.Token) (string, error) {
+func WhoamiUser(proc ...windows.Handle) (string, error) {
 	var e error
 	var id *ID
 
-	if id, e = Identity(tokenOrDefault(access)); e != nil {
+	if id, e = Identity(proc...); e != nil {
 		return "", e
 	}
 

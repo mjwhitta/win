@@ -14,10 +14,10 @@ type Group struct {
 	Type  string
 }
 
-// Groups returns an array of Groups associated with the provided
-// access token. If no token is provided, it defaults to the current
-// process.
-func Groups(access ...windows.Token) ([]Group, error) {
+// Groups returns an array of Groups for the process token associated
+// with the provided process handle. If no handle is provided, it
+// defaults to the current process.
+func Groups(proc ...windows.Handle) ([]Group, error) {
 	var acctype string
 	var attrs []string
 	var e error
@@ -25,7 +25,7 @@ func Groups(access ...windows.Token) ([]Group, error) {
 	var name string
 	var tg *windows.Tokengroups
 
-	if tg, e = tokenOrDefault(access).GetTokenGroups(); e != nil {
+	if tg, e = tokenOrDefault(proc).GetTokenGroups(); e != nil {
 		e = errors.Newf("failed to get token groups: %w", e)
 		return nil, e
 	}

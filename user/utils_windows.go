@@ -1,14 +1,47 @@
 package user
 
 import (
+	"bytes"
+	"encoding/binary"
 	"sort"
 	"strings"
+	"unsafe"
 
 	"golang.org/x/sys/windows"
 
 	"github.com/mjwhitta/errors"
 	w32 "github.com/mjwhitta/win/api"
 )
+
+func adjustToken(p *Privilege) error {
+	var e error
+	var t windows.Token
+	var tp *windows.Tokenprivileges = &windows.Tokenprivileges{
+		PrivilegeCount: 1,
+		Privileges: [1]windows.LUIDAndAttributes{
+			{Attributes: p.Attributes, Luid: p.LUID},
+		},
+	}
+
+	e = windows.OpenProcessToken(
+		p.proc,
+		windows.TOKEN_ADJUST_PRIVILEGES|windows.TOKEN_QUERY,
+		&t,
+	)
+	if e != nil {
+		return errors.Newf("failed to adjust token privileges: %w", e)
+	}
+	defer t.Close()
+
+	return windows.AdjustTokenPrivileges(
+		t,
+		false,
+		tp,
+		uint32(unsafe.Sizeof(*tp)),
+		nil,
+		nil,
+	)
+}
 
 func getGroupAttrs(attributes uint32) ([]string, error) {
 	var attrs []string
@@ -93,14 +126,15 @@ func getGroupNameAndType(sid *windows.SID) (string, string, error) {
 	return name, acctype, nil
 }
 
-func getPrivName(luid uint64) (string, error) {
+func getPrivName(luid windows.LUID) (string, error) {
 	var b []byte
 	var e error
 	var n int
+	var l int64 = (int64(luid.HighPart) << 32) + int64(luid.LowPart)
 
-	if e = w32.LookupPrivilegeName("", luid, &b, &n); e != nil {
+	if e = w32.LookupPrivilegeName("", l, &b, &n); e != nil {
 		b = make([]byte, n)
-		if e = w32.LookupPrivilegeName("", luid, &b, &n); e != nil {
+		if e = w32.LookupPrivilegeName("", l, &b, &n); e != nil {
 			e = errors.Newf("failed to lookup privilege name: %w", e)
 			return "", e
 		}
@@ -189,10 +223,65 @@ func output(section string, hdrs []string, data [][]string) string {
 	return strings.Join(lines, "\n")
 }
 
-func tokenOrDefault(access []windows.Token) windows.Token {
-	if len(access) == 0 {
+func privsFromBytes(
+	b []byte, n uint32, proc windows.Handle,
+) ([]*Privilege, error) {
+	var attrs uint32
+	var buf *bytes.Buffer = bytes.NewBuffer(b)
+	var e error
+	var privs []*Privilege
+
+	if e = binary.Read(buf, binary.LittleEndian, &n); e != nil {
+		e = errors.Newf("failed to read number of privileges: %w", e)
+		return nil, e
+	}
+
+	privs = make([]*Privilege, n)
+
+	for i := range privs {
+		privs[i] = &Privilege{proc: proc}
+
+		e = binary.Read(buf, binary.LittleEndian, &privs[i].LUID)
+		if e != nil {
+			return nil, errors.Newf("failed to read LUID: %w", e)
+		}
+
+		if privs[i].Name, e = getPrivName(privs[i].LUID); e != nil {
+			return nil, e
+		}
+
+		privs[i].Description, e = getPrivDesc(privs[i].Name)
+		if e != nil {
+			return nil, e
+		}
+
+		e = binary.Read(buf, binary.LittleEndian, &attrs)
+		if e != nil {
+			e = errors.Newf("failed to read attributes: %w", e)
+			return nil, e
+		}
+
+		privs[i].Attributes = attrs
+	}
+
+	return privs, nil
+}
+
+func procOrDefault(proc []windows.Handle) windows.Handle {
+	if len(proc) == 0 {
+		return windows.CurrentProcess()
+	}
+
+	return proc[0]
+}
+
+func tokenOrDefault(proc []windows.Handle) windows.Token {
+	var t windows.Token
+
+	if len(proc) == 0 {
 		return windows.GetCurrentProcessToken()
 	}
 
-	return access[0]
+	windows.OpenProcessToken(proc[0], windows.TOKEN_QUERY, &t)
+	return t
 }

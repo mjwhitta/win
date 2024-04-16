@@ -1,9 +1,6 @@
 package user
 
 import (
-	"bytes"
-	"encoding/binary"
-
 	"golang.org/x/sys/windows"
 
 	"github.com/mjwhitta/errors"
@@ -13,25 +10,24 @@ import (
 type Privilege struct {
 	Attributes  uint32
 	Description string
-	LUID        uint64
+	LUID        windows.LUID
 	Name        string
+
+	proc windows.Handle
 }
 
-// Privileges returns an array of Privileges associated with the
-// provided access token. If no token is provided, it defaults to the
-// current process.
-func Privileges(access ...windows.Token) ([]Privilege, error) {
-	var attrs uint32
+// Privileges returns an array of Privileges for the process token
+// associated with the provided process handle. If no handle is
+// provided, it defaults to the current process.
+func Privileges(proc ...windows.Handle) ([]*Privilege, error) {
 	var b []byte
-	var buf *bytes.Buffer
 	var e error
 	var n uint32
-	var luid uint64
-	var privs []Privilege
+	var t windows.Token = tokenOrDefault(proc)
 
 	// Get number of bytes
 	windows.GetTokenInformation(
-		tokenOrDefault(access),
+		t,
 		windows.TokenPrivileges,
 		nil,
 		0,
@@ -41,7 +37,7 @@ func Privileges(access ...windows.Token) ([]Privilege, error) {
 	// Now create memory and fill it in
 	b = make([]byte, n)
 	e = windows.GetTokenInformation(
-		tokenOrDefault(access),
+		t,
 		windows.TokenPrivileges,
 		&b[0],
 		n,
@@ -52,54 +48,28 @@ func Privileges(access ...windows.Token) ([]Privilege, error) {
 		return nil, e
 	}
 
-	// Read number of privileges
-	buf = bytes.NewBuffer(b)
-	if e = binary.Read(buf, binary.LittleEndian, &n); e != nil {
-		e = errors.Newf("failed to read number of privileges: %w", e)
-		return nil, e
-	}
-
-	privs = make([]Privilege, n)
-
-	for i := range privs {
-		e = binary.Read(buf, binary.LittleEndian, &luid)
-		if e != nil {
-			return nil, errors.Newf("failed to read LUID: %w", e)
-		}
-
-		privs[i].LUID = luid
-
-		if privs[i].Name, e = getPrivName(luid); e != nil {
-			return nil, e
-		}
-
-		privs[i].Description, e = getPrivDesc(privs[i].Name)
-		if e != nil {
-			return nil, e
-		}
-
-		e = binary.Read(buf, binary.LittleEndian, &attrs)
-		if e != nil {
-			e = errors.Newf("failed to read attributes: %w", e)
-			return nil, e
-		}
-
-		privs[i].Attributes = attrs
-	}
-
-	return privs, nil
+	// Read privileges from bytes
+	return privsFromBytes(b, n, procOrDefault(proc))
 }
 
 // Disable will adjust token privileges to disable the Privilege.
 func (p *Privilege) Disable() error {
-	// TODO
-	return errors.New("not implemented")
+	if !p.Enabled() {
+		return nil
+	}
+
+	p.Attributes ^= windows.SE_PRIVILEGE_ENABLED
+	return adjustToken(p)
 }
 
 // Enable will adjust token privileges to enable the Privilege.
 func (p *Privilege) Enable() error {
-	// TODO
-	return errors.New("not implemented")
+	if p.Enabled() {
+		return nil
+	}
+
+	p.Attributes ^= windows.SE_PRIVILEGE_ENABLED
+	return adjustToken(p)
 }
 
 // Enabled will return whether or not the Privilege has been enabled.
@@ -111,6 +81,16 @@ func (p *Privilege) Enabled() bool {
 // enabled by default.
 func (p *Privilege) EnabledByDefault() bool {
 	return p.Attributes&windows.SE_PRIVILEGE_ENABLED_BY_DEFAULT > 0
+}
+
+// Remove will adjust token privileges to remove the Privilege.
+func (p *Privilege) Remove() error {
+	if p.Removed() {
+		return nil
+	}
+
+	p.Attributes ^= windows.SE_PRIVILEGE_REMOVED
+	return adjustToken(p)
 }
 
 // Removed will return whether or not the Privilege has been removed.

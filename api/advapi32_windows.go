@@ -47,7 +47,7 @@ func LookupPrivilegeDisplayName(
 
 // LookupPrivilegeName is from winbase.h
 func LookupPrivilegeName(
-	system string, luid uint64, name *[]byte, nameLen *int,
+	system string, luid int64, name *[]byte, nameLen *int,
 ) error {
 	var b []uint16
 	var e error

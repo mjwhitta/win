@@ -10,52 +10,60 @@ import (
 type ID struct {
 	Groups     []Group
 	Name       string
-	Privileges []Privilege
+	Privileges []*Privilege
 	SID        string
 }
 
 // Identity will return a pointer to a new ID instance containing the
-// user information for the provided access token. If no token is
-// provided, it defaults to the current process.
-func Identity(access ...windows.Token) (*ID, error) {
+// user information for the process token associated with the provided
+// process handle. If no handle is provided, it defaults to the
+// current process.
+func Identity(proc ...windows.Handle) (*ID, error) {
 	var e error
 	var groups []Group
 	var id *ID
 	var name string
-	var privs []Privilege
+	var p windows.Handle = procOrDefault(proc)
+	var privs []*Privilege
 	var sid string
 
 	if name, e = Name(); e != nil {
 		return nil, e
 	}
 
-	if sid, e = SID(tokenOrDefault(access)); e != nil {
+	if sid, e = SID(p); e != nil {
 		return nil, e
 	}
 
-	if groups, e = Groups(tokenOrDefault(access)); e != nil {
+	if groups, e = Groups(p); e != nil {
 		return nil, e
 	}
 
-	if privs, e = Privileges(tokenOrDefault(access)); e != nil {
+	if privs, e = Privileges(p); e != nil {
 		return nil, e
 	}
 
-	id = &ID{Groups: groups, Name: name, Privileges: privs, SID: sid}
+	id = &ID{
+		Groups:     groups,
+		Name:       name,
+		Privileges: privs,
+		SID:        sid,
+	}
+
 	return id, nil
 }
 
 // HasPrivilege will search the associated Privileges for one with the
 // provided name. The returned bool should be checked before using the
 // returned Privilege.
-func (id *ID) HasPrivilege(name string) (Privilege, bool) {
+func (id *ID) HasPrivilege(name string) (*Privilege, bool) {
 	for _, priv := range id.Privileges {
 		if priv.Name == name {
 			return priv, true
 		}
 	}
 
-	return Privilege{}, false
+	return nil, false
 }
 
 // InGroup will search the associated Groups for one with the provided
@@ -133,6 +141,10 @@ func (id *ID) WhoamiPriv() string {
 
 	// Privileges info
 	for _, priv := range id.Privileges {
+		if priv.Removed() {
+			continue
+		}
+
 		state = "Disabled"
 		if priv.Enabled() {
 			state = "Enabled"
