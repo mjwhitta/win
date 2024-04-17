@@ -55,7 +55,7 @@ func (c *Client) Do(req *http.Request) (*http.Response, error) {
 	var e error
 	var reqHndl uintptr
 	var res *http.Response
-	var tlsIgnore uintptr
+	var tmp uintptr
 
 	for _, cookie := range loadCookies(c.Jar, req.URL) {
 		req.AddCookie(cookie)
@@ -129,24 +129,28 @@ func (c *Client) Do(req *http.Request) (*http.Response, error) {
 	}
 
 	if t, ok := http.DefaultTransport.(*http.Transport); ok {
-		if t.TLSClientConfig.InsecureSkipVerify {
-			tlsIgnore |= w32.Winhttp.SecurityFlagIgnoreUnknownCa
-			tlsIgnore |= w32.Winhttp.SecurityFlagIgnoreCertDateInvalid
-			tlsIgnore |= w32.Winhttp.SecurityFlagIgnoreCertCnInvalid
-			tlsIgnore |= w32.Winhttp.SecurityFlagIgnoreCertWrongUsage
+		if t.TLSClientConfig != nil {
+			if t.TLSClientConfig.InsecureSkipVerify {
+				tmp |= w32.Winhttp.SecurityFlagIgnoreUnknownCa
+				tmp |= w32.Winhttp.SecurityFlagIgnoreCertDateInvalid
+				tmp |= w32.Winhttp.SecurityFlagIgnoreCertCnInvalid
+				tmp |= w32.Winhttp.SecurityFlagIgnoreCertWrongUsage
 
-			b = make([]byte, 4)
-			binary.LittleEndian.PutUint32(b, uint32(tlsIgnore))
+				b = make([]byte, 4)
+				binary.LittleEndian.PutUint32(b, uint32(tmp))
 
-			e = w32.WinHTTPSetOption(
-				reqHndl,
-				w32.Winhttp.WinhttpOptionSecurityFlags,
-				b,
-				len(b),
-			)
-			if e != nil {
-				e = errors.Newf("failed to set security flags: %w", e)
-				return nil, e
+				e = w32.WinHTTPSetOption(
+					reqHndl,
+					w32.Winhttp.WinhttpOptionSecurityFlags,
+					b,
+					len(b),
+				)
+				if e != nil {
+					return nil, errors.Newf(
+						"failed to disable TLS verification: %w",
+						e,
+					)
+				}
 			}
 		}
 	}

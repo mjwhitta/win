@@ -106,22 +106,26 @@ func (c *Client) Do(req *http.Request) (*http.Response, error) {
 	}
 
 	if t, ok := http.DefaultTransport.(*http.Transport); ok {
-		if t.TLSClientConfig.InsecureSkipVerify {
-			b = make([]byte, 4)
-			binary.LittleEndian.PutUint32(
-				b,
-				uint32(w32.Wininet.SecuritySetMask),
-			)
+		if t.TLSClientConfig != nil {
+			if t.TLSClientConfig.InsecureSkipVerify {
+				b = make([]byte, 4)
+				binary.LittleEndian.PutUint32(
+					b,
+					uint32(w32.Wininet.SecuritySetMask),
+				)
 
-			e = w32.InternetSetOptionW(
-				reqHndl,
-				w32.Wininet.InternetOptionSecurityFlags,
-				b,
-				len(b),
-			)
-			if e != nil {
-				e = errors.Newf("failed to set security flags: %w", e)
-				return nil, e
+				e = w32.InternetSetOptionW(
+					reqHndl,
+					w32.Wininet.InternetOptionSecurityFlags,
+					b,
+					len(b),
+				)
+				if e != nil {
+					return nil, errors.Newf(
+						"failed to disable TLS verification: %w",
+						e,
+					)
+				}
 			}
 		}
 	}
