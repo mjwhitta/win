@@ -7,17 +7,19 @@
 
 ## What is this?
 
-This Go modules started as a simple "drop-in" replacement of
-`net/http` so that you can use WinHTTP and WinINet on Windows for
-better proxy support, with NTLM authentication. Microsoft recommends
-[WinINet over WinHTTP] unless you're writing a Windows service.
+This Go module started as a simple "drop-in" replacement of `net/http`
+so that you can use WinHTTP and WinINet on Windows for better proxy
+support, with NTLM authentication. Microsoft recommends [WinINet over
+WinHTTP] unless you're writing a Windows service.
 
-It has been expanded to include multiple Windows API functions and
-constants. There are nested modules for converting Go/Windows types,
-debugging DLLs, and user identity management.
+If you want to use a minimal, cross-plaform HTTP client, I recommend
+[inet] which uses this module behind the scenes.
 
-**Note:** This is probably beta quality at best.
+This module has been expanded to also include multiple Windows API
+functions and constants. There are nested modules for converting
+Go/Windows types, debugging DLLs, and user identity management.
 
+[inet]: https://github.com/mjwhitta/inet
 [WinINet over WinHTTP]: https://docs.microsoft.com/en-us/windows/win32/wininet/wininet-vs-winhttp
 
 ## How to install
