@@ -3,9 +3,12 @@
 package winhttp
 
 import (
+	"bytes"
 	"encoding/binary"
+	"io"
 	"net/http"
 	"net/url"
+	"strings"
 	"time"
 
 	"github.com/mjwhitta/errors"
@@ -15,23 +18,25 @@ import (
 // Client is a struct containing relevant metadata to make HTTP
 // requests.
 type Client struct {
-	hndl            uintptr
-	Jar             http.CookieJar
-	Timeout         time.Duration
-	TLSClientConfig struct {
-		InsecureSkipVerify bool
-	}
+	Jar     http.CookieJar
+	Timeout time.Duration
+
+	hndl uintptr
 }
 
 // NewClient will return a pointer to a new Client instance that
 // simply wraps the net/http.Client type.
-func NewClient() (*Client, error) {
+func NewClient(ua ...string) (*Client, error) {
 	var c *Client = &Client{}
 	var e error
 
+	if len(ua) == 0 {
+		ua = []string{"Go-http-client/1.1"}
+	}
+
 	// Create session
 	c.hndl, e = w32.WinHTTPOpen(
-		"Go-http-client/1.1", // TODO make this configurable
+		strings.Join(ua, " "),
 		w32.Winhttp.WinhttpAccessTypeAutomaticProxy,
 		"",
 		"",
@@ -45,20 +50,14 @@ func NewClient() (*Client, error) {
 }
 
 // Do will send the HTTP request and return an HTTP response.
-func (c *Client) Do(req *Request) (*Response, error) {
+func (c *Client) Do(req *http.Request) (*http.Response, error) {
 	var b []byte
 	var e error
 	var reqHndl uintptr
-	var res *Response
+	var res *http.Response
 	var tlsIgnore uintptr
-	var uri *url.URL
 
-	if uri, e = url.Parse(req.URL); e != nil {
-		e = errors.Newf("failed to parse URL: %w", e)
-		return nil, e
-	}
-
-	for _, cookie := range retrieveCookies(c.Jar, uri) {
+	for _, cookie := range loadCookies(c.Jar, req.URL) {
 		req.AddCookie(cookie)
 	}
 
@@ -129,24 +128,26 @@ func (c *Client) Do(req *Request) (*Response, error) {
 		}
 	}
 
-	if c.TLSClientConfig.InsecureSkipVerify {
-		tlsIgnore |= w32.Winhttp.SecurityFlagIgnoreUnknownCa
-		tlsIgnore |= w32.Winhttp.SecurityFlagIgnoreCertDateInvalid
-		tlsIgnore |= w32.Winhttp.SecurityFlagIgnoreCertCnInvalid
-		tlsIgnore |= w32.Winhttp.SecurityFlagIgnoreCertWrongUsage
+	if t, ok := http.DefaultTransport.(*http.Transport); ok {
+		if t.TLSClientConfig.InsecureSkipVerify {
+			tlsIgnore |= w32.Winhttp.SecurityFlagIgnoreUnknownCa
+			tlsIgnore |= w32.Winhttp.SecurityFlagIgnoreCertDateInvalid
+			tlsIgnore |= w32.Winhttp.SecurityFlagIgnoreCertCnInvalid
+			tlsIgnore |= w32.Winhttp.SecurityFlagIgnoreCertWrongUsage
 
-		b = make([]byte, 4)
-		binary.LittleEndian.PutUint32(b, uint32(tlsIgnore))
+			b = make([]byte, 4)
+			binary.LittleEndian.PutUint32(b, uint32(tlsIgnore))
 
-		e = w32.WinHTTPSetOption(
-			reqHndl,
-			w32.Winhttp.WinhttpOptionSecurityFlags,
-			b,
-			len(b),
-		)
-		if e != nil {
-			e = errors.Newf("failed to set security flags: %w", e)
-			return nil, e
+			e = w32.WinHTTPSetOption(
+				reqHndl,
+				w32.Winhttp.WinhttpOptionSecurityFlags,
+				b,
+				len(b),
+			)
+			if e != nil {
+				e = errors.Newf("failed to set security flags: %w", e)
+				return nil, e
+			}
 		}
 	}
 
@@ -158,32 +159,71 @@ func (c *Client) Do(req *Request) (*Response, error) {
 		return nil, e
 	}
 
-	storeCookies(c.Jar, uri, res.Cookies())
+	storeCookies(c.Jar, req.URL, res.Cookies())
 
 	return res, nil
 }
 
 // Get will make a GET request using WinHTTP.dll.
-func (c *Client) Get(url string) (*Response, error) {
-	return c.Do(NewRequest(MethodGet, url))
+func (c *Client) Get(url string) (*http.Response, error) {
+	var e error
+	var req *http.Request
+
+	if req, e = http.NewRequest(http.MethodGet, url, nil); e != nil {
+		return nil, errors.Newf("failed to create request: %w", e)
+	}
+
+	return c.Do(req)
 }
 
 // Head will make a HEAD request using WinHTTP.dll.
-func (c *Client) Head(url string) (*Response, error) {
-	return c.Do(NewRequest(MethodHead, url))
+func (c *Client) Head(url string) (*http.Response, error) {
+	var e error
+	var req *http.Request
+
+	if req, e = http.NewRequest(http.MethodHead, url, nil); e != nil {
+		return nil, errors.Newf("failed to create request: %w", e)
+	}
+
+	return c.Do(req)
 }
 
 // Post will make a POST request using WinHTTP.dll.
 func (c *Client) Post(
-	url string,
-	contentType string,
-	body []byte,
-) (*Response, error) {
-	var req *Request = NewRequest(MethodPost, url, body)
+	url string, contentType string, body io.Reader,
+) (*http.Response, error) {
+	var e error
+	var req *http.Request
+
+	req, e = http.NewRequest(http.MethodPost, url, body)
+	if e != nil {
+		return nil, errors.Newf("failed to create request: %w", e)
+	}
 
 	if contentType != "" {
-		req.Headers["Content-Type"] = contentType
+		req.Header.Set("Content-Type", contentType)
 	}
+
+	return c.Do(req)
+}
+
+// PostForm will make a POST request using WinHTTP.dll.
+func (c *Client) PostForm(
+	url string, data url.Values,
+) (*http.Response, error) {
+	var body io.Reader = bytes.NewReader([]byte(data.Encode()))
+	var e error
+	var req *http.Request
+
+	req, e = http.NewRequest(http.MethodPost, url, body)
+	if e != nil {
+		return nil, errors.Newf("failed to create request: %w", e)
+	}
+
+	req.Header.Set(
+		"Content-Type",
+		"application/x-www-form-urlencoded",
+	)
 
 	return c.Do(req)
 }

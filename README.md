@@ -38,11 +38,5 @@ See each nested module's README for usage examples.
 
 ## TODO
 
-- Mirror `net/http` as close as possible
-    - CookieJar for the Client
-    - etc...
 - WinINet
     - FTP client
-- User
-    - Disable privs
-    - Enable privs

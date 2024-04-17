@@ -2,35 +2,22 @@
 
 package wininet
 
-import "github.com/mjwhitta/errors"
+import (
+	"io"
+	"net/http"
+	"net/url"
+)
 
 // DefaultClient is the default client similar to net/http.
 var DefaultClient *Client
 
-// ErrNoCookie is returned by Request's Cookie method when a cookie is
-// not found.
-var ErrNoCookie = errors.New("named cookie not present")
-
-// Common HTTP methods.
-const (
-	MethodConnect string = "CONNECT"
-	MethodDelete  string = "DELETE"
-	MethodGet     string = "GET"
-	MethodHead    string = "HEAD"
-	MethodOptions string = "OPTIONS"
-	MethodPatch   string = "PATCH"
-	MethodPost    string = "POST"
-	MethodPut     string = "PUT"
-	MethodTrace   string = "TRACE"
-)
-
 // Get will make a GET request using the DefaultClient.
-func Get(url string) (*Response, error) {
+func Get(url string) (*http.Response, error) {
 	return DefaultClient.Get(url)
 }
 
 // Head will make a HEAD request using the DefaultClient.
-func Head(url string) (*Response, error) {
+func Head(url string) (*http.Response, error) {
 	return DefaultClient.Head(url)
 }
 
@@ -39,6 +26,13 @@ func init() {
 }
 
 // Post will make a POST request using the DefaultClient.
-func Post(url, contentType string, body []byte) (*Response, error) {
+func Post(
+	url string, contentType string, body io.Reader,
+) (*http.Response, error) {
 	return DefaultClient.Post(url, contentType, body)
+}
+
+// PostForm will make a POST request using the DefaultClient.
+func PostForm(url string, data url.Values) (*http.Response, error) {
+	return DefaultClient.PostForm(url, data)
 }
