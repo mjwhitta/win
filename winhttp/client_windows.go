@@ -4,7 +4,6 @@ package winhttp
 
 import (
 	"bytes"
-	"encoding/binary"
 	"io"
 	"net/http"
 	"net/url"
@@ -18,8 +17,9 @@ import (
 // Client is a struct containing relevant metadata to make HTTP
 // requests.
 type Client struct {
-	Jar     http.CookieJar
-	Timeout time.Duration
+	Jar       http.CookieJar
+	Timeout   time.Duration
+	Transport *http.Transport
 
 	hndl uintptr
 }
@@ -51,11 +51,16 @@ func NewClient(ua ...string) (*Client, error) {
 
 // Do will send the HTTP request and return an HTTP response.
 func (c *Client) Do(req *http.Request) (*http.Response, error) {
-	var b []byte
 	var e error
 	var reqHndl uintptr
 	var res *http.Response
-	var tmp uintptr
+	var trans *http.Transport = c.Transport
+
+	if trans == nil {
+		if t, ok := http.DefaultTransport.(*http.Transport); ok {
+			trans = t
+		}
+	}
 
 	for _, cookie := range loadCookies(c.Jar, req.URL) {
 		req.AddCookie(cookie)
@@ -65,92 +70,14 @@ func (c *Client) Do(req *http.Request) (*http.Response, error) {
 		return nil, e
 	}
 
-	if c.Timeout > 0 {
-		b = make([]byte, 4)
-		binary.LittleEndian.PutUint32(
-			b,
-			uint32(c.Timeout.Milliseconds()),
-		)
-
-		e = w32.WinHTTPSetOption(
-			reqHndl,
-			w32.Winhttp.WinhttpOptionConnectTimeout,
-			b,
-			len(b),
-		)
-		if e != nil {
-			e = errors.Newf("failed to set connect timeout: %w", e)
-			return nil, e
-		}
-
-		e = w32.WinHTTPSetOption(
-			reqHndl,
-			w32.Winhttp.WinhttpOptionReceiveResponseTimeout,
-			b,
-			len(b),
-		)
-		if e != nil {
-			e = errors.Newf("failed to set response timeout: %w", e)
-			return nil, e
-		}
-
-		e = w32.WinHTTPSetOption(
-			reqHndl,
-			w32.Winhttp.WinhttpOptionReceiveTimeout,
-			b,
-			len(b),
-		)
-		if e != nil {
-			e = errors.Newf("failed to set receive timeout: %w", e)
-			return nil, e
-		}
-
-		e = w32.WinHTTPSetOption(
-			reqHndl,
-			w32.Winhttp.WinhttpOptionResolveTimeout,
-			b,
-			len(b),
-		)
-		if e != nil {
-			e = errors.Newf("failed to set resolve timeout: %w", e)
-			return nil, e
-		}
-
-		e = w32.WinHTTPSetOption(
-			reqHndl,
-			w32.Winhttp.WinhttpOptionSendTimeout,
-			b,
-			len(b),
-		)
-		if e != nil {
-			e = errors.Newf("failed to set send timeout: %w", e)
-			return nil, e
-		}
+	if e = setTimeouts(reqHndl, c.Timeout); e != nil {
+		return nil, e
 	}
 
-	if t, ok := http.DefaultTransport.(*http.Transport); ok {
-		if t.TLSClientConfig != nil {
-			if t.TLSClientConfig.InsecureSkipVerify {
-				tmp |= w32.Winhttp.SecurityFlagIgnoreUnknownCa
-				tmp |= w32.Winhttp.SecurityFlagIgnoreCertDateInvalid
-				tmp |= w32.Winhttp.SecurityFlagIgnoreCertCnInvalid
-				tmp |= w32.Winhttp.SecurityFlagIgnoreCertWrongUsage
-
-				b = make([]byte, 4)
-				binary.LittleEndian.PutUint32(b, uint32(tmp))
-
-				e = w32.WinHTTPSetOption(
-					reqHndl,
-					w32.Winhttp.WinhttpOptionSecurityFlags,
-					b,
-					len(b),
-				)
-				if e != nil {
-					return nil, errors.Newf(
-						"failed to disable TLS verification: %w",
-						e,
-					)
-				}
+	if (trans != nil) && (trans.TLSClientConfig != nil) {
+		if trans.TLSClientConfig.InsecureSkipVerify {
+			if e = disableTLS(reqHndl); e != nil {
+				return nil, e
 			}
 		}
 	}

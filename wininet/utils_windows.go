@@ -4,11 +4,13 @@ package wininet
 
 import (
 	"bytes"
+	"encoding/binary"
 	"io"
 	"net/http"
 	"net/url"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/mjwhitta/errors"
 	w32 "github.com/mjwhitta/win/api"
@@ -135,6 +137,29 @@ func buildResponse(
 	}
 
 	return res, nil
+}
+
+func disableTLS(reqHndl uintptr) error {
+	var b []byte = make([]byte, 4)
+	var e error
+
+	binary.LittleEndian.PutUint32(
+		b,
+		uint32(w32.Wininet.SecuritySetMask),
+	)
+
+	e = w32.InternetSetOptionW(
+		reqHndl,
+		w32.Wininet.InternetOptionSecurityFlags,
+		b,
+		len(b),
+	)
+	if e != nil {
+		e = errors.Newf("failed to disable TLS verification: %w", e)
+		return e
+	}
+
+	return nil
 }
 
 func getHeaders(
@@ -323,6 +348,50 @@ func sendRequest(reqHndl uintptr, req *http.Request) error {
 	)
 	if e != nil {
 		return errors.Newf("%s \"%s\": %w", req.Method, req.URL, e)
+	}
+
+	return nil
+}
+
+func setTimeouts(reqHndl uintptr, timeout time.Duration) error {
+	var b []byte
+	var e error
+
+	if timeout <= 0 {
+		return nil
+	}
+
+	b = make([]byte, 4)
+	binary.LittleEndian.PutUint32(b, uint32(timeout.Milliseconds()))
+
+	e = w32.InternetSetOptionW(
+		reqHndl,
+		w32.Wininet.InternetOptionConnectTimeout,
+		b,
+		len(b),
+	)
+	if e != nil {
+		return errors.Newf("failed to set connect timeout: %w", e)
+	}
+
+	e = w32.InternetSetOptionW(
+		reqHndl,
+		w32.Wininet.InternetOptionReceiveTimeout,
+		b,
+		len(b),
+	)
+	if e != nil {
+		return errors.Newf("failed to set receive timeout: %w", e)
+	}
+
+	e = w32.InternetSetOptionW(
+		reqHndl,
+		w32.Wininet.InternetOptionSendTimeout,
+		b,
+		len(b),
+	)
+	if e != nil {
+		return errors.Newf("failed to set send timeout: %w", e)
 	}
 
 	return nil

@@ -4,11 +4,13 @@ package winhttp
 
 import (
 	"bytes"
+	"encoding/binary"
 	"io"
 	"net/http"
 	"net/url"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/mjwhitta/errors"
 	w32 "github.com/mjwhitta/win/api"
@@ -136,6 +138,32 @@ func buildResponse(
 	}
 
 	return res, nil
+}
+
+func disableTLS(reqHndl uintptr) error {
+	var b []byte = make([]byte, 4)
+	var e error
+	var tmp uintptr
+
+	tmp |= w32.Winhttp.SecurityFlagIgnoreUnknownCa
+	tmp |= w32.Winhttp.SecurityFlagIgnoreCertDateInvalid
+	tmp |= w32.Winhttp.SecurityFlagIgnoreCertCnInvalid
+	tmp |= w32.Winhttp.SecurityFlagIgnoreCertWrongUsage
+
+	binary.LittleEndian.PutUint32(b, uint32(tmp))
+
+	e = w32.WinHTTPSetOption(
+		reqHndl,
+		w32.Winhttp.WinhttpOptionSecurityFlags,
+		b,
+		len(b),
+	)
+	if e != nil {
+		e = errors.Newf("failed to disable TLS verification: %w", e)
+		return e
+	}
+
+	return nil
 }
 
 func getHeaders(
@@ -332,6 +360,70 @@ func sendRequest(reqHndl uintptr, req *http.Request) error {
 	)
 	if e != nil {
 		return errors.Newf("%s \"%s\": %w", req.Method, req.URL, e)
+	}
+
+	return nil
+}
+
+func setTimeouts(reqHndl uintptr, timeout time.Duration) error {
+	var b []byte
+	var e error
+
+	if timeout <= 0 {
+		return nil
+	}
+
+	b = make([]byte, 4)
+	binary.LittleEndian.PutUint32(b, uint32(timeout.Milliseconds()))
+
+	e = w32.WinHTTPSetOption(
+		reqHndl,
+		w32.Winhttp.WinhttpOptionConnectTimeout,
+		b,
+		len(b),
+	)
+	if e != nil {
+		return errors.Newf("failed to set connect timeout: %w", e)
+	}
+
+	e = w32.WinHTTPSetOption(
+		reqHndl,
+		w32.Winhttp.WinhttpOptionReceiveResponseTimeout,
+		b,
+		len(b),
+	)
+	if e != nil {
+		return errors.Newf("failed to set response timeout: %w", e)
+	}
+
+	e = w32.WinHTTPSetOption(
+		reqHndl,
+		w32.Winhttp.WinhttpOptionReceiveTimeout,
+		b,
+		len(b),
+	)
+	if e != nil {
+		return errors.Newf("failed to set receive timeout: %w", e)
+	}
+
+	e = w32.WinHTTPSetOption(
+		reqHndl,
+		w32.Winhttp.WinhttpOptionResolveTimeout,
+		b,
+		len(b),
+	)
+	if e != nil {
+		return errors.Newf("failed to set resolve timeout: %w", e)
+	}
+
+	e = w32.WinHTTPSetOption(
+		reqHndl,
+		w32.Winhttp.WinhttpOptionSendTimeout,
+		b,
+		len(b),
+	)
+	if e != nil {
+		return errors.Newf("failed to set send timeout: %w", e)
 	}
 
 	return nil
