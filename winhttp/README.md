@@ -26,9 +26,11 @@ func main() {
     var res *http.Response
 
     if t, ok := http.DefaultTransport.(*http.Transport); ok {
-        t.TLSClientConfig = &tls.Config{
-            InsecureSkipVerify: true,
+        if t.TLSClientConfig == nil {
+            t.TLSClientConfig = &tls.Config{}
         }
+
+        t.TLSClientConfig.InsecureSkipVerify = true
     }
 
     if winhttp.DefaultClient.Jar, e = cookiejar.New(nil); e != nil {
