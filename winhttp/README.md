@@ -58,6 +58,7 @@ func main() {
     if res, e = winhttp.DefaultClient.Do(req); e != nil {
         panic(e)
     }
+    defer res.Body.Close()
 
     if e = output(res); e != nil {
         panic(e)
@@ -68,12 +69,8 @@ func output(res *http.Response) error {
     var b []byte
     var e error
 
-    if res.Body != nil {
-        defer res.Body.Close()
-
-        if b, e = io.ReadAll(res.Body); e != nil {
-            return e
-        }
+    if b, e = io.ReadAll(res.Body); e != nil {
+        return e
     }
 
     fmt.Println(res.Status)
