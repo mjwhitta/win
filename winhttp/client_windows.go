@@ -6,6 +6,7 @@ import (
 	"bytes"
 	"io"
 	"net/http"
+	// "net/http/httputil"
 	"net/url"
 	"strings"
 	"time"
@@ -82,6 +83,10 @@ func (c *Client) Do(req *http.Request) (*http.Response, error) {
 		}
 	}
 
+	// b, _ := httputil.DumpRequestOut(req, true)
+	// println(string(b))
+
+	// FIXME cookies get lost if following redirects
 	if e = sendRequest(reqHndl, req); e != nil {
 		return nil, e
 	}
@@ -89,6 +94,9 @@ func (c *Client) Do(req *http.Request) (*http.Response, error) {
 	if res, e = buildResponse(reqHndl, req); e != nil {
 		return nil, e
 	}
+
+	// b, _ = httputil.DumpResponse(res, true)
+	// println(string(b))
 
 	storeCookies(c.Jar, req.URL, res.Cookies())
 
