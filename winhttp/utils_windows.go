@@ -17,7 +17,7 @@ import (
 )
 
 func buildRequest(
-	sessionHndl uintptr, req *http.Request,
+	sessionHndl uintptr, req *http.Request, timeout time.Duration,
 ) (uintptr, error) {
 	var connHndl uintptr
 	var e error
@@ -63,6 +63,10 @@ func buildRequest(
 	)
 	if e != nil {
 		return 0, errors.Newf("failed to open request: %w", e)
+	}
+
+	if e = setTimeouts(reqHndl, timeout); e != nil {
+		return 0, e
 	}
 
 	return reqHndl, nil
@@ -221,14 +225,6 @@ func getHeaders(
 	return proto, int(major), int(minor), hdrs, nil
 }
 
-func loadCookies(jar http.CookieJar, uri *url.URL) []*http.Cookie {
-	if jar == nil {
-		return nil
-	}
-
-	return jar.Cookies(uri)
-}
-
 func queryResponse(reqHndl, info uintptr, idx int) ([]byte, error) {
 	var buffer []byte
 	var e error
@@ -247,6 +243,10 @@ func queryResponse(reqHndl, info uintptr, idx int) ([]byte, error) {
 		&idx,
 	)
 	if e != nil {
+		if size == 0 {
+			return nil, errors.Newf("failed to query info: %w", e)
+		}
+
 		buffer = make([]byte, size)
 
 		e = w32.WinHTTPQueryHeaders(
@@ -258,8 +258,7 @@ func queryResponse(reqHndl, info uintptr, idx int) ([]byte, error) {
 			&idx,
 		)
 		if e != nil {
-			e = errors.Newf("failed to query info: %w", e)
-			return []byte{}, e
+			return nil, errors.Newf("failed to query info: %w", e)
 		}
 	}
 
@@ -307,10 +306,13 @@ func readResponse(reqHndl uintptr) (io.ReadCloser, int64, error) {
 	return io.NopCloser(bytes.NewReader(b)), contentLen, nil
 }
 
-func sendRequest(reqHndl uintptr, req *http.Request) error {
+func sendRequest(
+	reqHndl uintptr, req *http.Request,
+) (*http.Response, error) {
 	var b []byte
 	var e error
 	var method uintptr
+	var res *http.Response
 
 	// Process cookies
 	method = w32.Winhttp.WinhttpAddreqFlagAdd
@@ -323,7 +325,7 @@ func sendRequest(reqHndl uintptr, req *http.Request) error {
 			method,
 		)
 		if e != nil {
-			return errors.Newf("failed to add cookies: %w", e)
+			return nil, errors.Newf("failed to add cookies: %w", e)
 		}
 	}
 
@@ -338,13 +340,15 @@ func sendRequest(reqHndl uintptr, req *http.Request) error {
 			method,
 		)
 		if e != nil {
-			return errors.Newf("failed to add request headers: %w", e)
+			e = errors.Newf("failed to add request headers: %w", e)
+			return nil, e
 		}
 	}
 
 	if req.Body != nil {
 		if b, e = io.ReadAll(req.Body); e != nil {
-			return errors.Newf("failed to read request body: %w", e)
+			e = errors.Newf("failed to read request body: %w", e)
+			return nil, e
 		}
 
 		req.Body.Close()
@@ -359,10 +363,15 @@ func sendRequest(reqHndl uintptr, req *http.Request) error {
 		len(b),
 	)
 	if e != nil {
-		return errors.Newf("%s \"%s\": %w", req.Method, req.URL, e)
+		e = errors.Newf("%s \"%s\": %w", req.Method, req.URL, e)
+		return nil, e
 	}
 
-	return nil
+	if res, e = buildResponse(reqHndl, req); e != nil {
+		return nil, e
+	}
+
+	return res, nil
 }
 
 func setTimeouts(reqHndl uintptr, timeout time.Duration) error {

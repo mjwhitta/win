@@ -1,3 +1,5 @@
+//go:build windows
+
 package api
 
 import (
@@ -187,6 +189,40 @@ func InternetConnectW(
 	}
 
 	return connHndl, nil
+}
+
+// InternetGetCookieW is from wininet.h
+func InternetGetCookieW(
+	url string,
+	buffer *[]byte,
+	bufferLen *int,
+) error {
+	var b []uint16
+	var e error
+	var proc string = "InternetGetCookieW"
+	var success uintptr
+	var tmp string
+
+	if *bufferLen > 0 {
+		b = make([]uint16, *bufferLen)
+	} else {
+		b = make([]uint16, 1)
+	}
+
+	success, _, e = wininet.NewProc(proc).Call(
+		types.LpCwstr(url),
+		0,
+		uintptr(unsafe.Pointer(&b[0])),
+		uintptr(unsafe.Pointer(bufferLen)),
+	)
+	if success == 0 {
+		return errors.Newf("%s: %w", proc, e)
+	}
+
+	tmp = windows.UTF16ToString(b)
+	*buffer = []byte(tmp)
+
+	return nil
 }
 
 // InternetOpenW is from wininet.h

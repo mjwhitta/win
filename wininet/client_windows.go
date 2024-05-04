@@ -6,7 +6,7 @@ import (
 	"bytes"
 	"io"
 	"net/http"
-	// "net/http/httputil"
+	"net/http/httputil"
 	"net/url"
 	"strings"
 	"time"
@@ -18,11 +18,13 @@ import (
 // Client is a struct containing relevant metadata to make HTTP
 // requests.
 type Client struct {
+	Debug     bool
 	Jar       http.CookieJar
 	Timeout   time.Duration
 	Transport *http.Transport
 
 	hndl uintptr
+	ua   string
 }
 
 // NewClient will return a pointer to a new Client instance that
@@ -34,6 +36,9 @@ func NewClient(ua ...string) (*Client, error) {
 	if len(ua) == 0 {
 		ua = []string{"Go-http-client/1.1"}
 	}
+
+	// Store User-Agent
+	c.ua = ua[0]
 
 	// Create session
 	c.hndl, e = w32.InternetOpenW(
@@ -52,6 +57,7 @@ func NewClient(ua ...string) (*Client, error) {
 
 // Do will send the HTTP request and return an HTTP response.
 func (c *Client) Do(req *http.Request) (*http.Response, error) {
+	var b []byte
 	var e error
 	var reqHndl uintptr
 	var res *http.Response
@@ -63,15 +69,11 @@ func (c *Client) Do(req *http.Request) (*http.Response, error) {
 		}
 	}
 
-	for _, cookie := range loadCookies(c.Jar, req.URL) {
-		req.AddCookie(cookie)
+	if req.Header.Get("User-Agent") == "" {
+		req.Header.Set("User-Agent", c.ua)
 	}
 
-	if reqHndl, e = buildRequest(c.hndl, req); e != nil {
-		return nil, e
-	}
-
-	if e = setTimeouts(reqHndl, c.Timeout); e != nil {
+	if reqHndl, e = buildRequest(c.hndl, req, c.Timeout); e != nil {
 		return nil, e
 	}
 
@@ -83,22 +85,28 @@ func (c *Client) Do(req *http.Request) (*http.Response, error) {
 		}
 	}
 
-	// b, _ := httputil.DumpRequestOut(req, true)
-	// println(string(b))
+	if c.Debug {
+		// Only needed for debugging b/c WinINet will do this for you
+		for _, cookie := range loadCookies(c.Jar, req.URL) {
+			req.AddCookie(cookie)
+		}
 
-	// FIXME cookies get lost if following redirects
-	if e = sendRequest(reqHndl, req); e != nil {
+		b, _ = httputil.DumpRequestOut(req, true)
+		println(string(b))
+	}
+
+	if res, e = sendRequest(reqHndl, req); e != nil {
 		return nil, e
 	}
 
-	if res, e = buildResponse(reqHndl, req); e != nil {
-		return nil, e
+	if c.Debug {
+		b, _ = httputil.DumpResponse(res, true)
+		println(string(b))
 	}
 
-	// b, _ = httputil.DumpResponse(res, true)
-	// println(string(b))
-
-	storeCookies(c.Jar, req.URL, res.Cookies())
+	if e = storeCookies(c.Jar, req.URL); e != nil {
+		return nil, e
+	}
 
 	return res, nil
 }

@@ -37,6 +37,7 @@ See each nested module's README for usage examples.
 ## Links
 
 - [Source](https://github.com/mjwhitta/win)
+- [WinHTTP/WinINet equivalents](https://learn.microsoft.com/en-us/windows/win32/winhttp/porting-wininet-applications-to-winhttp#winhttp-equivalents-to-wininet-functions)
 
 ## TODO
 
