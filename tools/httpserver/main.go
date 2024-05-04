@@ -24,9 +24,11 @@ func authHandler(w http.ResponseWriter, req *http.Request) {
 
 func handler(w http.ResponseWriter, req *http.Request) {
 	var b []byte
+	var e error
 
-	b, _ = httputil.DumpRequest(req, true)
-	println(string(b))
+	if b, e = httputil.DumpRequest(req, true); e == nil {
+		println(string(b))
+	}
 
 	w.Header().Add("Set-Cookie", "chocolatechip=delicious")
 	w.Header().Add("Set-Cookie", "cookiemonster=hero")

@@ -91,8 +91,9 @@ func (c *Client) Do(req *http.Request) (*http.Response, error) {
 			req.AddCookie(cookie)
 		}
 
-		b, _ = httputil.DumpRequestOut(req, true)
-		println(string(b))
+		if b, e = httputil.DumpRequestOut(req, true); e == nil {
+			println(string(b))
+		}
 	}
 
 	if res, e = sendRequest(reqHndl, req); e != nil {
@@ -100,15 +101,12 @@ func (c *Client) Do(req *http.Request) (*http.Response, error) {
 	}
 
 	if c.Debug {
-		b, _ = httputil.DumpResponse(res, true)
-		println(string(b))
+		if b, e = httputil.DumpResponse(res, true); e == nil {
+			println(string(b))
+		}
 	}
 
-	if e = storeCookies(c.Jar, req.URL); e != nil {
-		return nil, e
-	}
-
-	return res, nil
+	return res, storeCookies(c.Jar, req.URL)
 }
 
 // Get will make a GET request using WinINet.dll.
