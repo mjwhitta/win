@@ -440,10 +440,12 @@ func setTimeouts(reqHndl uintptr, timeout time.Duration) error {
 
 func storeCookies(
 	jar http.CookieJar, uri *url.URL, cookies []*http.Cookie,
-) {
+) error {
 	if jar == nil {
-		return
+		return nil
 	}
 
 	jar.SetCookies(uri, cookies)
+
+	return nil
 }

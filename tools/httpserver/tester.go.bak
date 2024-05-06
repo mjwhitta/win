@@ -1,0 +1,77 @@
+package main
+
+import (
+	"flag"
+	"fmt"
+	"net/http"
+	"net/http/cookiejar"
+	"net/http/httputil"
+	"net/url"
+
+	inet "github.com/mjwhitta/win/wininet"
+)
+
+var (
+	client *inet.Client
+	jar    http.CookieJar
+	uri    *url.URL
+)
+
+func init() {
+	var e error
+	var host string
+
+	flag.Parse()
+	host = flag.Arg(0)
+	if host == "" {
+		host = "localhost:8080"
+	}
+
+	if uri, e = url.Parse("http://" + host); e != nil {
+		panic(e)
+	}
+
+	if client, e = inet.NewClient(); e != nil {
+		panic(e)
+	}
+
+	jar, _ = cookiejar.New(nil)
+	client.Jar = jar
+}
+
+func main() {
+	if e := send(http.MethodGet, "/"); e != nil {
+		panic(e)
+	}
+
+	if e := send(http.MethodPost, "/login"); e != nil {
+		panic(e)
+	}
+
+	fmt.Println("### Cookies ###")
+	for _, cookie := range jar.Cookies(uri) {
+		fmt.Println(cookie.String())
+	}
+}
+
+func send(method string, path string) error {
+	var e error
+	var req *http.Request
+	var res *http.Response
+
+	req, e = http.NewRequest(method, uri.String()+path, nil)
+	if e != nil {
+		return e
+	}
+
+	if res, e = client.Do(req); e != nil {
+		return e
+	}
+	defer res.Body.Close()
+
+	if b, e := httputil.DumpResponse(res, true); e == nil {
+		fmt.Println(string(b) + "\n")
+	}
+
+	return nil
+}

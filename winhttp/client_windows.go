@@ -88,9 +88,7 @@ func (c *Client) Do(req *http.Request) (*http.Response, error) {
 	if c.Debug {
 		// WinHTTP will add cookies for you, and if we add them here
 		// for debugging, they end up in the request twice...
-		// for _, cookie := range loadCookies(c.Jar, req.URL) {
-		// 	req.AddCookie(cookie)
-		// }
+		// loadCookies(c.Jar, req)
 
 		if b, e = httputil.DumpRequestOut(req, true); e == nil {
 			println(string(b))
@@ -110,9 +108,7 @@ func (c *Client) Do(req *http.Request) (*http.Response, error) {
 	// Can only store cookies from last response when redirects are
 	// followed. WinHTTP cookie support is horrible compared to
 	// WinINet.
-	storeCookies(c.Jar, req.URL, res.Cookies())
-
-	return res, nil
+	return res, storeCookies(c.Jar, req.URL, res.Cookies())
 }
 
 // Get will make a GET request using WinHTTP.dll.

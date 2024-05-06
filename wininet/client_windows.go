@@ -87,10 +87,7 @@ func (c *Client) Do(req *http.Request) (*http.Response, error) {
 
 	if c.Debug {
 		// Only needed for debugging b/c WinINet will do this for you
-		for _, cookie := range loadCookies(c.Jar, req.URL) {
-			req.AddCookie(cookie)
-		}
-
+		loadCookies(c.Jar, req)
 		if b, e = httputil.DumpRequestOut(req, true); e == nil {
 			println(string(b))
 		}
@@ -106,7 +103,7 @@ func (c *Client) Do(req *http.Request) (*http.Response, error) {
 		}
 	}
 
-	return res, storeCookies(c.Jar, req.URL)
+	return res, storeCookies(c.Jar, req.URL, res.Cookies())
 }
 
 // Get will make a GET request using WinINet.dll.

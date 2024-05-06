@@ -13,6 +13,10 @@ import (
 var port uint
 
 func authHandler(w http.ResponseWriter, req *http.Request) {
+	if b, e := httputil.DumpRequest(req, true); e == nil {
+		println(string(b))
+	}
+
 	w.Header().Add("Location", "/")
 	w.Header().Add("Set-Cookie", "chocolatechip=delicious")
 	w.Header().Add("Set-Cookie", "cookiemonster=hero")
@@ -23,16 +27,21 @@ func authHandler(w http.ResponseWriter, req *http.Request) {
 }
 
 func handler(w http.ResponseWriter, req *http.Request) {
-	var b []byte
-	var e error
-
-	if b, e = httputil.DumpRequest(req, true); e == nil {
+	if b, e := httputil.DumpRequest(req, true); e == nil {
 		println(string(b))
 	}
 
-	w.Header().Add("Set-Cookie", "chocolatechip=delicious")
-	w.Header().Add("Set-Cookie", "cookiemonster=hero")
-	w.Header().Add("Set-Cookie", "snickerdoodle=best")
+	if _, e := req.Cookie("chocolatechip"); e != nil {
+		w.Header().Add("Set-Cookie", "chocolatechip=unknown")
+	}
+
+	if _, e := req.Cookie("cookiemonster"); e != nil {
+		w.Header().Add("Set-Cookie", "cookiemonster=unknown")
+	}
+
+	if _, e := req.Cookie("snickerdoodle"); e != nil {
+		w.Header().Add("Set-Cookie", "snickerdoodle=unknown")
+	}
 
 	w.Write([]byte("Success"))
 }

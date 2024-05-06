@@ -166,29 +166,27 @@ func disableTLS(reqHndl uintptr) error {
 	return nil
 }
 
-func getCookies(uri string) ([]byte, error) {
+func getCookies(uri string) (string, error) {
 	var buffer []byte
 	var e error
 	var size int
 
 	e = w32.InternetGetCookieW(uri, &buffer, &size)
-	if e != nil {
-		if strings.HasSuffix(e.Error(), errNoMoreItems) {
-			return nil, nil
-		}
-
-		if size == 0 {
-			return nil, errors.Newf("failed to get cookies: %w", e)
-		}
-
-		buffer = make([]byte, size)
-
-		if e = w32.InternetGetCookieW(uri, &buffer, &size); e != nil {
-			return nil, errors.Newf("failed to get cookies: %w", e)
-		}
+	if e == nil {
+		return string(buffer), nil
+	} else if strings.HasSuffix(e.Error(), errNoMoreItems) {
+		return string(buffer), nil
+	} else if size == 0 {
+		return "", errors.Newf("failed to get cookies: %w", e)
 	}
 
-	return buffer, nil
+	buffer = make([]byte, size)
+
+	if e = w32.InternetGetCookieW(uri, &buffer, &size); e != nil {
+		return "", errors.Newf("failed to get cookies: %w", e)
+	}
+
+	return string(buffer), nil
 }
 
 func getHeaders(
@@ -246,12 +244,14 @@ func getHeaders(
 	return proto, int(major), int(minor), hdrs, nil
 }
 
-func loadCookies(jar http.CookieJar, uri *url.URL) []*http.Cookie {
+func loadCookies(jar http.CookieJar, req *http.Request) {
 	if jar == nil {
-		return nil
+		return
 	}
 
-	return jar.Cookies(uri)
+	for _, cookie := range jar.Cookies(req.URL) {
+		req.AddCookie(cookie)
+	}
 }
 
 func queryResponse(reqHndl, info uintptr, idx int) ([]byte, error) {
@@ -439,26 +439,27 @@ func setTimeouts(reqHndl uintptr, timeout time.Duration) error {
 	return nil
 }
 
-func storeCookies(jar http.CookieJar, uri *url.URL) error {
-	var b []byte
-	var e error
-	var r *http.Request
+func storeCookies(
+	jar http.CookieJar, uri *url.URL, cookies []*http.Cookie,
+) error {
+	var req *http.Request
 
 	if jar == nil {
 		return nil
 	}
 
-	if b, e = getCookies(uri.String()); e != nil {
+	req = &http.Request{Header: http.Header{}}
+
+	if s, e := getCookies(uri.String()); e != nil {
 		return e
+	} else if s != "" {
+		req.Header.Set("Cookie", s)
 	}
 
-	if len(b) == 0 {
-		return nil
+	for _, cookie := range cookies {
+		req.AddCookie(cookie)
 	}
 
-	r = &http.Request{Header: http.Header{}}
-	r.Header.Set("Cookie", string(b))
-	jar.SetCookies(uri, r.Cookies())
-
+	jar.SetCookies(uri, req.Cookies())
 	return nil
 }
