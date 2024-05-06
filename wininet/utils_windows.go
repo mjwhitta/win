@@ -173,6 +173,10 @@ func getCookies(uri string) ([]byte, error) {
 
 	e = w32.InternetGetCookieW(uri, &buffer, &size)
 	if e != nil {
+		if strings.HasSuffix(e.Error(), errNoMoreItems) {
+			return nil, nil
+		}
+
 		if size == 0 {
 			return nil, errors.Newf("failed to get cookies: %w", e)
 		}
