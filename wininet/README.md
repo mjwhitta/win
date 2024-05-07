@@ -20,6 +20,7 @@ import (
 
 func main() {
     var body io.Reader = bytes.NewReader([]byte("test"))
+    var client *wininet.Client
     var dst string = "http://127.0.0.1:8080/asdf"
     var e error
     var req *http.Request
@@ -31,10 +32,6 @@ func main() {
         }
 
         t.TLSClientConfig.InsecureSkipVerify = true
-    }
-
-    if wininet.DefaultClient.Jar, e = cookiejar.New(nil); e != nil {
-        panic(e)
     }
 
     if res, e = wininet.Get(dst); e != nil {
@@ -53,9 +50,16 @@ func main() {
     req.AddCookie(&http.Cookie{Name: "chocolatechip", Value: "tasty"})
     req.AddCookie(&http.Cookie{Name: "oatmealraisin", Value: "gross"})
     req.AddCookie(&http.Cookie{Name: "snickerdoodle", Value: "yummy"})
-    req.Header.Set("User-Agent", "testing, testing, 1, 2, 3...")
 
-    if res, e = wininet.DefaultClient.Do(req); e != nil {
+    if client, e = wininet.NewClient("My custom UA"); e != nil {
+        panic(e)
+    }
+
+    if client.Jar, e = cookiejar.New(nil); e != nil {
+        panic(e)
+    }
+
+    if res, e = client.Do(req); e != nil {
         panic(e)
     }
     defer res.Body.Close()
