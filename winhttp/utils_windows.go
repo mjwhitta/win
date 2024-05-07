@@ -441,11 +441,14 @@ func setTimeouts(reqHndl uintptr, timeout time.Duration) error {
 func storeCookies(
 	jar http.CookieJar, uri *url.URL, cookies []*http.Cookie,
 ) error {
+	var root *url.URL
+
 	if jar == nil {
 		return nil
 	}
 
-	jar.SetCookies(uri, cookies)
+	root, _ = uri.Parse("/")
+	jar.SetCookies(root, cookies)
 
 	return nil
 }

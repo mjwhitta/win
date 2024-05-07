@@ -88,6 +88,7 @@ func (c *Client) Do(req *http.Request) (*http.Response, error) {
 	if c.Debug {
 		// Only needed for debugging b/c WinINet will do this for you
 		loadCookies(c.Jar, req)
+
 		if b, e = httputil.DumpRequestOut(req, true); e == nil {
 			println(string(b))
 		}

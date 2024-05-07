@@ -1,12 +1,13 @@
 package main
 
 import (
+	"bytes"
 	"flag"
 	"fmt"
 	"net/http"
 	"net/http/cookiejar"
-	"net/http/httputil"
 	"net/url"
+	"os"
 
 	inet "github.com/mjwhitta/win/wininet"
 )
@@ -22,6 +23,10 @@ func init() {
 	var host string
 
 	flag.Parse()
+	if flag.NArg() == 0 {
+		os.Exit(1)
+	}
+
 	host = flag.Arg(0)
 	if host == "" {
 		host = "localhost:8080"
@@ -35,6 +40,8 @@ func init() {
 		panic(e)
 	}
 
+	client.Debug = flag.NArg() > 1
+
 	jar, _ = cookiejar.New(nil)
 	client.Jar = jar
 }
@@ -44,7 +51,7 @@ func main() {
 		panic(e)
 	}
 
-	if e := send(http.MethodPost, "/login"); e != nil {
+	if e := send(http.MethodPost, "/some/path/to/login"); e != nil {
 		panic(e)
 	}
 
@@ -59,7 +66,17 @@ func send(method string, path string) error {
 	var req *http.Request
 	var res *http.Response
 
-	req, e = http.NewRequest(method, uri.String()+path, nil)
+	switch method {
+	case http.MethodGet:
+		req, e = http.NewRequest(method, uri.String()+path, nil)
+	case http.MethodPost:
+		req, e = http.NewRequest(
+			method,
+			uri.String()+path,
+			bytes.NewBuffer([]byte("user=admin")),
+		)
+	}
+
 	if e != nil {
 		return e
 	}
@@ -68,10 +85,6 @@ func send(method string, path string) error {
 		return e
 	}
 	defer res.Body.Close()
-
-	if b, e := httputil.DumpResponse(res, true); e == nil {
-		fmt.Println(string(b) + "\n")
-	}
 
 	return nil
 }

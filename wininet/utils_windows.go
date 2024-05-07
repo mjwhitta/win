@@ -442,24 +442,30 @@ func setTimeouts(reqHndl uintptr, timeout time.Duration) error {
 func storeCookies(
 	jar http.CookieJar, uri *url.URL, cookies []*http.Cookie,
 ) error {
+	var e error
 	var req *http.Request
+	var root *url.URL
+	var tmp string
 
 	if jar == nil {
 		return nil
 	}
 
-	req = &http.Request{Header: http.Header{}}
-
-	if s, e := getCookies(uri.String()); e != nil {
+	if tmp, e = getCookies(uri.String()); e != nil {
 		return e
-	} else if s != "" {
-		req.Header.Set("Cookie", s)
 	}
 
-	for _, cookie := range cookies {
-		req.AddCookie(cookie)
+	req = &http.Request{Header: http.Header{}}
+	if strings.TrimSpace(tmp) != "" {
+		req.Header.Set("Cookie", tmp)
+	} else {
+		for _, cookie := range cookies {
+			req.AddCookie(cookie)
+		}
 	}
 
-	jar.SetCookies(uri, req.Cookies())
+	root, _ = uri.Parse("/")
+	jar.SetCookies(root, req.Cookies())
+
 	return nil
 }
