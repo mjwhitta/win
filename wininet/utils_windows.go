@@ -170,6 +170,7 @@ func dbgLog(debug bool, thing any) {
 		}
 	case *http.Response:
 		if b, e = httputil.DumpResponse(thing, true); e == nil {
+			println()
 			println(string(b))
 		}
 	default:
