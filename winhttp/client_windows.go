@@ -20,7 +20,7 @@ type Client struct {
 	Debug     bool
 	Jar       http.CookieJar
 	Timeout   time.Duration
-	Transport *http.Transport
+	Transport http.RoundTripper
 
 	hndl uintptr
 	ua   string
@@ -60,35 +60,39 @@ func (c *Client) Do(req *http.Request) (*http.Response, error) {
 	var redirect *url.URL
 	var reqHndl uintptr
 	var res *http.Response
-	var trans *http.Transport = c.Transport
+	var trans http.RoundTripper = c.Transport
 
 	if trans == nil {
-		if t, ok := http.DefaultTransport.(*http.Transport); ok {
-			trans = t
-		}
-	}
-
-	if req.Header.Get("User-Agent") == "" {
-		req.Header.Set("User-Agent", c.ua)
-	}
-
-	if reqHndl, e = buildRequest(c.hndl, req, c.Timeout); e != nil {
-		return nil, e
-	}
-
-	if (trans != nil) && (trans.TLSClientConfig != nil) {
-		if trans.TLSClientConfig.InsecureSkipVerify {
-			if e = disableTLS(reqHndl); e != nil {
-				return nil, e
-			}
-		}
+		trans = http.DefaultTransport
 	}
 
 	// Load cookies from cookie jar
 	loadCookies(c.Jar, req)
 
+	// Set configured user-agent
+	if req.Header.Get("User-Agent") == "" {
+		req.Header.Set("User-Agent", c.ua)
+	}
+
+	// Build the underlying WinHTTP request
+	if reqHndl, e = buildRequest(c.hndl, req, c.Timeout); e != nil {
+		return nil, e
+	}
+
+	// Disable TLS verification, if configured to do so
+	if t, ok := trans.(*http.Transport); ok {
+		if t.TLSClientConfig != nil {
+			if t.TLSClientConfig.InsecureSkipVerify {
+				if e = disableTLS(reqHndl); e != nil {
+					return nil, e
+				}
+			}
+		}
+	}
+
 	dbgLog(c.Debug, req)
 
+	// Send request using WinHTTP
 	if res, e = sendRequest(reqHndl, req); e != nil {
 		return nil, e
 	}

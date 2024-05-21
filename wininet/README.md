@@ -47,9 +47,9 @@ func main() {
         panic(e)
     }
 
-    req.AddCookie(&http.Cookie{Name: "chocolatechip", Value: "tasty"})
+    req.AddCookie(&http.Cookie{Name: "chocolatechip", Value: "yum"})
     req.AddCookie(&http.Cookie{Name: "oatmealraisin", Value: "gross"})
-    req.AddCookie(&http.Cookie{Name: "snickerdoodle", Value: "yummy"})
+    req.AddCookie(&http.Cookie{Name: "snickerdoodle", Value: "best"})
 
     if client, e = wininet.NewClient("My custom UA"); e != nil {
         panic(e)
