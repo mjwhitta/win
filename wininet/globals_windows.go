@@ -2,4 +2,4 @@
 
 package wininet
 
-const errNoMoreItems string = "No more data is available."
+// const errNoMoreItems string = "No more data is available."

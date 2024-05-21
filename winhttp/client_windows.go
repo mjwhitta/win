@@ -6,7 +6,6 @@ import (
 	"bytes"
 	"io"
 	"net/http"
-	"net/http/httputil"
 	"net/url"
 	"strings"
 	"time"
@@ -57,8 +56,8 @@ func NewClient(ua ...string) (*Client, error) {
 
 // Do will send the HTTP request and return an HTTP response.
 func (c *Client) Do(req *http.Request) (*http.Response, error) {
-	var b []byte
 	var e error
+	var redirect *url.URL
 	var reqHndl uintptr
 	var res *http.Response
 	var trans *http.Transport = c.Transport
@@ -85,30 +84,28 @@ func (c *Client) Do(req *http.Request) (*http.Response, error) {
 		}
 	}
 
-	if c.Debug {
-		// WinHTTP will add cookies for you, and if we add them here
-		// for debugging, they end up in the request twice...
-		// loadCookies(c.Jar, req)
+	// Load cookies from cookie jar
+	loadCookies(c.Jar, req)
 
-		if b, e = httputil.DumpRequestOut(req, true); e == nil {
-			println(string(b))
-		}
-	}
+	dbgLog(c.Debug, req)
 
 	if res, e = sendRequest(reqHndl, req); e != nil {
 		return nil, e
 	}
 
-	if c.Debug {
-		if b, e = httputil.DumpResponse(res, true); e == nil {
-			println(string(b))
-		}
+	dbgLog(c.Debug, res)
+
+	// Store cookies into cookie jar
+	if e = storeCookies(c.Jar, req.URL, res.Cookies()); e != nil {
+		return nil, e
 	}
 
-	// Can only store cookies from last response when redirects are
-	// followed. WinHTTP cookie support is horrible compared to
-	// WinINet.
-	return res, storeCookies(c.Jar, req.URL, res.Cookies())
+	// Follow redirects
+	if redirect, e = res.Location(); e == nil {
+		return c.Get(redirect.String())
+	}
+
+	return res, nil
 }
 
 // Get will make a GET request using WinHTTP.dll.

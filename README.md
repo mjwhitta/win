@@ -8,9 +8,9 @@
 ## What is this?
 
 This Go module started as a simple "drop-in" replacement of `net/http`
-so that you can use WinHTTP and WinINet on Windows for better proxy
-support, with NTLM authentication. Microsoft recommends [WinINet over
-WinHTTP] unless you're writing a Windows service.
+so that you can use WinHTTP and WinINet on Windows for better support
+for proxying and NTLM authentication. Microsoft recommends [WinINet
+over WinHTTP] unless you're writing a Windows service.
 
 If you want to use a minimal, cross-plaform HTTP client, I recommend
 [inet] which uses this module behind the scenes.

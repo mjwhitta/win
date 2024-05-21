@@ -225,6 +225,44 @@ func InternetGetCookieW(
 	return nil
 }
 
+// InternetGetCookieExW is from wininet.h
+func InternetGetCookieExW(
+	url string,
+	name string,
+	buffer *[]byte,
+	bufferLen *int,
+	flags uintptr,
+) error {
+	var b []uint16
+	var e error
+	var proc string = "InternetGetCookieExW"
+	var success uintptr
+	var tmp string
+
+	if *bufferLen > 0 {
+		b = make([]uint16, *bufferLen)
+	} else {
+		b = make([]uint16, 1)
+	}
+
+	success, _, e = wininet.NewProc(proc).Call(
+		types.LpCwstr(url),
+		types.LpCwstr(name),
+		uintptr(unsafe.Pointer(&b[0])),
+		uintptr(unsafe.Pointer(bufferLen)),
+		flags,
+		0,
+	)
+	if success == 0 {
+		return errors.Newf("%s: %w", proc, e)
+	}
+
+	tmp = windows.UTF16ToString(b)
+	*buffer = []byte(tmp)
+
+	return nil
+}
+
 // InternetOpenW is from wininet.h
 func InternetOpenW(
 	userAgent string,

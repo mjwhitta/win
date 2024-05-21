@@ -7,6 +7,7 @@ import (
 	"encoding/binary"
 	"io"
 	"net/http"
+	"net/http/httputil"
 	"net/url"
 	"strconv"
 	"strings"
@@ -59,8 +60,19 @@ func buildRequest(
 		query = "?" + req.URL.RawQuery
 	}
 
+	// Send fragment too
+	if req.URL.RawFragment != "" {
+		query = "#" + req.URL.RawFragment
+	}
+
 	// Allow NTLM auth
 	flags |= w32.Wininet.InternetFlagKeepConnection
+
+	// Don't redirect
+	flags |= w32.Wininet.InternetFlagNoAutoRedirect
+
+	// Don't let Windows handle cookies
+	flags |= w32.Wininet.InternetFlagNoCookies
 
 	// Create HTTP request
 	reqHndl, e = w32.HTTPOpenRequestW(
@@ -143,6 +155,28 @@ func buildResponse(
 	return res, nil
 }
 
+func dbgLog(debug bool, thing any) {
+	var b []byte
+	var e error
+
+	if !debug {
+		return
+	}
+
+	switch thing := thing.(type) {
+	case *http.Request:
+		if b, e = httputil.DumpRequestOut(thing, true); e == nil {
+			println(string(b))
+		}
+	case *http.Response:
+		if b, e = httputil.DumpResponse(thing, true); e == nil {
+			println(string(b))
+		}
+	default:
+		println(thing)
+	}
+}
+
 func disableTLS(reqHndl uintptr) error {
 	var b []byte = make([]byte, 4)
 	var e error
@@ -166,28 +200,30 @@ func disableTLS(reqHndl uintptr) error {
 	return nil
 }
 
-func getCookies(uri string) (string, error) {
-	var buffer []byte
-	var e error
-	var size int
+// func getCookies(uri string) (string, error) {
+// 	var buffer []byte
+// 	var e error
+// 	var flags uintptr = w32.Wininet.InternetCookieHTTPonly
+// 	var size int
 
-	e = w32.InternetGetCookieW(uri, &buffer, &size)
-	if e == nil {
-		return string(buffer), nil
-	} else if strings.HasSuffix(e.Error(), errNoMoreItems) {
-		return string(buffer), nil
-	} else if size == 0 {
-		return "", errors.Newf("failed to get cookies: %w", e)
-	}
+// 	e = w32.InternetGetCookieExW(uri, "", &buffer, &size, flags)
+// 	if e == nil {
+// 		return string(buffer), nil
+// 	} else if strings.HasSuffix(e.Error(), errNoMoreItems) {
+// 		return string(buffer), nil
+// 	} else if size == 0 {
+// 		return "", errors.Newf("failed to get cookies: %w", e)
+// 	}
 
-	buffer = make([]byte, size)
+// 	buffer = make([]byte, size)
 
-	if e = w32.InternetGetCookieW(uri, &buffer, &size); e != nil {
-		return "", errors.Newf("failed to get cookies: %w", e)
-	}
+// 	e = w32.InternetGetCookieExW(uri, "", &buffer, &size, flags)
+// 	if e != nil {
+// 		return "", errors.Newf("failed to get cookies: %w", e)
+// 	}
 
-	return string(buffer), nil
-}
+// 	return string(buffer), nil
+// }
 
 func getHeaders(
 	reqHndl uintptr,
@@ -443,29 +479,20 @@ func storeCookies(
 	jar http.CookieJar, uri *url.URL, cookies []*http.Cookie,
 ) error {
 	var e error
-	var req *http.Request
-	var root *url.URL
-	var tmp string
+	var path *url.URL
 
 	if jar == nil {
 		return nil
 	}
 
-	if tmp, e = getCookies(uri.String()); e != nil {
-		return e
-	}
-
-	req = &http.Request{Header: http.Header{}}
-	if strings.TrimSpace(tmp) != "" {
-		req.Header.Set("Cookie", tmp)
-	} else {
-		for _, cookie := range cookies {
-			req.AddCookie(cookie)
+	// Store cookies per path
+	for _, cookie := range cookies {
+		if path, e = uri.Parse(cookie.Path); e != nil {
+			return errors.Newf("invalid cookie path: %w", e)
 		}
-	}
 
-	root, _ = uri.Parse("/")
-	jar.SetCookies(root, req.Cookies())
+		jar.SetCookies(path, []*http.Cookie{cookie})
+	}
 
 	return nil
 }

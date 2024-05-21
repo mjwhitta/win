@@ -1,3 +1,5 @@
+//go:build ignore && !windows
+
 package main
 
 import (
@@ -7,25 +9,19 @@ import (
 	"net/http"
 	"net/http/cookiejar"
 	"net/url"
-	"os"
-
-	inet "github.com/mjwhitta/win/wininet"
 )
 
 var (
-	client *inet.Client
-	jar    http.CookieJar
+	client *http.Client
 	uri    *url.URL
 )
 
 func init() {
 	var e error
 	var host string
+	var jar http.CookieJar
 
 	flag.Parse()
-	if flag.NArg() == 0 {
-		os.Exit(1)
-	}
 
 	host = flag.Arg(0)
 	if host == "" {
@@ -36,27 +32,28 @@ func init() {
 		panic(e)
 	}
 
-	if client, e = inet.NewClient(); e != nil {
-		panic(e)
-	}
-
-	client.Debug = flag.NArg() > 1
-
 	jar, _ = cookiejar.New(nil)
-	client.Jar = jar
+	client = &http.Client{Jar: jar}
 }
 
 func main() {
-	if e := send(http.MethodGet, "/"); e != nil {
+	if e := send(http.MethodGet, "/path"); e != nil {
 		panic(e)
 	}
 
-	if e := send(http.MethodPost, "/some/path/to/login"); e != nil {
+	if e := send(http.MethodPost, "/path/to/login"); e != nil {
 		panic(e)
 	}
 
-	fmt.Println("### Cookies ###")
-	for _, cookie := range jar.Cookies(uri) {
+	fmt.Println("### Cookies / ###")
+	uri, _ = uri.Parse("/")
+	for _, cookie := range client.Jar.Cookies(uri) {
+		fmt.Println(cookie.String())
+	}
+
+	fmt.Println("### Cookies /path ###")
+	uri, _ = uri.Parse("/path")
+	for _, cookie := range client.Jar.Cookies(uri) {
 		fmt.Println(cookie.String())
 	}
 }

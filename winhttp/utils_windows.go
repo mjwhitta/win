@@ -7,6 +7,7 @@ import (
 	"encoding/binary"
 	"io"
 	"net/http"
+	"net/http/httputil"
 	"net/url"
 	"strconv"
 	"strings"
@@ -19,6 +20,7 @@ import (
 func buildRequest(
 	sessionHndl uintptr, req *http.Request, timeout time.Duration,
 ) (uintptr, error) {
+	var b []byte = make([]byte, 4)
 	var connHndl uintptr
 	var e error
 	var flags uintptr
@@ -51,6 +53,11 @@ func buildRequest(
 		query = "?" + req.URL.RawQuery
 	}
 
+	// Send fragment too
+	if req.URL.RawFragment != "" {
+		query = "#" + req.URL.RawFragment
+	}
+
 	// Create HTTP request
 	reqHndl, e = w32.WinHTTPOpenRequest(
 		connHndl,
@@ -63,6 +70,24 @@ func buildRequest(
 	)
 	if e != nil {
 		return 0, errors.Newf("failed to open request: %w", e)
+	}
+
+	// Don't redirect
+	flags = w32.Winhttp.WinhttpDisableRedirects
+
+	// Don't let Windows handle cookies
+	flags |= w32.Winhttp.WinhttpDisableCookies
+
+	binary.LittleEndian.PutUint32(b, uint32(flags))
+	e = w32.WinHTTPSetOption(
+		reqHndl,
+		w32.Winhttp.WinhttpOptionDisableFeature,
+		b,
+		len(b),
+	)
+	if e != nil {
+		e = errors.Newf("failed to set options: %w", e)
+		return 0, e
 	}
 
 	if e = setTimeouts(reqHndl, timeout); e != nil {
@@ -144,6 +169,28 @@ func buildResponse(
 	return res, nil
 }
 
+func dbgLog(debug bool, thing any) {
+	var b []byte
+	var e error
+
+	if !debug {
+		return
+	}
+
+	switch thing := thing.(type) {
+	case *http.Request:
+		if b, e = httputil.DumpRequestOut(thing, true); e == nil {
+			println(string(b))
+		}
+	case *http.Response:
+		if b, e = httputil.DumpResponse(thing, true); e == nil {
+			println(string(b))
+		}
+	default:
+		println(thing)
+	}
+}
+
 func disableTLS(reqHndl uintptr) error {
 	var b []byte = make([]byte, 4)
 	var e error
@@ -223,6 +270,16 @@ func getHeaders(
 	}
 
 	return proto, int(major), int(minor), hdrs, nil
+}
+
+func loadCookies(jar http.CookieJar, req *http.Request) {
+	if jar == nil {
+		return
+	}
+
+	for _, cookie := range jar.Cookies(req.URL) {
+		req.AddCookie(cookie)
+	}
 }
 
 func queryResponse(reqHndl, info uintptr, idx int) ([]byte, error) {
@@ -441,14 +498,21 @@ func setTimeouts(reqHndl uintptr, timeout time.Duration) error {
 func storeCookies(
 	jar http.CookieJar, uri *url.URL, cookies []*http.Cookie,
 ) error {
-	var root *url.URL
+	var e error
+	var path *url.URL
 
 	if jar == nil {
 		return nil
 	}
 
-	root, _ = uri.Parse("/")
-	jar.SetCookies(root, cookies)
+	// Store cookies per path
+	for _, cookie := range cookies {
+		if path, e = uri.Parse(cookie.Path); e != nil {
+			return errors.Newf("invalid cookie path: %w", e)
+		}
+
+		jar.SetCookies(path, []*http.Cookie{cookie})
+	}
 
 	return nil
 }
