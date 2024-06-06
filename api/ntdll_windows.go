@@ -89,6 +89,43 @@ func NtCreateSection(
 	return nil
 }
 
+// NtCreateThreadEx from ntdll.
+func NtCreateThreadEx(
+	pHndl windows.Handle,
+	addr uintptr,
+	sspnd bool,
+) (windows.Handle, error) {
+	var err uintptr
+	var proc string = "NtCreateThreadEx"
+	var suspend uintptr
+	var tHndl windows.Handle
+
+	if sspnd {
+		suspend = 1
+	}
+
+	err, _, _ = ntdll.NewProc(proc).Call(
+		uintptr(unsafe.Pointer(&tHndl)),
+		Winnt.ThreadAllAccess,
+		0,
+		uintptr(pHndl),
+		addr,
+		0,
+		suspend,
+		0,
+		0,
+		0,
+		0,
+	)
+	if err != 0 {
+		return 0, errors.Newf("%s returned %0x", proc, uint32(err))
+	} else if tHndl == 0 {
+		return 0, errors.Newf("%s failed for unknown reason", proc)
+	}
+
+	return tHndl, nil
+}
+
 // NtMapViewOfSection from ntdll.
 func NtMapViewOfSection(
 	sHndl windows.Handle,
