@@ -169,6 +169,8 @@ func NtOpenProcess(
 	var pHndl windows.Handle
 	var proc string = "NtOpenProcess"
 
+	// TODO allow objectAttrs to be passed in
+	// TODO allow clientID to be passed in
 	err, _, _ = ntdll.NewProc(proc).Call(
 		uintptr(unsafe.Pointer(&pHndl)),
 		access,

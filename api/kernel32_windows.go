@@ -3,13 +3,47 @@
 package api
 
 import (
+	"unsafe"
+
 	"golang.org/x/sys/windows"
 
 	"github.com/mjwhitta/errors"
 	"github.com/mjwhitta/win/types"
 )
 
+// CopyFile2ExtendedParameters is COPYFILE2_EXTENDED_PARAMETERS from
+// winbase.h
+type CopyFile2ExtendedParameters struct {
+	dwSize          uint32  // DWORD, 4 bytes
+	CopyFlags       uint32  // DWORD, 4 bytes
+	CancelPtr       uintptr // pointer, 8 bytes
+	ProgressRoutine uintptr // pointer, 8 bytes
+	CallbackContext uintptr // pointer, 8 bytes
+} // dwSize is always 32
+
 var kernel32 *windows.LazyDLL = windows.NewLazySystemDLL("kernel32")
+
+// CopyFile2 from winbase.h
+func CopyFile2(
+	src string, dst string, params CopyFile2ExtendedParameters,
+) error {
+	var e error
+	var ok uintptr
+	var proc string = "CopyFile2"
+
+	params.dwSize = 32 // Always 32
+
+	ok, _, e = kernel32.NewProc(proc).Call(
+		types.LpCwstr(src),
+		types.LpCwstr(dst),
+		uintptr(unsafe.Pointer(&params)),
+	)
+	if ok != 0 {
+		return errors.Newf("%s: %w", proc, e)
+	}
+
+	return nil
+}
 
 // HeapAlloc is from heapapi.h
 func HeapAlloc(
