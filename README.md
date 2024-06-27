@@ -27,7 +27,7 @@ Go/Windows types, debugging DLLs, and user identity management.
 Open a terminal and run the following:
 
 ```
-$ go get --ldflags "-s -w" --trimpath -u github.com/mjwhitta/win
+$ go get -u github.com/mjwhitta/win
 ```
 
 ## Usage
