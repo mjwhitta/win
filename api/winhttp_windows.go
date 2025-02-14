@@ -44,6 +44,19 @@ func WinHTTPAddRequestHeaders(
 	return nil
 }
 
+// WinHTTPCloseHandle is WinHttpCloseHandle from winhttp.h
+func WinHTTPCloseHandle(reqHndl uintptr) error {
+	var e error
+	var ok uintptr
+	var proc string = "WinHttpCloseHandle"
+
+	if ok, _, e = winhttp.NewProc(proc).Call(reqHndl); ok == 0 {
+		return errors.Newf("%s: %w", proc, e)
+	}
+
+	return nil
+}
+
 // WinHTTPConnect is WinHttpConnect from winhttp.h
 func WinHTTPConnect(
 	sessionHndl uintptr,
@@ -143,14 +156,14 @@ func WinHTTPQueryDataAvailable(
 	reqHndl uintptr, bytesToRead *int64,
 ) error {
 	var e error
+	var ok uintptr
 	var proc string = "WinHttpQueryDataAvailable"
-	var success uintptr
 
-	success, _, e = winhttp.NewProc(proc).Call(
+	ok, _, e = winhttp.NewProc(proc).Call(
 		reqHndl,
 		uintptr(unsafe.Pointer(bytesToRead)),
 	)
-	if success == 0 {
+	if ok == 0 {
 		return errors.Newf("%s: %w", proc, e)
 	}
 
@@ -168,9 +181,9 @@ func WinHTTPQueryHeaders(
 ) error {
 	var b []uint16
 	var e error
+	var ok uintptr
 	var proc string = "WinHttpQueryHeaders"
 	var pwszName uintptr
-	var success uintptr
 
 	// Convert to Windows types
 	if *bufferLen > 0 {
@@ -185,7 +198,7 @@ func WinHTTPQueryHeaders(
 		pwszName = Winhttp.WinhttpHeaderNameByIndex
 	}
 
-	success, _, e = winhttp.NewProc(proc).Call(
+	ok, _, e = winhttp.NewProc(proc).Call(
 		reqHndl,
 		info,
 		pwszName,
@@ -193,7 +206,7 @@ func WinHTTPQueryHeaders(
 		uintptr(unsafe.Pointer(bufferLen)),
 		uintptr(unsafe.Pointer(index)),
 	)
-	if success == 0 {
+	if ok == 0 {
 		return errors.Newf("%s: %w", proc, e)
 	}
 
@@ -211,8 +224,8 @@ func WinHTTPReadData(
 ) error {
 	var b []byte
 	var e error
+	var ok uintptr
 	var proc string = "WinHttpReadData"
-	var success uintptr
 
 	if bytesToRead > 0 {
 		b = make([]byte, bytesToRead)
@@ -220,13 +233,13 @@ func WinHTTPReadData(
 		b = make([]byte, 1)
 	}
 
-	success, _, e = winhttp.NewProc(proc).Call(
+	ok, _, e = winhttp.NewProc(proc).Call(
 		reqHndl,
 		uintptr(unsafe.Pointer(&b[0])),
 		uintptr(bytesToRead),
 		uintptr(unsafe.Pointer(bytesRead)),
 	)
-	if success == 0 {
+	if ok == 0 {
 		return errors.Newf("%s: %w", proc, e)
 	}
 
@@ -238,11 +251,10 @@ func WinHTTPReadData(
 // WinHTTPReceiveResponse is WinHttpReceiveResponse from winhttp.h
 func WinHTTPReceiveResponse(reqHndl uintptr) error {
 	var e error
+	var ok uintptr
 	var proc string = "WinHttpReceiveResponse"
-	var success uintptr
 
-	success, _, e = winhttp.NewProc(proc).Call(reqHndl, 0)
-	if success == 0 {
+	if ok, _, e = winhttp.NewProc(proc).Call(reqHndl, 0); ok == 0 {
 		return errors.Newf("%s: %w", proc, e)
 	}
 
@@ -259,15 +271,15 @@ func WinHTTPSendRequest(
 ) error {
 	var body uintptr
 	var e error
+	var ok uintptr
 	var proc string = "WinHttpSendRequest"
-	var success uintptr
 
 	// Pointer to data if provided
 	if (data != nil) && (len(data) > 0) {
 		body = uintptr(unsafe.Pointer(&data[0]))
 	}
 
-	success, _, e = winhttp.NewProc(proc).Call(
+	ok, _, e = winhttp.NewProc(proc).Call(
 		reqHndl,
 		types.LpCwstr(headers),
 		uintptr(headersLen),
@@ -275,7 +287,7 @@ func WinHTTPSendRequest(
 		uintptr(dataLen),
 		uintptr(dataLen),
 	)
-	if success == 0 {
+	if ok == 0 {
 		return errors.Newf("%s: %w", proc, e)
 	}
 
@@ -287,21 +299,21 @@ func WinHTTPSetOption(
 	hndl, opt uintptr, val []byte, valLen int,
 ) error {
 	var e error
+	var ok uintptr
 	var proc string = "WinHttpSetOption"
-	var success uintptr
 
 	// Pointer to data if provided
 	if valLen == 0 {
 		val = make([]byte, 1)
 	}
 
-	success, _, e = winhttp.NewProc(proc).Call(
+	ok, _, e = winhttp.NewProc(proc).Call(
 		hndl,
 		opt,
 		uintptr(unsafe.Pointer(&val[0])),
 		uintptr(valLen),
 	)
-	if success == 0 {
+	if ok == 0 {
 		return errors.Newf("%s: %w", proc, e)
 	}
 

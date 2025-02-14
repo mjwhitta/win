@@ -100,8 +100,8 @@ func HTTPQueryInfoW(
 ) error {
 	var b []uint16
 	var e error
+	var ok uintptr
 	var proc string = "HttpQueryInfoW"
-	var success uintptr
 	var tmp string
 
 	if *bufferLen > 0 {
@@ -110,14 +110,14 @@ func HTTPQueryInfoW(
 		b = make([]uint16, 1)
 	}
 
-	success, _, e = wininet.NewProc(proc).Call(
+	ok, _, e = wininet.NewProc(proc).Call(
 		reqHndl,
 		info,
 		uintptr(unsafe.Pointer(&b[0])),
 		uintptr(unsafe.Pointer(bufferLen)),
 		uintptr(unsafe.Pointer(index)),
 	)
-	if success == 0 {
+	if ok == 0 {
 		return errors.Newf("%s: %w", proc, e)
 	}
 
@@ -137,22 +137,35 @@ func HTTPSendRequestW(
 ) error {
 	var body uintptr
 	var e error
+	var ok uintptr
 	var proc string = "HttpSendRequestW"
-	var success uintptr
 
 	// Pointer to data if provided
 	if (data != nil) && (len(data) > 0) {
 		body = uintptr(unsafe.Pointer(&data[0]))
 	}
 
-	success, _, e = wininet.NewProc(proc).Call(
+	ok, _, e = wininet.NewProc(proc).Call(
 		reqHndl,
 		types.LpCwstr(headers),
 		uintptr(headersLen),
 		body,
 		uintptr(dataLen),
 	)
-	if success == 0 {
+	if ok == 0 {
+		return errors.Newf("%s: %w", proc, e)
+	}
+
+	return nil
+}
+
+// InternetCloseHandle is from wininet.h
+func InternetCloseHandle(reqHndl uintptr) error {
+	var e error
+	var ok uintptr
+	var proc string = "InternetCloseHandle"
+
+	if ok, _, e = wininet.NewProc(proc).Call(reqHndl); ok == 0 {
 		return errors.Newf("%s: %w", proc, e)
 	}
 
@@ -199,8 +212,8 @@ func InternetGetCookieW(
 ) error {
 	var b []uint16
 	var e error
+	var ok uintptr
 	var proc string = "InternetGetCookieW"
-	var success uintptr
 	var tmp string
 
 	if *bufferLen > 0 {
@@ -209,13 +222,13 @@ func InternetGetCookieW(
 		b = make([]uint16, 1)
 	}
 
-	success, _, e = wininet.NewProc(proc).Call(
+	ok, _, e = wininet.NewProc(proc).Call(
 		types.LpCwstr(url),
 		0,
 		uintptr(unsafe.Pointer(&b[0])),
 		uintptr(unsafe.Pointer(bufferLen)),
 	)
-	if success == 0 {
+	if ok == 0 {
 		return errors.Newf("%s: %w", proc, e)
 	}
 
@@ -235,8 +248,8 @@ func InternetGetCookieExW(
 ) error {
 	var b []uint16
 	var e error
+	var ok uintptr
 	var proc string = "InternetGetCookieExW"
-	var success uintptr
 	var tmp string
 
 	if *bufferLen > 0 {
@@ -245,7 +258,7 @@ func InternetGetCookieExW(
 		b = make([]uint16, 1)
 	}
 
-	success, _, e = wininet.NewProc(proc).Call(
+	ok, _, e = wininet.NewProc(proc).Call(
 		types.LpCwstr(url),
 		types.LpCwstr(name),
 		uintptr(unsafe.Pointer(&b[0])),
@@ -253,7 +266,7 @@ func InternetGetCookieExW(
 		flags,
 		0,
 	)
-	if success == 0 {
+	if ok == 0 {
 		return errors.Newf("%s: %w", proc, e)
 	}
 
@@ -295,16 +308,16 @@ func InternetQueryDataAvailable(
 	bytesAvailable *int64,
 ) error {
 	var e error
+	var ok uintptr
 	var proc string = "InternetQueryDataAvailable"
-	var success uintptr
 
-	success, _, e = wininet.NewProc(proc).Call(
+	ok, _, e = wininet.NewProc(proc).Call(
 		reqHndl,
 		uintptr(unsafe.Pointer(bytesAvailable)),
 		0,
 		0,
 	)
-	if success == 0 {
+	if ok == 0 {
 		return errors.Newf("%s: %w", proc, e)
 	}
 
@@ -320,8 +333,8 @@ func InternetReadFile(
 ) error {
 	var b []byte
 	var e error
+	var ok uintptr
 	var proc string = "InternetReadFile"
-	var success uintptr
 
 	if bytesToRead > 0 {
 		b = make([]byte, bytesToRead)
@@ -329,13 +342,13 @@ func InternetReadFile(
 		b = make([]byte, 1)
 	}
 
-	success, _, e = wininet.NewProc(proc).Call(
+	ok, _, e = wininet.NewProc(proc).Call(
 		reqHndl,
 		uintptr(unsafe.Pointer(&b[0])),
 		uintptr(bytesToRead),
 		uintptr(unsafe.Pointer(bytesRead)),
 	)
-	if success == 0 {
+	if ok == 0 {
 		return errors.Newf("%s: %w", proc, e)
 	}
 
@@ -352,21 +365,21 @@ func InternetSetOptionW(
 	valLen int,
 ) error {
 	var e error
+	var ok uintptr
 	var proc string = "InternetSetOptionW"
-	var success uintptr
 
 	// Pointer to data if provided
 	if valLen == 0 {
 		val = make([]byte, 1)
 	}
 
-	success, _, e = wininet.NewProc(proc).Call(
+	ok, _, e = wininet.NewProc(proc).Call(
 		hndl,
 		opt,
 		uintptr(unsafe.Pointer(&val[0])),
 		uintptr(valLen),
 	)
-	if success == 0 {
+	if ok == 0 {
 		return errors.Newf("%s: %w", proc, e)
 	}
 

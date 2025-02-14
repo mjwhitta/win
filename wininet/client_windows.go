@@ -78,6 +78,7 @@ func (c *Client) Do(req *http.Request) (*http.Response, error) {
 	if reqHndl, e = buildRequest(c.hndl, req, c.Timeout); e != nil {
 		return nil, e
 	}
+	defer w32.InternetCloseHandle(reqHndl)
 
 	// Disable TLS verification, if configured to do so
 	if t, ok := trans.(*http.Transport); ok {
