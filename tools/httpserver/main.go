@@ -119,5 +119,5 @@ func rootHandler(w http.ResponseWriter, req *http.Request) {
 		w.Header().Add("Set-Cookie", cookie.String())
 	}
 
-	w.Write([]byte("Success"))
+	_, _ = w.Write([]byte("Success"))
 }
