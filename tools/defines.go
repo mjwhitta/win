@@ -74,6 +74,10 @@ var skipLContains = map[string][]string{
 	"shellapi.h": {
 		"DUMMY",
 	},
+	"stdlib.h": {
+		"__",
+		"errno",
+	},
 	"winnt.h": {
 		"DUMMY",
 		"XSTATE_MASK_ALLOWED",
@@ -97,13 +101,18 @@ var skipRContains = map[string][]string{
 		"INTERNET_STATUS_CALLBACK",
 	},
 	"winnt.h": {
+		"DWORD64",
 		"FIELD_OFFSET",
+		"HANDLE",
 		"inline",
 		"MAKELANGID(",
 		"MAKELCID(",
 	},
 	"nb30.h": {
 		"\\0",
+	},
+	"stdlib.h": {
+		"__",
 	},
 	"wincrypt.h": {
 		"\\0",
@@ -233,53 +242,66 @@ func fixVarTypes() {
 }
 
 func format(str string) string {
+	var out []string
 	var tmp []string
 
 	if str == "" {
 		return str
 	}
 
-	// Replace _ with CamelCase
-	if strings.Contains(str, "_") {
-		// Split on "_"
-		tmp = strings.Split(strings.ToLower(str), "_")
+	for _, s := range strings.Split(str, " ") {
+		// Replace _ with CamelCase
+		if strings.Contains(s, "_") {
+			// Split on "_"
+			tmp = strings.Split(strings.ToLower(s), "_")
 
-		// Capitalize every part
-		for i := range tmp {
-			if tmp[i] == "" {
-				continue
+			// Capitalize every part
+			for i := range tmp {
+				if tmp[i] == "" {
+					continue
+				}
+
+				tmp[i] = strings.ToUpper(tmp[i][:1]) + tmp[i][1:]
 			}
 
-			tmp[i] = strings.ToUpper(tmp[i][:1]) + tmp[i][1:]
+			// Join together for camelcase
+			s = strings.Join(tmp, "")
+		} else if camel.MatchString(s) {
+			// Do nothing
+		} else {
+			s = strings.ToUpper(s[:1]) + strings.ToLower(s[1:])
 		}
 
-		// Join together for camelcase
-		str = strings.Join(tmp, "")
-	} else if camel.MatchString(str) {
-		// Do nothing
-	} else {
-		str = strings.ToUpper(str[:1]) + strings.ToLower(str[1:])
+		// Fix some special cases
+		s = strings.ReplaceAll(s, "Crlf", "CRLF")
+		s = strings.ReplaceAll(s, "Ftp", "FTP")
+		s = strings.ReplaceAll(s, "Hf32", "")
+		s = strings.ReplaceAll(s, "Http", "HTTP")
+		s = strings.ReplaceAll(s, "Lf32", "")
+		s = strings.ReplaceAll(s, "LOGICAL", "Logical")
+		s = strings.ReplaceAll(s, "LOGNAME", "Logname")
+		s = strings.ReplaceAll(s, "Snapall", "SnapAll")
+		s = strings.ReplaceAll(s, "Snapheaplist", "SnapHeapList")
+		s = strings.ReplaceAll(s, "Snapmodule", "SnapModule")
+		s = strings.ReplaceAll(s, "Snapprocess", "SnapProcess")
+		s = strings.ReplaceAll(s, "Snapthread", "SnapThread")
+		s = strings.ReplaceAll(s, "Th32cs", "")
+
+		// Fix type-related
+		s = strings.ReplaceAll(s, "BYTE", "Byte")
+		s = strings.ReplaceAll(s, "CHAR", "Char")
+		s = strings.ReplaceAll(s, "DWORD", "Dword")
+		s = strings.ReplaceAll(s, "MAX", "Max")
+		s = strings.ReplaceAll(s, "MIN", "Min")
+		s = strings.ReplaceAll(s, "LONG", "Long")
+		s = strings.ReplaceAll(s, "SHORT", "Short")
+		s = strings.ReplaceAll(s, "SIZE", "Size")
+		s = strings.ReplaceAll(s, "WORD", "Word")
+
+		out = append(out, s)
 	}
 
-	// Fix some special cases
-	str = strings.ReplaceAll(str, "Crlf", "CRLF")
-	str = strings.ReplaceAll(str, "Ftp", "FTP")
-	str = strings.ReplaceAll(str, "Http", "HTTP")
-	str = strings.ReplaceAll(str, "LOGICAL", "Logical")
-	str = strings.ReplaceAll(str, "LOGNAME", "Logname")
-
-	// Fix type-related
-	str = strings.ReplaceAll(str, "BYTE", "Byte")
-	str = strings.ReplaceAll(str, "CHAR", "Char")
-	str = strings.ReplaceAll(str, "DWORD", "Dword")
-	str = strings.ReplaceAll(str, "MAX", "Max")
-	str = strings.ReplaceAll(str, "MIN", "Min")
-	str = strings.ReplaceAll(str, "LONG", "Long")
-	str = strings.ReplaceAll(str, "SHORT", "Short")
-	str = strings.ReplaceAll(str, "SIZE", "Size")
-	str = strings.ReplaceAll(str, "WORD", "Word")
-
-	return str
+	return strings.Join(out, " ")
 }
 
 func genFile(pkg string) error {

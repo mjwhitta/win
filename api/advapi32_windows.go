@@ -13,7 +13,7 @@ import (
 
 var advapi32 *windows.LazyDLL = windows.NewLazySystemDLL("Advapi32")
 
-// LookupPrivilegeDisplayName is from winbase.h
+// LookupPrivilegeDisplayName from winbase.h
 func LookupPrivilegeDisplayName(
 	system string, name string, desc *[]byte, descLen *int,
 ) error {
@@ -47,7 +47,7 @@ func LookupPrivilegeDisplayName(
 	return nil
 }
 
-// LookupPrivilegeName is from winbase.h
+// LookupPrivilegeName from winbase.h
 func LookupPrivilegeName(
 	system string, luid int64, name *[]byte, nameLen *int,
 ) error {

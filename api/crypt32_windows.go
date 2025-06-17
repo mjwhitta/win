@@ -11,7 +11,7 @@ import (
 
 var crypt32 *windows.LazyDLL = windows.NewLazySystemDLL("crypt32")
 
-// CertEnumPhysicalStore is from wincrypt.h
+// CertEnumPhysicalStore from wincrypt.h
 func CertEnumPhysicalStore(
 	store string,
 	dwFlags uintptr,
@@ -35,7 +35,7 @@ func CertEnumPhysicalStore(
 	return nil
 }
 
-// CertEnumSystemStore is from wincrypt.h
+// CertEnumSystemStore from wincrypt.h
 func CertEnumSystemStore(
 	dwFlags uintptr,
 	pvSystemStoreLocationPara uintptr,

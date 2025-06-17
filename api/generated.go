@@ -1095,1729 +1095,15 @@ var Lzexpand = struct {
 
 // Mmsystem contains constants from mmsystem.h
 var Mmsystem = struct {
-	AuxcapsAuxin                          uintptr
-	AuxcapsCdaudio                        uintptr
-	AuxcapsLrvolume                       uintptr
-	AuxcapsVolume                         uintptr
-	AuxMapper                             int
-	CallbackEvent                         uintptr
-	CallbackFunction                      uintptr
-	CallbackNull                          uintptr
-	CallbackTask                          uintptr
-	CallbackThread                        uintptr
-	CallbackTypemask                      uintptr
-	CallbackWindow                        uintptr
-	Cfsepchar                             uintptr
-	DrvCancel                             uintptr
-	DrvClose                              uintptr
-	DrvcnfCancel                          uintptr
-	DrvcnfOk                              uintptr
-	DrvcnfRestart                         uintptr
-	DrvConfigure                          uintptr
-	DrvDisable                            uintptr
-	DrvEnable                             uintptr
-	DrvExitsession                        uintptr
-	DrvFree                               uintptr
-	DrvInstall                            uintptr
-	DrvLoad                               uintptr
-	DrvMciFirst                           uintptr
-	DrvMciLast                            uintptr
-	DrvOk                                 uintptr
-	DrvOpen                               uintptr
-	DrvPower                              uintptr
-	DrvQueryconfigure                     uintptr
-	DrvRemove                             uintptr
-	DrvReserved                           uintptr
-	DrvRestart                            uintptr
-	DrvUser                               uintptr
-	JoyButton1                            uintptr
-	JoyButton10                           uintptr
-	JoyButton11                           uintptr
-	JoyButton12                           uintptr
-	JoyButton13                           uintptr
-	JoyButton14                           uintptr
-	JoyButton15                           uintptr
-	JoyButton16                           uintptr
-	JoyButton17                           uintptr
-	JoyButton18                           uintptr
-	JoyButton19                           uintptr
-	JoyButton1chg                         uintptr
-	JoyButton2                            uintptr
-	JoyButton20                           uintptr
-	JoyButton21                           uintptr
-	JoyButton22                           uintptr
-	JoyButton23                           uintptr
-	JoyButton24                           uintptr
-	JoyButton25                           uintptr
-	JoyButton26                           uintptr
-	JoyButton27                           uintptr
-	JoyButton28                           uintptr
-	JoyButton29                           uintptr
-	JoyButton2chg                         uintptr
-	JoyButton3                            uintptr
-	JoyButton30                           uintptr
-	JoyButton31                           uintptr
-	JoyButton32                           uintptr
-	JoyButton3chg                         uintptr
-	JoyButton4                            uintptr
-	JoyButton4chg                         uintptr
-	JoyButton5                            uintptr
-	JoyButton6                            uintptr
-	JoyButton7                            uintptr
-	JoyButton8                            uintptr
-	JoyButton9                            uintptr
-	JoyCalRead3                           uintptr
-	JoyCalRead4                           uintptr
-	JoyCalRead5                           uintptr
-	JoyCalRead6                           uintptr
-	JoyCalReadalways                      uintptr
-	JoyCalReadronly                       uintptr
-	JoyCalReaduonly                       uintptr
-	JoyCalReadvonly                       uintptr
-	JoyCalReadxonly                       uintptr
-	JoyCalReadxyonly                      uintptr
-	JoyCalReadyonly                       uintptr
-	JoyCalReadzonly                       uintptr
-	JoycapsHaspov                         uintptr
-	JoycapsHasr                           uintptr
-	JoycapsHasu                           uintptr
-	JoycapsHasv                           uintptr
-	JoycapsHasz                           uintptr
-	JoycapsPov4dir                        uintptr
-	JoycapsPovcts                         uintptr
-	JoyerrBase                            uintptr
-	JoyerrNocando                         uintptr
-	JoyerrNoerror                         uintptr
-	JoyerrParms                           uintptr
-	JoyerrUnplugged                       uintptr
-	JoyPovbackward                        uintptr
-	JoyPovcentered                        int
-	JoyPovforward                         uintptr
-	JoyPovleft                            uintptr
-	JoyPovright                           uintptr
-	JoyReturnall                          uintptr
-	JoyReturnbuttons                      uintptr
-	JoyReturncentered                     uintptr
-	JoyReturnpov                          uintptr
-	JoyReturnpovcts                       uintptr
-	JoyReturnr                            uintptr
-	JoyReturnrawdata                      uintptr
-	JoyReturnu                            uintptr
-	JoyReturnv                            uintptr
-	JoyReturnx                            uintptr
-	JoyReturny                            uintptr
-	JoyReturnz                            uintptr
-	Joystickid1                           uintptr
-	Joystickid2                           uintptr
-	JoyUsedeadzone                        uintptr
-	Maxerrorlength                        uintptr
-	MaxJoystickoemvxdname                 uintptr
-	Maxpnamelen                           uintptr
-	MciAllDeviceId                        int
-	MciAnimGetdevcapsCanReverse           uintptr
-	MciAnimGetdevcapsCanStretch           uintptr
-	MciAnimGetdevcapsFastRate             uintptr
-	MciAnimGetdevcapsMaxWindows           uintptr
-	MciAnimGetdevcapsNormalRate           uintptr
-	MciAnimGetdevcapsPalettes             uintptr
-	MciAnimGetdevcapsSlowRate             uintptr
-	MciAnimInfoText                       uintptr
-	MciAnimOpenNostatic                   uintptr
-	MciAnimOpenParent                     uintptr
-	MciAnimOpenWs                         uintptr
-	MciAnimPlayFast                       uintptr
-	MciAnimPlayReverse                    uintptr
-	MciAnimPlayScan                       uintptr
-	MciAnimPlaySlow                       uintptr
-	MciAnimPlaySpeed                      uintptr
-	MciAnimPutDestination                 uintptr
-	MciAnimPutSource                      uintptr
-	MciAnimRealizeBkgd                    uintptr
-	MciAnimRealizeNorm                    uintptr
-	MciAnimRect                           uintptr
-	MciAnimStatusForward                  uintptr
-	MciAnimStatusHpal                     uintptr
-	MciAnimStatusHwnd                     uintptr
-	MciAnimStatusSpeed                    uintptr
-	MciAnimStatusStretch                  uintptr
-	MciAnimStepFrames                     uintptr
-	MciAnimStepReverse                    uintptr
-	MciAnimUpdateHdc                      uintptr
-	MciAnimWhereDestination               uintptr
-	MciAnimWhereSource                    uintptr
-	MciAnimWindowDefault                  uintptr
-	MciAnimWindowDisableStretch           uintptr
-	MciAnimWindowEnableStretch            uintptr
-	MciAnimWindowHwnd                     uintptr
-	MciAnimWindowState                    uintptr
-	MciAnimWindowText                     uintptr
-	MciBreak                              uintptr
-	MciBreakHwnd                          uintptr
-	MciBreakKey                           uintptr
-	MciBreakOff                           uintptr
-	MciCdaStatusTypeTrack                 uintptr
-	MciCdaTrackAudio                      uintptr
-	MciCdaTrackOther                      uintptr
-	MciCdOffset                           uintptr
-	MciClose                              uintptr
-	MciCopy                               uintptr
-	MciCue                                uintptr
-	MciCut                                uintptr
-	MciDelete                             uintptr
-	MciDevtypeAnimation                   uintptr
-	MciDevtypeCdAudio                     uintptr
-	MciDevtypeDat                         uintptr
-	MciDevtypeDigitalVideo                uintptr
-	MciDevtypeFirst                       uintptr
-	MciDevtypeFirstUser                   uintptr
-	MciDevtypeLast                        uintptr
-	MciDevtypeOther                       uintptr
-	MciDevtypeOverlay                     uintptr
-	MciDevtypeScanner                     uintptr
-	MciDevtypeSequencer                   uintptr
-	MciDevtypeVcr                         uintptr
-	MciDevtypeVideodisc                   uintptr
-	MciDevtypeWaveformAudio               uintptr
-	McierrBadConstant                     uintptr
-	McierrBadInteger                      uintptr
-	McierrBadTimeFormat                   uintptr
-	McierrBase                            uintptr
-	McierrCannotLoadDriver                uintptr
-	McierrCannotUseAll                    uintptr
-	McierrCreatewindow                    uintptr
-	McierrCustomDriverBase                uintptr
-	McierrDeviceLength                    uintptr
-	McierrDeviceLocked                    uintptr
-	McierrDeviceNotInstalled              uintptr
-	McierrDeviceNotReady                  uintptr
-	McierrDeviceOpen                      uintptr
-	McierrDeviceOrdLength                 uintptr
-	McierrDeviceTypeRequired              uintptr
-	McierrDriver                          uintptr
-	McierrDriverInternal                  uintptr
-	McierrDuplicateAlias                  uintptr
-	McierrDuplicateFlags                  uintptr
-	McierrExtensionNotFound               uintptr
-	McierrExtraCharacters                 uintptr
-	McierrFilenameRequired                uintptr
-	McierrFileNotFound                    uintptr
-	McierrFileNotSaved                    uintptr
-	McierrFileRead                        uintptr
-	McierrFileWrite                       uintptr
-	McierrFlagsNotCompatible              uintptr
-	McierrGetCd                           uintptr
-	McierrHardware                        uintptr
-	McierrIllegalForAutoOpen              uintptr
-	McierrInternal                        uintptr
-	McierrInvalidDeviceId                 uintptr
-	McierrInvalidDeviceName               uintptr
-	McierrInvalidFile                     uintptr
-	McierrMissingCommandString            uintptr
-	McierrMissingDeviceName               uintptr
-	McierrMissingParameter                uintptr
-	McierrMissingStringArgument           uintptr
-	McierrMultiple                        uintptr
-	McierrMustUseShareable                uintptr
-	McierrNewRequiresAlias                uintptr
-	McierrNoClosingQuote                  uintptr
-	McierrNoElementAllowed                uintptr
-	McierrNoIdentity                      uintptr
-	McierrNoInteger                       uintptr
-	McierrNonapplicableFunction           uintptr
-	McierrNotifyOnAutoOpen                uintptr
-	McierrNoWindow                        uintptr
-	McierrNullParameterBlock              uintptr
-	McierrOutOfMemory                     uintptr
-	McierrOutofrange                      uintptr
-	McierrParamOverflow                   uintptr
-	McierrParserInternal                  uintptr
-	McierrSeqDivIncompatible              uintptr
-	McierrSeqNomidipresent                uintptr
-	McierrSeqPortInuse                    uintptr
-	McierrSeqPortMapnodevice              uintptr
-	McierrSeqPortMiscerror                uintptr
-	McierrSeqPortNonexistent              uintptr
-	McierrSeqPortunspecified              uintptr
-	McierrSeqTimer                        uintptr
-	McierrSetCd                           uintptr
-	McierrSetDrive                        uintptr
-	McierrUnnamedResource                 uintptr
-	McierrUnrecognizedCommand             uintptr
-	McierrUnrecognizedKeyword             uintptr
-	McierrUnsupportedFunction             uintptr
-	McierrWaveInputsinuse                 uintptr
-	McierrWaveInputsunsuitable            uintptr
-	McierrWaveInputunspecified            uintptr
-	McierrWaveOutputsinuse                uintptr
-	McierrWaveOutputsunsuitable           uintptr
-	McierrWaveOutputunspecified           uintptr
-	McierrWaveSetinputinuse               uintptr
-	McierrWaveSetinputunsuitable          uintptr
-	McierrWaveSetoutputinuse              uintptr
-	McierrWaveSetoutputunsuitable         uintptr
-	MciEscape                             uintptr
-	MciFirst                              uintptr
-	MciFormatBytes                        uintptr
-	MciFormatFrames                       uintptr
-	MciFormatHms                          uintptr
-	MciFormatMilliseconds                 uintptr
-	MciFormatMsf                          uintptr
-	MciFormatSamples                      uintptr
-	MciFormatSmpte24                      uintptr
-	MciFormatSmpte25                      uintptr
-	MciFormatSmpte30                      uintptr
-	MciFormatSmpte30drop                  uintptr
-	MciFormatTmsf                         uintptr
-	MciFreeze                             uintptr
-	MciFrom                               uintptr
-	MciGetdevcaps                         uintptr
-	MciGetdevcapsCanEject                 uintptr
-	MciGetdevcapsCanPlay                  uintptr
-	MciGetdevcapsCanRecord                uintptr
-	MciGetdevcapsCanSave                  uintptr
-	MciGetdevcapsCompoundDevice           uintptr
-	MciGetdevcapsDeviceType               uintptr
-	MciGetdevcapsHasAudio                 uintptr
-	MciGetdevcapsHasVideo                 uintptr
-	MciGetdevcapsItem                     uintptr
-	MciGetdevcapsUsesFiles                uintptr
-	MciInfo                               uintptr
-	MciInfoCopyright                      uintptr
-	MciInfoFile                           uintptr
-	MciInfoMediaIdentity                  uintptr
-	MciInfoMediaUpc                       uintptr
-	MciInfoName                           uintptr
-	MciInfoProduct                        uintptr
-	MciLast                               uintptr
-	MciLoad                               uintptr
-	MciLoadFile                           uintptr
-	MciModeNotReady                       uintptr
-	MciModeOpen                           uintptr
-	MciModePause                          uintptr
-	MciModePlay                           uintptr
-	MciModeRecord                         uintptr
-	MciModeSeek                           uintptr
-	MciModeStop                           uintptr
-	MciNotify                             uintptr
-	MciNotifyAborted                      uintptr
-	MciNotifyFailure                      uintptr
-	MciNotifySuccessful                   uintptr
-	MciNotifySuperseded                   uintptr
-	MciOpen                               uintptr
-	MciOpenAlias                          uintptr
-	MciOpenElement                        uintptr
-	MciOpenElementId                      uintptr
-	MciOpenShareable                      uintptr
-	MciOpenType                           uintptr
-	MciOpenTypeId                         uintptr
-	MciOvlyGetdevcapsCanFreeze            uintptr
-	MciOvlyGetdevcapsCanStretch           uintptr
-	MciOvlyGetdevcapsMaxWindows           uintptr
-	MciOvlyInfoText                       uintptr
-	MciOvlyOpenParent                     uintptr
-	MciOvlyOpenWs                         uintptr
-	MciOvlyPutDestination                 uintptr
-	MciOvlyPutFrame                       uintptr
-	MciOvlyPutSource                      uintptr
-	MciOvlyPutVideo                       uintptr
-	MciOvlyRect                           uintptr
-	MciOvlyStatusHwnd                     uintptr
-	MciOvlyStatusStretch                  uintptr
-	MciOvlyWhereDestination               uintptr
-	MciOvlyWhereFrame                     uintptr
-	MciOvlyWhereSource                    uintptr
-	MciOvlyWhereVideo                     uintptr
-	MciOvlyWindowDefault                  uintptr
-	MciOvlyWindowDisableStretch           uintptr
-	MciOvlyWindowEnableStretch            uintptr
-	MciOvlyWindowHwnd                     uintptr
-	MciOvlyWindowState                    uintptr
-	MciOvlyWindowText                     uintptr
-	MciPaste                              uintptr
-	MciPause                              uintptr
-	MciPlay                               uintptr
-	MciPut                                uintptr
-	MciRealize                            uintptr
-	MciRecord                             uintptr
-	MciRecordInsert                       uintptr
-	MciRecordOverwrite                    uintptr
-	MciResume                             uintptr
-	MciSave                               uintptr
-	MciSaveFile                           uintptr
-	MciSeek                               uintptr
-	MciSeekToEnd                          uintptr
-	MciSeekToStart                        uintptr
-	MciSeqDivPpqn                         uintptr
-	MciSeqDivSmpte24                      uintptr
-	MciSeqDivSmpte25                      uintptr
-	MciSeqDivSmpte30                      uintptr
-	MciSeqDivSmpte30drop                  uintptr
-	MciSeqFile                            uintptr
-	MciSeqFormatSongptr                   uintptr
-	MciSeqMapper                          uintptr
-	MciSeqMidi                            uintptr
-	MciSeqNone                            uintptr
-	MciSeqOffset                          uintptr
-	MciSeqSetMaster                       uintptr
-	MciSeqSetOffset                       uintptr
-	MciSeqSetPort                         uintptr
-	MciSeqSetSlave                        uintptr
-	MciSeqSetTempo                        uintptr
-	MciSeqSmpte                           uintptr
-	MciSeqStatusCopyright                 uintptr
-	MciSeqStatusDivtype                   uintptr
-	MciSeqStatusMaster                    uintptr
-	MciSeqStatusName                      uintptr
-	MciSeqStatusOffset                    uintptr
-	MciSeqStatusPort                      uintptr
-	MciSeqStatusSlave                     uintptr
-	MciSeqStatusTempo                     uintptr
-	MciSet                                uintptr
-	MciSetAudio                           uintptr
-	MciSetAudioAll                        uintptr
-	MciSetAudioLeft                       uintptr
-	MciSetAudioRight                      uintptr
-	MciSetDoorClosed                      uintptr
-	MciSetDoorOpen                        uintptr
-	MciSetOff                             uintptr
-	MciSetOn                              uintptr
-	MciSetTimeFormat                      uintptr
-	MciSetVideo                           uintptr
-	MciSpin                               uintptr
-	MciStatus                             uintptr
-	MciStatusCurrentTrack                 uintptr
-	MciStatusItem                         uintptr
-	MciStatusLength                       uintptr
-	MciStatusMediaPresent                 uintptr
-	MciStatusMode                         uintptr
-	MciStatusNumberOfTracks               uintptr
-	MciStatusPosition                     uintptr
-	MciStatusReady                        uintptr
-	MciStatusStart                        uintptr
-	MciStatusTimeFormat                   uintptr
-	MciStep                               uintptr
-	MciStop                               uintptr
-	MciStringOffset                       uintptr
-	MciSysinfo                            uintptr
-	MciSysinfoInstallname                 uintptr
-	MciSysinfoName                        uintptr
-	MciSysinfoOpen                        uintptr
-	MciSysinfoQuantity                    uintptr
-	MciTo                                 uintptr
-	MciTrack                              uintptr
-	MciUnfreeze                           uintptr
-	MciUpdate                             uintptr
-	MciUserMessages                       uintptr
-	MciVdEscapeString                     uintptr
-	MciVdFormatTrack                      uintptr
-	MciVdGetdevcapsCanReverse             uintptr
-	MciVdGetdevcapsCav                    uintptr
-	MciVdGetdevcapsClv                    uintptr
-	MciVdGetdevcapsFastRate               uintptr
-	MciVdGetdevcapsNormalRate             uintptr
-	MciVdGetdevcapsSlowRate               uintptr
-	MciVdMediaCav                         uintptr
-	MciVdMediaClv                         uintptr
-	MciVdMediaOther                       uintptr
-	MciVdModePark                         uintptr
-	MciVdOffset                           uintptr
-	MciVdPlayFast                         uintptr
-	MciVdPlayReverse                      uintptr
-	MciVdPlayScan                         uintptr
-	MciVdPlaySlow                         uintptr
-	MciVdPlaySpeed                        uintptr
-	MciVdSeekReverse                      uintptr
-	MciVdSpinDown                         uintptr
-	MciVdSpinUp                           uintptr
-	MciVdStatusDiscSize                   uintptr
-	MciVdStatusForward                    uintptr
-	MciVdStatusMediaType                  uintptr
-	MciVdStatusSide                       uintptr
-	MciVdStatusSpeed                      uintptr
-	MciVdStepFrames                       uintptr
-	MciVdStepReverse                      uintptr
-	MciWait                               uintptr
-	MciWaveGetdevcapsInputs               uintptr
-	MciWaveGetdevcapsOutputs              uintptr
-	MciWaveInput                          uintptr
-	MciWaveMapper                         uintptr
-	MciWaveOffset                         uintptr
-	MciWaveOpenBuffer                     uintptr
-	MciWaveOutput                         uintptr
-	MciWavePcm                            uintptr
-	MciWaveSetAnyinput                    uintptr
-	MciWaveSetAnyoutput                   uintptr
-	MciWaveSetAvgbytespersec              uintptr
-	MciWaveSetBitspersample               uintptr
-	MciWaveSetBlockalign                  uintptr
-	MciWaveSetChannels                    uintptr
-	MciWaveSetFormattag                   uintptr
-	MciWaveSetSamplespersec               uintptr
-	MciWaveStatusAvgbytespersec           uintptr
-	MciWaveStatusBitspersample            uintptr
-	MciWaveStatusBlockalign               uintptr
-	MciWaveStatusChannels                 uintptr
-	MciWaveStatusFormattag                uintptr
-	MciWaveStatusLevel                    uintptr
-	MciWaveStatusSamplespersec            uintptr
-	MciWhere                              uintptr
-	MciWindow                             uintptr
-	MevtComment                           uintptr
-	MevtFCallback                         uintptr
-	MevtFLong                             uintptr
-	MevtFShort                            uintptr
-	MevtLongmsg                           uintptr
-	MevtNop                               uintptr
-	MevtShortmsg                          uintptr
-	MevtTempo                             uintptr
-	MevtVersion                           uintptr
-	MhdrDone                              uintptr
-	MhdrInqueue                           uintptr
-	MhdrIsstrm                            uintptr
-	MhdrPrepared                          uintptr
-	MidiCacheAll                          uintptr
-	MidiCacheBestfit                      uintptr
-	MidiCacheQuery                        uintptr
-	MidicapsCache                         uintptr
-	MidicapsLrvolume                      uintptr
-	MidicapsStream                        uintptr
-	MidicapsVolume                        uintptr
-	MidierrBadopenmode                    uintptr
-	MidierrBase                           uintptr
-	MidierrDontContinue                   uintptr
-	MidierrInvalidsetup                   uintptr
-	MidierrLasterror                      uintptr
-	MidierrNodevice                       uintptr
-	MidierrNomap                          uintptr
-	MidierrNotready                       uintptr
-	MidierrStillplaying                   uintptr
-	MidierrUnprepared                     uintptr
-	MidiIoStatus                          uintptr
-	MidiMapper                            int
-	Midimapper                            int
-	Midipatchsize                         uintptr
-	MidipropGet                           uintptr
-	MidipropSet                           uintptr
-	MidipropTempo                         uintptr
-	MidipropTimediv                       uintptr
-	MidistrmError                         int
-	MidiUncache                           uintptr
-	MimClose                              uintptr
-	MimData                               uintptr
-	MimError                              uintptr
-	MimLongdata                           uintptr
-	MimLongerror                          uintptr
-	MimMoredata                           uintptr
-	MimOpen                               uintptr
-	MixercontrolControlfDisabled          uintptr
-	MixercontrolControlfMultiple          uintptr
-	MixercontrolControlfUniform           uintptr
-	MixercontrolControltypeBass           uintptr
-	MixercontrolControltypeBassBoost      uintptr
-	MixercontrolControltypeBoolean        uintptr
-	MixercontrolControltypeBooleanmeter   uintptr
-	MixercontrolControltypeButton         uintptr
-	MixercontrolControltypeCustom         uintptr
-	MixercontrolControltypeDecibels       uintptr
-	MixercontrolControltypeEqualizer      uintptr
-	MixercontrolControltypeFader          uintptr
-	MixercontrolControltypeLoudness       uintptr
-	MixercontrolControltypeMicrotime      uintptr
-	MixercontrolControltypeMillitime      uintptr
-	MixercontrolControltypeMixer          uintptr
-	MixercontrolControltypeMono           uintptr
-	MixercontrolControltypeMultipleselect uintptr
-	MixercontrolControltypeMute           uintptr
-	MixercontrolControltypeMux            uintptr
-	MixercontrolControltypeOnoff          uintptr
-	MixercontrolControltypePan            uintptr
-	MixercontrolControltypePeakmeter      uintptr
-	MixercontrolControltypePercent        uintptr
-	MixercontrolControltypeQsoundpan      uintptr
-	MixercontrolControltypeSigned         uintptr
-	MixercontrolControltypeSignedmeter    uintptr
-	MixercontrolControltypeSingleselect   uintptr
-	MixercontrolControltypeSlider         uintptr
-	MixercontrolControltypeStereoenh      uintptr
-	MixercontrolControltypeTreble         uintptr
-	MixercontrolControltypeUnsigned       uintptr
-	MixercontrolControltypeUnsignedmeter  uintptr
-	MixercontrolControltypeVolume         uintptr
-	MixercontrolCtClassCustom             uintptr
-	MixercontrolCtClassFader              uintptr
-	MixercontrolCtClassList               uintptr
-	MixercontrolCtClassMask               uintptr
-	MixercontrolCtClassMeter              uintptr
-	MixercontrolCtClassNumber             uintptr
-	MixercontrolCtClassSlider             uintptr
-	MixercontrolCtClassSwitch             uintptr
-	MixercontrolCtClassTime               uintptr
-	MixercontrolCtScListMultiple          uintptr
-	MixercontrolCtScListSingle            uintptr
-	MixercontrolCtScMeterPolled           uintptr
-	MixercontrolCtScSwitchBoolean         uintptr
-	MixercontrolCtScSwitchButton          uintptr
-	MixercontrolCtScTimeMicrosecs         uintptr
-	MixercontrolCtScTimeMillisecs         uintptr
-	MixercontrolCtSubclassMask            uintptr
-	MixercontrolCtUnitsBoolean            uintptr
-	MixercontrolCtUnitsCustom             uintptr
-	MixercontrolCtUnitsDecibels           uintptr
-	MixercontrolCtUnitsMask               uintptr
-	MixercontrolCtUnitsPercent            uintptr
-	MixercontrolCtUnitsSigned             uintptr
-	MixercontrolCtUnitsUnsigned           uintptr
-	MixerGetcontroldetailsfListtext       uintptr
-	MixerGetcontroldetailsfQuerymask      uintptr
-	MixerGetcontroldetailsfValue          uintptr
-	MixerGetlinecontrolsfAll              uintptr
-	MixerGetlinecontrolsfOnebyid          uintptr
-	MixerGetlinecontrolsfOnebytype        uintptr
-	MixerGetlinecontrolsfQuerymask        uintptr
-	MixerGetlineinfofComponenttype        uintptr
-	MixerGetlineinfofDestination          uintptr
-	MixerGetlineinfofLineid               uintptr
-	MixerGetlineinfofQuerymask            uintptr
-	MixerGetlineinfofSource               uintptr
-	MixerGetlineinfofTargettype           uintptr
-	MixerlineComponenttypeDstDigital      uintptr
-	MixerlineComponenttypeDstFirst        uintptr
-	MixerlineComponenttypeDstHeadphones   uintptr
-	MixerlineComponenttypeDstLast         uintptr
-	MixerlineComponenttypeDstLine         uintptr
-	MixerlineComponenttypeDstMonitor      uintptr
-	MixerlineComponenttypeDstSpeakers     uintptr
-	MixerlineComponenttypeDstTelephone    uintptr
-	MixerlineComponenttypeDstUndefined    uintptr
-	MixerlineComponenttypeDstVoicein      uintptr
-	MixerlineComponenttypeDstWavein       uintptr
-	MixerlineComponenttypeSrcAnalog       uintptr
-	MixerlineComponenttypeSrcAuxiliary    uintptr
-	MixerlineComponenttypeSrcCompactdisc  uintptr
-	MixerlineComponenttypeSrcDigital      uintptr
-	MixerlineComponenttypeSrcFirst        uintptr
-	MixerlineComponenttypeSrcLast         uintptr
-	MixerlineComponenttypeSrcLine         uintptr
-	MixerlineComponenttypeSrcMicrophone   uintptr
-	MixerlineComponenttypeSrcPcspeaker    uintptr
-	MixerlineComponenttypeSrcSynthesizer  uintptr
-	MixerlineComponenttypeSrcTelephone    uintptr
-	MixerlineComponenttypeSrcUndefined    uintptr
-	MixerlineComponenttypeSrcWaveout      uintptr
-	MixerlineLinefActive                  uintptr
-	MixerlineLinefDisconnected            uintptr
-	MixerlineLinefSource                  uintptr
-	MixerlineTargettypeAux                uintptr
-	MixerlineTargettypeMidiin             uintptr
-	MixerlineTargettypeMidiout            uintptr
-	MixerlineTargettypeUndefined          uintptr
-	MixerlineTargettypeWavein             uintptr
-	MixerlineTargettypeWaveout            uintptr
-	MixerLongNameChars                    uintptr
-	MixerObjectfAux                       uintptr
-	MixerObjectfHandle                    uintptr
-	MixerObjectfHmidiin                   uintptr
-	MixerObjectfHmidiout                  uintptr
-	MixerObjectfHmixer                    uintptr
-	MixerObjectfHwavein                   uintptr
-	MixerObjectfHwaveout                  uintptr
-	MixerObjectfMidiin                    uintptr
-	MixerObjectfMidiout                   uintptr
-	MixerObjectfMixer                     uintptr
-	MixerObjectfWavein                    uintptr
-	MixerObjectfWaveout                   uintptr
-	MixerrBase                            uintptr
-	MixerrInvalcontrol                    uintptr
-	MixerrInvalline                       uintptr
-	MixerrInvalvalue                      uintptr
-	MixerrLasterror                       uintptr
-	MixerSetcontroldetailsfCustom         uintptr
-	MixerSetcontroldetailsfQuerymask      uintptr
-	MixerSetcontroldetailsfValue          uintptr
-	MixerShortNameChars                   uintptr
-	MmDrvmClose                           uintptr
-	MmDrvmData                            uintptr
-	MmDrvmError                           uintptr
-	MmDrvmOpen                            uintptr
-	MmioAllocbuf                          uintptr
-	MmioCompat                            uintptr
-	MmioCreate                            uintptr
-	MmioCreatelist                        uintptr
-	MmioCreateriff                        uintptr
-	MmioDefaultbuffer                     uintptr
-	MmioDelete                            uintptr
-	MmioDenynone                          uintptr
-	MmioDenyread                          uintptr
-	MmioDenywrite                         uintptr
-	MmioDirty                             uintptr
-	MmioEmptybuf                          uintptr
-	MmioerrAccessdenied                   uintptr
-	MmioerrBase                           uintptr
-	MmioerrCannotclose                    uintptr
-	MmioerrCannotexpand                   uintptr
-	MmioerrCannotopen                     uintptr
-	MmioerrCannotread                     uintptr
-	MmioerrCannotseek                     uintptr
-	MmioerrCannotwrite                    uintptr
-	MmioerrChunknotfound                  uintptr
-	MmioerrFilenotfound                   uintptr
-	MmioerrInvalidfile                    uintptr
-	MmioerrNetworkerror                   uintptr
-	MmioerrOutofmemory                    uintptr
-	MmioerrPathnotfound                   uintptr
-	MmioerrSharingviolation               uintptr
-	MmioerrToomanyopenfiles               uintptr
-	MmioerrUnbuffered                     uintptr
-	MmioExclusive                         uintptr
-	MmioExist                             uintptr
-	MmioFhopen                            uintptr
-	MmioFindchunk                         uintptr
-	MmioFindlist                          uintptr
-	MmioFindproc                          uintptr
-	MmioFindriff                          uintptr
-	MmioGettemp                           uintptr
-	MmioGlobalproc                        uintptr
-	MmioInstallproc                       uintptr
-	MmiomClose                            uintptr
-	MmiomOpen                             uintptr
-	MmiomRead                             uintptr
-	MmiomRename                           uintptr
-	MmiomSeek                             uintptr
-	MmiomUser                             uintptr
-	MmiomWrite                            uintptr
-	MmiomWriteflush                       uintptr
-	MmioParse                             uintptr
-	MmioRead                              uintptr
-	MmioReadwrite                         uintptr
-	MmioRemoveproc                        uintptr
-	MmioRwmode                            uintptr
-	MmioSharemode                         uintptr
-	MmioToupper                           uintptr
-	MmioUnicodeproc                       uintptr
-	MmioWrite                             uintptr
-	MmJoy1buttondown                      uintptr
-	MmJoy1buttonup                        uintptr
-	MmJoy1move                            uintptr
-	MmJoy1zmove                           uintptr
-	MmJoy2buttondown                      uintptr
-	MmJoy2buttonup                        uintptr
-	MmJoy2move                            uintptr
-	MmJoy2zmove                           uintptr
-	MmMcinotify                           uintptr
-	MmMcisignal                           uintptr
-	MmMimClose                            uintptr
-	MmMimData                             uintptr
-	MmMimError                            uintptr
-	MmMimLongdata                         uintptr
-	MmMimLongerror                        uintptr
-	MmMimMoredata                         uintptr
-	MmMimOpen                             uintptr
-	MmMixmControlChange                   uintptr
-	MmMixmLineChange                      uintptr
-	MmMomClose                            uintptr
-	MmMomDone                             uintptr
-	MmMomOpen                             uintptr
-	MmMomPositioncb                       uintptr
-	MmStreamClose                         uintptr
-	MmStreamDone                          uintptr
-	MmStreamError                         uintptr
-	MmStreamOpen                          uintptr
-	MmsyserrAllocated                     uintptr
-	MmsyserrBaddb                         uintptr
-	MmsyserrBaddeviceid                   uintptr
-	MmsyserrBaderrnum                     uintptr
-	MmsyserrBase                          uintptr
-	MmsyserrDeleteerror                   uintptr
-	MmsyserrError                         uintptr
-	MmsyserrHandlebusy                    uintptr
-	MmsyserrInvalflag                     uintptr
-	MmsyserrInvalhandle                   uintptr
-	MmsyserrInvalidalias                  uintptr
-	MmsyserrInvalparam                    uintptr
-	MmsyserrKeynotfound                   uintptr
-	MmsyserrLasterror                     uintptr
-	MmsyserrMoredata                      uintptr
-	MmsyserrNodriver                      uintptr
-	MmsyserrNodrivercb                    uintptr
-	MmsyserrNoerror                       uintptr
-	MmsyserrNomem                         uintptr
-	MmsyserrNotenabled                    uintptr
-	MmsyserrNotsupported                  uintptr
-	MmsyserrReaderror                     uintptr
-	MmsyserrValnotfound                   uintptr
-	MmsyserrWriteerror                    uintptr
-	MmWimClose                            uintptr
-	MmWimData                             uintptr
-	MmWimOpen                             uintptr
-	MmWomClose                            uintptr
-	MmWomDone                             uintptr
-	MmWomOpen                             uintptr
-	ModFmsynth                            uintptr
-	ModMapper                             uintptr
-	ModMidiport                           uintptr
-	ModSqsynth                            uintptr
-	ModSwsynth                            uintptr
-	ModSynth                              uintptr
-	ModWavetable                          uintptr
-	MomClose                              uintptr
-	MomDone                               uintptr
-	MomOpen                               uintptr
-	MomPositioncb                         uintptr
-	Newtransparent                        uintptr
-	Queryropsupport                       uintptr
-	ScScreensave                          uintptr
-	SeekCur                               uintptr
-	SeekEnd                               uintptr
-	SeekSet                               uintptr
-	Selectdib                             uintptr
-	SndAlias                              uintptr
-	SndAliasId                            uintptr
-	SndAliasStart                         uintptr
-	SndApplication                        uintptr
-	SndAsync                              uintptr
-	SndFilename                           uintptr
-	SndLoop                               uintptr
-	SndMemory                             uintptr
-	SndNodefault                          uintptr
-	SndNostop                             uintptr
-	SndNowait                             uintptr
-	SndPurge                              uintptr
-	SndResource                           uintptr
-	SndSync                               uintptr
-	TimeBytes                             uintptr
-	TimeCallbackEventPulse                uintptr
-	TimeCallbackEventSet                  uintptr
-	TimeCallbackFunction                  uintptr
-	TimeKillSynchronous                   uintptr
-	TimeMidi                              uintptr
-	TimeMs                                uintptr
-	TimeOneshot                           uintptr
-	TimePeriodic                          uintptr
-	TimerrBase                            uintptr
-	TimerrNocando                         uintptr
-	TimerrNoerror                         uintptr
-	TimerrStruct                          uintptr
-	TimeSamples                           uintptr
-	TimeSmpte                             uintptr
-	TimeTicks                             uintptr
-	WaveAllowsync                         uintptr
-	WavecapsLrvolume                      uintptr
-	WavecapsPitch                         uintptr
-	WavecapsPlaybackrate                  uintptr
-	WavecapsSampleaccurate                uintptr
-	WavecapsSync                          uintptr
-	WavecapsVolume                        uintptr
-	WaveFormat1m08                        uintptr
-	WaveFormat1m16                        uintptr
-	WaveFormat1s08                        uintptr
-	WaveFormat1s16                        uintptr
-	WaveFormat2m08                        uintptr
-	WaveFormat2m16                        uintptr
-	WaveFormat2s08                        uintptr
-	WaveFormat2s16                        uintptr
-	WaveFormat44m08                       uintptr
-	WaveFormat44m16                       uintptr
-	WaveFormat44s08                       uintptr
-	WaveFormat44s16                       uintptr
-	WaveFormat48m08                       uintptr
-	WaveFormat48m16                       uintptr
-	WaveFormat48s08                       uintptr
-	WaveFormat48s16                       uintptr
-	WaveFormat4m08                        uintptr
-	WaveFormat4m16                        uintptr
-	WaveFormat4s08                        uintptr
-	WaveFormat4s16                        uintptr
-	WaveFormat96m08                       uintptr
-	WaveFormat96m16                       uintptr
-	WaveFormat96s08                       uintptr
-	WaveFormat96s16                       uintptr
-	WaveFormatDirect                      uintptr
-	WaveFormatDirectQuery                 uintptr
-	WaveFormatPcm                         uintptr
-	WaveFormatQuery                       uintptr
-	WaveInvalidformat                     uintptr
-	WaveMapped                            uintptr
-	WaveMappedDefaultCommunicationDevice  uintptr
-	WaveMapper                            int
-	WaverrBadformat                       uintptr
-	WaverrBase                            uintptr
-	WaverrLasterror                       uintptr
-	WaverrStillplaying                    uintptr
-	WaverrSync                            uintptr
-	WaverrUnprepared                      uintptr
-	WhdrBeginloop                         uintptr
-	WhdrDone                              uintptr
-	WhdrEndloop                           uintptr
-	WhdrInqueue                           uintptr
-	WhdrPrepared                          uintptr
-	WimClose                              uintptr
-	WimData                               uintptr
-	WimOpen                               uintptr
-	WomClose                              uintptr
-	WomDone                               uintptr
-	WomOpen                               uintptr
+	Newtransparent  uintptr
+	Queryropsupport uintptr
+	ScScreensave    uintptr
+	Selectdib       uintptr
 }{
-	AuxcapsAuxin:                          2,
-	AuxcapsCdaudio:                        1,
-	AuxcapsLrvolume:                       0x0002,
-	AuxcapsVolume:                         0x0001,
-	AuxMapper:                             (-1),
-	CallbackEvent:                         (0x00050000),
-	CallbackFunction:                      (0x00030000),
-	CallbackNull:                          (0x00000000),
-	CallbackTask:                          (0x00020000),
-	CallbackThread:                        (0x00020000),
-	CallbackTypemask:                      (0x00070000),
-	CallbackWindow:                        (0x00010000),
-	Cfsepchar:                             '+',
-	DrvCancel:                             0x0000,
-	DrvClose:                              0x0004,
-	DrvcnfCancel:                          0x0000,
-	DrvcnfOk:                              0x0001,
-	DrvcnfRestart:                         0x0002,
-	DrvConfigure:                          0x0007,
-	DrvDisable:                            0x0005,
-	DrvEnable:                             0x0002,
-	DrvExitsession:                        0x000B,
-	DrvFree:                               0x0006,
-	DrvInstall:                            0x0009,
-	DrvLoad:                               0x0001,
-	DrvMciFirst:                           0x0800,
-	DrvMciLast:                            (0x0800 + 0xFFF),
-	DrvOk:                                 0x0001,
-	DrvOpen:                               0x0003,
-	DrvPower:                              0x000F,
-	DrvQueryconfigure:                     0x0008,
-	DrvRemove:                             0x000A,
-	DrvReserved:                           0x0800,
-	DrvRestart:                            0x0002,
-	DrvUser:                               0x4000,
-	JoyButton1:                            0x0001,
-	JoyButton10:                           (0x00000200),
-	JoyButton11:                           (0x00000400),
-	JoyButton12:                           (0x00000800),
-	JoyButton13:                           (0x00001000),
-	JoyButton14:                           (0x00002000),
-	JoyButton15:                           (0x00004000),
-	JoyButton16:                           (0x00008000),
-	JoyButton17:                           (0x00010000),
-	JoyButton18:                           (0x00020000),
-	JoyButton19:                           (0x00040000),
-	JoyButton1chg:                         0x0100,
-	JoyButton2:                            0x0002,
-	JoyButton20:                           (0x00080000),
-	JoyButton21:                           (0x00100000),
-	JoyButton22:                           (0x00200000),
-	JoyButton23:                           (0x00400000),
-	JoyButton24:                           (0x00800000),
-	JoyButton25:                           (0x01000000),
-	JoyButton26:                           (0x02000000),
-	JoyButton27:                           (0x04000000),
-	JoyButton28:                           (0x08000000),
-	JoyButton29:                           (0x10000000),
-	JoyButton2chg:                         0x0200,
-	JoyButton3:                            0x0004,
-	JoyButton30:                           (0x20000000),
-	JoyButton31:                           (0x40000000),
-	JoyButton32:                           (0x80000000),
-	JoyButton3chg:                         0x0400,
-	JoyButton4:                            0x0008,
-	JoyButton4chg:                         0x0800,
-	JoyButton5:                            (0x00000010),
-	JoyButton6:                            (0x00000020),
-	JoyButton7:                            (0x00000040),
-	JoyButton8:                            (0x00000080),
-	JoyButton9:                            (0x00000100),
-	JoyCalRead3:                           (0x00040000),
-	JoyCalRead4:                           (0x00080000),
-	JoyCalRead5:                           (0x00400000),
-	JoyCalRead6:                           (0x00800000),
-	JoyCalReadalways:                      (0x00010000),
-	JoyCalReadronly:                       (0x02000000),
-	JoyCalReaduonly:                       (0x04000000),
-	JoyCalReadvonly:                       (0x08000000),
-	JoyCalReadxonly:                       (0x00100000),
-	JoyCalReadxyonly:                      (0x00020000),
-	JoyCalReadyonly:                       (0x00200000),
-	JoyCalReadzonly:                       (0x01000000),
-	JoycapsHaspov:                         0x0010,
-	JoycapsHasr:                           0x0002,
-	JoycapsHasu:                           0x0004,
-	JoycapsHasv:                           0x0008,
-	JoycapsHasz:                           0x0001,
-	JoycapsPov4dir:                        0x0020,
-	JoycapsPovcts:                         0x0040,
-	JoyerrBase:                            160,
-	JoyerrNocando:                         (160 + 6),
-	JoyerrNoerror:                         (0),
-	JoyerrParms:                           (160 + 5),
-	JoyerrUnplugged:                       (160 + 7),
-	JoyPovbackward:                        18000,
-	JoyPovcentered:                        -1,
-	JoyPovforward:                         0,
-	JoyPovleft:                            27000,
-	JoyPovright:                           9000,
-	JoyReturnall:                          ((0x00000001) | (0x00000002) | (0x00000004) | (0x00000008) | (0x00000010) | (0x00000020) | (0x00000040) | (0x00000080)),
-	JoyReturnbuttons:                      (0x00000080),
-	JoyReturncentered:                     (0x00000400),
-	JoyReturnpov:                          (0x00000040),
-	JoyReturnpovcts:                       (0x00000200),
-	JoyReturnr:                            (0x00000008),
-	JoyReturnrawdata:                      (0x00000100),
-	JoyReturnu:                            (0x00000010),
-	JoyReturnv:                            (0x00000020),
-	JoyReturnx:                            (0x00000001),
-	JoyReturny:                            (0x00000002),
-	JoyReturnz:                            (0x00000004),
-	Joystickid1:                           0,
-	Joystickid2:                           1,
-	JoyUsedeadzone:                        (0x00000800),
-	Maxerrorlength:                        256,
-	MaxJoystickoemvxdname:                 260,
-	Maxpnamelen:                           32,
-	MciAllDeviceId:                        (-1),
-	MciAnimGetdevcapsCanReverse:           (0x00004001),
-	MciAnimGetdevcapsCanStretch:           (0x00004007),
-	MciAnimGetdevcapsFastRate:             (0x00004002),
-	MciAnimGetdevcapsMaxWindows:           (0x00004008),
-	MciAnimGetdevcapsNormalRate:           (0x00004004),
-	MciAnimGetdevcapsPalettes:             (0x00004006),
-	MciAnimGetdevcapsSlowRate:             (0x00004003),
-	MciAnimInfoText:                       (0x00010000),
-	MciAnimOpenNostatic:                   (0x00040000),
-	MciAnimOpenParent:                     (0x00020000),
-	MciAnimOpenWs:                         (0x00010000),
-	MciAnimPlayFast:                       (0x00040000),
-	MciAnimPlayReverse:                    (0x00020000),
-	MciAnimPlayScan:                       (0x00100000),
-	MciAnimPlaySlow:                       (0x00080000),
-	MciAnimPlaySpeed:                      (0x00010000),
-	MciAnimPutDestination:                 (0x00040000),
-	MciAnimPutSource:                      (0x00020000),
-	MciAnimRealizeBkgd:                    (0x00020000),
-	MciAnimRealizeNorm:                    (0x00010000),
-	MciAnimRect:                           (0x00010000),
-	MciAnimStatusForward:                  (0x00004002),
-	MciAnimStatusHpal:                     (0x00004004),
-	MciAnimStatusHwnd:                     (0x00004003),
-	MciAnimStatusSpeed:                    (0x00004001),
-	MciAnimStatusStretch:                  (0x00004005),
-	MciAnimStepFrames:                     (0x00020000),
-	MciAnimStepReverse:                    (0x00010000),
-	MciAnimUpdateHdc:                      (0x00020000),
-	MciAnimWhereDestination:               (0x00040000),
-	MciAnimWhereSource:                    (0x00020000),
-	MciAnimWindowDefault:                  (0x00000000),
-	MciAnimWindowDisableStretch:           (0x00200000),
-	MciAnimWindowEnableStretch:            (0x00100000),
-	MciAnimWindowHwnd:                     (0x00010000),
-	MciAnimWindowState:                    (0x00040000),
-	MciAnimWindowText:                     (0x00080000),
-	MciBreak:                              0x0811,
-	MciBreakHwnd:                          (0x00000200),
-	MciBreakKey:                           (0x00000100),
-	MciBreakOff:                           (0x00000400),
-	MciCdaStatusTypeTrack:                 (0x00004001),
-	MciCdaTrackAudio:                      (1088 + 0),
-	MciCdaTrackOther:                      (1088 + 1),
-	MciCdOffset:                           1088,
-	MciClose:                              0x0804,
-	MciCopy:                               0x0852,
-	MciCue:                                0x0830,
-	MciCut:                                0x0851,
-	MciDelete:                             0x0856,
-	MciDevtypeAnimation:                   519,
-	MciDevtypeCdAudio:                     516,
-	MciDevtypeDat:                         517,
-	MciDevtypeDigitalVideo:                520,
-	MciDevtypeFirst:                       513,
-	MciDevtypeFirstUser:                   0x1000,
-	MciDevtypeLast:                        523,
-	MciDevtypeOther:                       521,
-	MciDevtypeOverlay:                     515,
-	MciDevtypeScanner:                     518,
-	MciDevtypeSequencer:                   523,
-	MciDevtypeVcr:                         513,
-	MciDevtypeVideodisc:                   514,
-	MciDevtypeWaveformAudio:               522,
-	McierrBadConstant:                     (256 + 34),
-	McierrBadInteger:                      (256 + 14),
-	McierrBadTimeFormat:                   (256 + 37),
-	McierrBase:                            256,
-	McierrCannotLoadDriver:                (256 + 10),
-	McierrCannotUseAll:                    (256 + 23),
-	McierrCreatewindow:                    (256 + 91),
-	McierrCustomDriverBase:                (256 + 256),
-	McierrDeviceLength:                    (256 + 54),
-	McierrDeviceLocked:                    (256 + 32),
-	McierrDeviceNotInstalled:              (256 + 50),
-	McierrDeviceNotReady:                  (256 + 20),
-	McierrDeviceOpen:                      (256 + 9),
-	McierrDeviceOrdLength:                 (256 + 55),
-	McierrDeviceTypeRequired:              (256 + 31),
-	McierrDriver:                          (256 + 22),
-	McierrDriverInternal:                  (256 + 16),
-	McierrDuplicateAlias:                  (256 + 33),
-	McierrDuplicateFlags:                  (256 + 39),
-	McierrExtensionNotFound:               (256 + 25),
-	McierrExtraCharacters:                 (256 + 49),
-	McierrFilenameRequired:                (256 + 48),
-	McierrFileNotFound:                    (256 + 19),
-	McierrFileNotSaved:                    (256 + 30),
-	McierrFileRead:                        (256 + 92),
-	McierrFileWrite:                       (256 + 93),
-	McierrFlagsNotCompatible:              (256 + 28),
-	McierrGetCd:                           (256 + 51),
-	McierrHardware:                        (256 + 6),
-	McierrIllegalForAutoOpen:              (256 + 47),
-	McierrInternal:                        (256 + 21),
-	McierrInvalidDeviceId:                 (256 + 1),
-	McierrInvalidDeviceName:               (256 + 7),
-	McierrInvalidFile:                     (256 + 40),
-	McierrMissingCommandString:            (256 + 11),
-	McierrMissingDeviceName:               (256 + 36),
-	McierrMissingParameter:                (256 + 17),
-	McierrMissingStringArgument:           (256 + 13),
-	McierrMultiple:                        (256 + 24),
-	McierrMustUseShareable:                (256 + 35),
-	McierrNewRequiresAlias:                (256 + 43),
-	McierrNoClosingQuote:                  (256 + 38),
-	McierrNoElementAllowed:                (256 + 45),
-	McierrNoIdentity:                      (256 + 94),
-	McierrNoInteger:                       (256 + 56),
-	McierrNonapplicableFunction:           (256 + 46),
-	McierrNotifyOnAutoOpen:                (256 + 44),
-	McierrNoWindow:                        (256 + 90),
-	McierrNullParameterBlock:              (256 + 41),
-	McierrOutOfMemory:                     (256 + 8),
-	McierrOutofrange:                      (256 + 26),
-	McierrParamOverflow:                   (256 + 12),
-	McierrParserInternal:                  (256 + 15),
-	McierrSeqDivIncompatible:              (256 + 80),
-	McierrSeqNomidipresent:                (256 + 87),
-	McierrSeqPortInuse:                    (256 + 81),
-	McierrSeqPortMapnodevice:              (256 + 83),
-	McierrSeqPortMiscerror:                (256 + 84),
-	McierrSeqPortNonexistent:              (256 + 82),
-	McierrSeqPortunspecified:              (256 + 86),
-	McierrSeqTimer:                        (256 + 85),
-	McierrSetCd:                           (256 + 52),
-	McierrSetDrive:                        (256 + 53),
-	McierrUnnamedResource:                 (256 + 42),
-	McierrUnrecognizedCommand:             (256 + 5),
-	McierrUnrecognizedKeyword:             (256 + 3),
-	McierrUnsupportedFunction:             (256 + 18),
-	McierrWaveInputsinuse:                 (256 + 66),
-	McierrWaveInputsunsuitable:            (256 + 72),
-	McierrWaveInputunspecified:            (256 + 69),
-	McierrWaveOutputsinuse:                (256 + 64),
-	McierrWaveOutputsunsuitable:           (256 + 70),
-	McierrWaveOutputunspecified:           (256 + 68),
-	McierrWaveSetinputinuse:               (256 + 67),
-	McierrWaveSetinputunsuitable:          (256 + 73),
-	McierrWaveSetoutputinuse:              (256 + 65),
-	McierrWaveSetoutputunsuitable:         (256 + 71),
-	MciEscape:                             0x0805,
-	MciFirst:                              0x0800,
-	MciFormatBytes:                        8,
-	MciFormatFrames:                       3,
-	MciFormatHms:                          1,
-	MciFormatMilliseconds:                 0,
-	MciFormatMsf:                          2,
-	MciFormatSamples:                      9,
-	MciFormatSmpte24:                      4,
-	MciFormatSmpte25:                      5,
-	MciFormatSmpte30:                      6,
-	MciFormatSmpte30drop:                  7,
-	MciFormatTmsf:                         10,
-	MciFreeze:                             0x0844,
-	MciFrom:                               (0x00000004),
-	MciGetdevcaps:                         0x080B,
-	MciGetdevcapsCanEject:                 (0x00000007),
-	MciGetdevcapsCanPlay:                  (0x00000008),
-	MciGetdevcapsCanRecord:                (0x00000001),
-	MciGetdevcapsCanSave:                  (0x00000009),
-	MciGetdevcapsCompoundDevice:           (0x00000006),
-	MciGetdevcapsDeviceType:               (0x00000004),
-	MciGetdevcapsHasAudio:                 (0x00000002),
-	MciGetdevcapsHasVideo:                 (0x00000003),
-	MciGetdevcapsItem:                     (0x00000100),
-	MciGetdevcapsUsesFiles:                (0x00000005),
-	MciInfo:                               0x080A,
-	MciInfoCopyright:                      (0x00002000),
-	MciInfoFile:                           (0x00000200),
-	MciInfoMediaIdentity:                  (0x00000800),
-	MciInfoMediaUpc:                       (0x00000400),
-	MciInfoName:                           (0x00001000),
-	MciInfoProduct:                        (0x00000100),
-	MciLast:                               0x0FFF,
-	MciLoad:                               0x0850,
-	MciLoadFile:                           (0x00000100),
-	MciModeNotReady:                       (512 + 12),
-	MciModeOpen:                           (512 + 18),
-	MciModePause:                          (512 + 17),
-	MciModePlay:                           (512 + 14),
-	MciModeRecord:                         (512 + 15),
-	MciModeSeek:                           (512 + 16),
-	MciModeStop:                           (512 + 13),
-	MciNotify:                             (0x00000001),
-	MciNotifyAborted:                      0x0004,
-	MciNotifyFailure:                      0x0008,
-	MciNotifySuccessful:                   0x0001,
-	MciNotifySuperseded:                   0x0002,
-	MciOpen:                               0x0803,
-	MciOpenAlias:                          (0x00000400),
-	MciOpenElement:                        (0x00000200),
-	MciOpenElementId:                      (0x00000800),
-	MciOpenShareable:                      (0x00000100),
-	MciOpenType:                           (0x00002000),
-	MciOpenTypeId:                         (0x00001000),
-	MciOvlyGetdevcapsCanFreeze:            (0x00004002),
-	MciOvlyGetdevcapsCanStretch:           (0x00004001),
-	MciOvlyGetdevcapsMaxWindows:           (0x00004003),
-	MciOvlyInfoText:                       (0x00010000),
-	MciOvlyOpenParent:                     (0x00020000),
-	MciOvlyOpenWs:                         (0x00010000),
-	MciOvlyPutDestination:                 (0x00040000),
-	MciOvlyPutFrame:                       (0x00080000),
-	MciOvlyPutSource:                      (0x00020000),
-	MciOvlyPutVideo:                       (0x00100000),
-	MciOvlyRect:                           (0x00010000),
-	MciOvlyStatusHwnd:                     (0x00004001),
-	MciOvlyStatusStretch:                  (0x00004002),
-	MciOvlyWhereDestination:               (0x00040000),
-	MciOvlyWhereFrame:                     (0x00080000),
-	MciOvlyWhereSource:                    (0x00020000),
-	MciOvlyWhereVideo:                     (0x00100000),
-	MciOvlyWindowDefault:                  (0x00000000),
-	MciOvlyWindowDisableStretch:           (0x00200000),
-	MciOvlyWindowEnableStretch:            (0x00100000),
-	MciOvlyWindowHwnd:                     (0x00010000),
-	MciOvlyWindowState:                    (0x00040000),
-	MciOvlyWindowText:                     (0x00080000),
-	MciPaste:                              0x0853,
-	MciPause:                              0x0809,
-	MciPlay:                               0x0806,
-	MciPut:                                0x0842,
-	MciRealize:                            0x0840,
-	MciRecord:                             0x080F,
-	MciRecordInsert:                       (0x00000100),
-	MciRecordOverwrite:                    (0x00000200),
-	MciResume:                             0x0855,
-	MciSave:                               0x0813,
-	MciSaveFile:                           (0x00000100),
-	MciSeek:                               0x0807,
-	MciSeekToEnd:                          (0x00000200),
-	MciSeekToStart:                        (0x00000100),
-	MciSeqDivPpqn:                         (0 + 1216),
-	MciSeqDivSmpte24:                      (1 + 1216),
-	MciSeqDivSmpte25:                      (2 + 1216),
-	MciSeqDivSmpte30:                      (4 + 1216),
-	MciSeqDivSmpte30drop:                  (3 + 1216),
-	MciSeqFile:                            0x4002,
-	MciSeqFormatSongptr:                   0x4001,
-	MciSeqMapper:                          65535,
-	MciSeqMidi:                            0x4003,
-	MciSeqNone:                            65533,
-	MciSeqOffset:                          1216,
-	MciSeqSetMaster:                       (0x00080000),
-	MciSeqSetOffset:                       (0x01000000),
-	MciSeqSetPort:                         (0x00020000),
-	MciSeqSetSlave:                        (0x00040000),
-	MciSeqSetTempo:                        (0x00010000),
-	MciSeqSmpte:                           0x4004,
-	MciSeqStatusCopyright:                 (0x0000400C),
-	MciSeqStatusDivtype:                   (0x0000400A),
-	MciSeqStatusMaster:                    (0x00004008),
-	MciSeqStatusName:                      (0x0000400B),
-	MciSeqStatusOffset:                    (0x00004009),
-	MciSeqStatusPort:                      (0x00004003),
-	MciSeqStatusSlave:                     (0x00004007),
-	MciSeqStatusTempo:                     (0x00004002),
-	MciSet:                                0x080D,
-	MciSetAudio:                           (0x00000800),
-	MciSetAudioAll:                        (0x00000000),
-	MciSetAudioLeft:                       (0x00000001),
-	MciSetAudioRight:                      (0x00000002),
-	MciSetDoorClosed:                      (0x00000200),
-	MciSetDoorOpen:                        (0x00000100),
-	MciSetOff:                             (0x00004000),
-	MciSetOn:                              (0x00002000),
-	MciSetTimeFormat:                      (0x00000400),
-	MciSetVideo:                           (0x00001000),
-	MciSpin:                               0x080C,
-	MciStatus:                             0x0814,
-	MciStatusCurrentTrack:                 (0x00000008),
-	MciStatusItem:                         (0x00000100),
-	MciStatusLength:                       (0x00000001),
-	MciStatusMediaPresent:                 (0x00000005),
-	MciStatusMode:                         (0x00000004),
-	MciStatusNumberOfTracks:               (0x00000003),
-	MciStatusPosition:                     (0x00000002),
-	MciStatusReady:                        (0x00000007),
-	MciStatusStart:                        (0x00000200),
-	MciStatusTimeFormat:                   (0x00000006),
-	MciStep:                               0x080E,
-	MciStop:                               0x0808,
-	MciStringOffset:                       512,
-	MciSysinfo:                            0x0810,
-	MciSysinfoInstallname:                 (0x00000800),
-	MciSysinfoName:                        (0x00000400),
-	MciSysinfoOpen:                        (0x00000200),
-	MciSysinfoQuantity:                    (0x00000100),
-	MciTo:                                 (0x00000008),
-	MciTrack:                              (0x00000010),
-	MciUnfreeze:                           0x0845,
-	MciUpdate:                             0x0854,
-	MciUserMessages:                       (0x0800 + 0x400),
-	MciVdEscapeString:                     (0x00000100),
-	MciVdFormatTrack:                      0x4001,
-	MciVdGetdevcapsCanReverse:             (0x00004002),
-	MciVdGetdevcapsCav:                    (0x00020000),
-	MciVdGetdevcapsClv:                    (0x00010000),
-	MciVdGetdevcapsFastRate:               (0x00004003),
-	MciVdGetdevcapsNormalRate:             (0x00004005),
-	MciVdGetdevcapsSlowRate:               (0x00004004),
-	MciVdMediaCav:                         (1024 + 3),
-	MciVdMediaClv:                         (1024 + 2),
-	MciVdMediaOther:                       (1024 + 4),
-	MciVdModePark:                         (1024 + 1),
-	MciVdOffset:                           1024,
-	MciVdPlayFast:                         (0x00020000),
-	MciVdPlayReverse:                      (0x00010000),
-	MciVdPlayScan:                         (0x00080000),
-	MciVdPlaySlow:                         (0x00100000),
-	MciVdPlaySpeed:                        (0x00040000),
-	MciVdSeekReverse:                      (0x00010000),
-	MciVdSpinDown:                         (0x00020000),
-	MciVdSpinUp:                           (0x00010000),
-	MciVdStatusDiscSize:                   (0x00004006),
-	MciVdStatusForward:                    (0x00004003),
-	MciVdStatusMediaType:                  (0x00004004),
-	MciVdStatusSide:                       (0x00004005),
-	MciVdStatusSpeed:                      (0x00004002),
-	MciVdStepFrames:                       (0x00010000),
-	MciVdStepReverse:                      (0x00020000),
-	MciWait:                               (0x00000002),
-	MciWaveGetdevcapsInputs:               (0x00004001),
-	MciWaveGetdevcapsOutputs:              (0x00004002),
-	MciWaveInput:                          (0x00400000),
-	MciWaveMapper:                         (1152 + 1),
-	MciWaveOffset:                         1152,
-	MciWaveOpenBuffer:                     (0x00010000),
-	MciWaveOutput:                         (0x00800000),
-	MciWavePcm:                            (1152 + 0),
-	MciWaveSetAnyinput:                    (0x04000000),
-	MciWaveSetAnyoutput:                   (0x08000000),
-	MciWaveSetAvgbytespersec:              (0x00080000),
-	MciWaveSetBitspersample:               (0x00200000),
-	MciWaveSetBlockalign:                  (0x00100000),
-	MciWaveSetChannels:                    (0x00020000),
-	MciWaveSetFormattag:                   (0x00010000),
-	MciWaveSetSamplespersec:               (0x00040000),
-	MciWaveStatusAvgbytespersec:           (0x00004004),
-	MciWaveStatusBitspersample:            (0x00004006),
-	MciWaveStatusBlockalign:               (0x00004005),
-	MciWaveStatusChannels:                 (0x00004002),
-	MciWaveStatusFormattag:                (0x00004001),
-	MciWaveStatusLevel:                    (0x00004007),
-	MciWaveStatusSamplespersec:            (0x00004003),
-	MciWhere:                              0x0843,
-	MciWindow:                             0x0841,
-	MevtComment:                           (0x82),
-	MevtFCallback:                         (0x40000000),
-	MevtFLong:                             (0x80000000),
-	MevtFShort:                            (0x00000000),
-	MevtLongmsg:                           (0x80),
-	MevtNop:                               (0x02),
-	MevtShortmsg:                          (0x00),
-	MevtTempo:                             (0x01),
-	MevtVersion:                           (0x84),
-	MhdrDone:                              0x00000001,
-	MhdrInqueue:                           0x00000004,
-	MhdrIsstrm:                            0x00000008,
-	MhdrPrepared:                          0x00000002,
-	MidiCacheAll:                          1,
-	MidiCacheBestfit:                      2,
-	MidiCacheQuery:                        3,
-	MidicapsCache:                         0x0004,
-	MidicapsLrvolume:                      0x0002,
-	MidicapsStream:                        0x0008,
-	MidicapsVolume:                        0x0001,
-	MidierrBadopenmode:                    (64 + 6),
-	MidierrBase:                           64,
-	MidierrDontContinue:                   (64 + 7),
-	MidierrInvalidsetup:                   (64 + 5),
-	MidierrLasterror:                      (64 + 7),
-	MidierrNodevice:                       (64 + 4),
-	MidierrNomap:                          (64 + 2),
-	MidierrNotready:                       (64 + 3),
-	MidierrStillplaying:                   (64 + 1),
-	MidierrUnprepared:                     (64 + 0),
-	MidiIoStatus:                          (0x00000020),
-	MidiMapper:                            (-1),
-	Midimapper:                            (-1),
-	Midipatchsize:                         128,
-	MidipropGet:                           (0x40000000),
-	MidipropSet:                           (0x80000000),
-	MidipropTempo:                         (0x00000002),
-	MidipropTimediv:                       (0x00000001),
-	MidistrmError:                         (-2),
-	MidiUncache:                           4,
-	MimClose:                              0x3C2,
-	MimData:                               0x3C3,
-	MimError:                              0x3C5,
-	MimLongdata:                           0x3C4,
-	MimLongerror:                          0x3C6,
-	MimMoredata:                           0x3CC,
-	MimOpen:                               0x3C1,
-	MixercontrolControlfDisabled:          (0x80000000),
-	MixercontrolControlfMultiple:          (0x00000002),
-	MixercontrolControlfUniform:           (0x00000001),
-	MixercontrolControltypeBass:           (((0x50000000) | (0x00030000)) + 2),
-	MixercontrolControltypeBassBoost:      (((0x20000000) | (0x00010000)) + 0x00002277),
-	MixercontrolControltypeBoolean:        ((0x20000000) | (0x00010000)),
-	MixercontrolControltypeBooleanmeter:   ((0x10000000) | (0x00010000)),
-	MixercontrolControltypeButton:         ((0x20000000) | (0x01000000) | (0x00010000)),
-	MixercontrolControltypeCustom:         (0x00000000),
-	MixercontrolControltypeDecibels:       ((0x30000000) | (0x00040000)),
-	MixercontrolControltypeEqualizer:      (((0x50000000) | (0x00030000)) + 4),
-	MixercontrolControltypeFader:          ((0x50000000) | (0x00030000)),
-	MixercontrolControltypeLoudness:       (((0x20000000) | (0x00010000)) + 4),
-	MixercontrolControltypeMicrotime:      ((0x60000000) | (0x00030000)),
-	MixercontrolControltypeMillitime:      ((0x60000000) | (0x01000000) | (0x00030000)),
-	MixercontrolControltypeMixer:          (((0x70000000) | (0x01000000) | (0x00010000)) + 1),
-	MixercontrolControltypeMono:           (((0x20000000) | (0x00010000)) + 3),
-	MixercontrolControltypeMultipleselect: ((0x70000000) | (0x01000000) | (0x00010000)),
-	MixercontrolControltypeMute:           (((0x20000000) | (0x00010000)) + 2),
-	MixercontrolControltypeMux:            (((0x70000000) | (0x00010000)) + 1),
-	MixercontrolControltypeOnoff:          (((0x20000000) | (0x00010000)) + 1),
-	MixercontrolControltypePan:            (((0x40000000) | (0x00020000)) + 1),
-	MixercontrolControltypePeakmeter:      (((0x10000000) | (0x00020000)) + 1),
-	MixercontrolControltypePercent:        ((0x30000000) | (0x00050000)),
-	MixercontrolControltypeQsoundpan:      (((0x40000000) | (0x00020000)) + 2),
-	MixercontrolControltypeSigned:         ((0x30000000) | (0x00020000)),
-	MixercontrolControltypeSignedmeter:    ((0x10000000) | (0x00020000)),
-	MixercontrolControltypeSingleselect:   ((0x70000000) | (0x00010000)),
-	MixercontrolControltypeSlider:         ((0x40000000) | (0x00020000)),
-	MixercontrolControltypeStereoenh:      (((0x20000000) | (0x00010000)) + 5),
-	MixercontrolControltypeTreble:         (((0x50000000) | (0x00030000)) + 3),
-	MixercontrolControltypeUnsigned:       ((0x30000000) | (0x00030000)),
-	MixercontrolControltypeUnsignedmeter:  ((0x10000000) | (0x00030000)),
-	MixercontrolControltypeVolume:         (((0x50000000) | (0x00030000)) + 1),
-	MixercontrolCtClassCustom:             (0x00000000),
-	MixercontrolCtClassFader:              (0x50000000),
-	MixercontrolCtClassList:               (0x70000000),
-	MixercontrolCtClassMask:               (0xF0000000),
-	MixercontrolCtClassMeter:              (0x10000000),
-	MixercontrolCtClassNumber:             (0x30000000),
-	MixercontrolCtClassSlider:             (0x40000000),
-	MixercontrolCtClassSwitch:             (0x20000000),
-	MixercontrolCtClassTime:               (0x60000000),
-	MixercontrolCtScListMultiple:          (0x01000000),
-	MixercontrolCtScListSingle:            (0x00000000),
-	MixercontrolCtScMeterPolled:           (0x00000000),
-	MixercontrolCtScSwitchBoolean:         (0x00000000),
-	MixercontrolCtScSwitchButton:          (0x01000000),
-	MixercontrolCtScTimeMicrosecs:         (0x00000000),
-	MixercontrolCtScTimeMillisecs:         (0x01000000),
-	MixercontrolCtSubclassMask:            (0x0F000000),
-	MixercontrolCtUnitsBoolean:            (0x00010000),
-	MixercontrolCtUnitsCustom:             (0x00000000),
-	MixercontrolCtUnitsDecibels:           (0x00040000),
-	MixercontrolCtUnitsMask:               (0x00FF0000),
-	MixercontrolCtUnitsPercent:            (0x00050000),
-	MixercontrolCtUnitsSigned:             (0x00020000),
-	MixercontrolCtUnitsUnsigned:           (0x00030000),
-	MixerGetcontroldetailsfListtext:       (0x00000001),
-	MixerGetcontroldetailsfQuerymask:      (0x0000000F),
-	MixerGetcontroldetailsfValue:          (0x00000000),
-	MixerGetlinecontrolsfAll:              (0x00000000),
-	MixerGetlinecontrolsfOnebyid:          (0x00000001),
-	MixerGetlinecontrolsfOnebytype:        (0x00000002),
-	MixerGetlinecontrolsfQuerymask:        (0x0000000F),
-	MixerGetlineinfofComponenttype:        (0x00000003),
-	MixerGetlineinfofDestination:          (0x00000000),
-	MixerGetlineinfofLineid:               (0x00000002),
-	MixerGetlineinfofQuerymask:            (0x0000000F),
-	MixerGetlineinfofSource:               (0x00000001),
-	MixerGetlineinfofTargettype:           (0x00000004),
-	MixerlineComponenttypeDstDigital:      ((0x0) + 1),
-	MixerlineComponenttypeDstFirst:        (0x0),
-	MixerlineComponenttypeDstHeadphones:   ((0x0) + 5),
-	MixerlineComponenttypeDstLast:         ((0x0) + 8),
-	MixerlineComponenttypeDstLine:         ((0x0) + 2),
-	MixerlineComponenttypeDstMonitor:      ((0x0) + 3),
-	MixerlineComponenttypeDstSpeakers:     ((0x0) + 4),
-	MixerlineComponenttypeDstTelephone:    ((0x0) + 6),
-	MixerlineComponenttypeDstUndefined:    ((0x0) + 0),
-	MixerlineComponenttypeDstVoicein:      ((0x0) + 8),
-	MixerlineComponenttypeDstWavein:       ((0x0) + 7),
-	MixerlineComponenttypeSrcAnalog:       ((0x00001000) + 10),
-	MixerlineComponenttypeSrcAuxiliary:    ((0x00001000) + 9),
-	MixerlineComponenttypeSrcCompactdisc:  ((0x00001000) + 5),
-	MixerlineComponenttypeSrcDigital:      ((0x00001000) + 1),
-	MixerlineComponenttypeSrcFirst:        (0x00001000),
-	MixerlineComponenttypeSrcLast:         ((0x00001000) + 10),
-	MixerlineComponenttypeSrcLine:         ((0x00001000) + 2),
-	MixerlineComponenttypeSrcMicrophone:   ((0x00001000) + 3),
-	MixerlineComponenttypeSrcPcspeaker:    ((0x00001000) + 7),
-	MixerlineComponenttypeSrcSynthesizer:  ((0x00001000) + 4),
-	MixerlineComponenttypeSrcTelephone:    ((0x00001000) + 6),
-	MixerlineComponenttypeSrcUndefined:    ((0x00001000) + 0),
-	MixerlineComponenttypeSrcWaveout:      ((0x00001000) + 8),
-	MixerlineLinefActive:                  (0x00000001),
-	MixerlineLinefDisconnected:            (0x00008000),
-	MixerlineLinefSource:                  (0x80000000),
-	MixerlineTargettypeAux:                5,
-	MixerlineTargettypeMidiin:             4,
-	MixerlineTargettypeMidiout:            3,
-	MixerlineTargettypeUndefined:          0,
-	MixerlineTargettypeWavein:             2,
-	MixerlineTargettypeWaveout:            1,
-	MixerLongNameChars:                    64,
-	MixerObjectfAux:                       (0x50000000),
-	MixerObjectfHandle:                    (0x80000000),
-	MixerObjectfHmidiin:                   ((0x80000000) | (0x40000000)),
-	MixerObjectfHmidiout:                  ((0x80000000) | (0x30000000)),
-	MixerObjectfHmixer:                    (0x80000000),
-	MixerObjectfHwavein:                   ((0x80000000) | (0x20000000)),
-	MixerObjectfHwaveout:                  ((0x80000000) | (0x10000000)),
-	MixerObjectfMidiin:                    (0x40000000),
-	MixerObjectfMidiout:                   (0x30000000),
-	MixerObjectfMixer:                     (0x00000000),
-	MixerObjectfWavein:                    (0x20000000),
-	MixerObjectfWaveout:                   (0x10000000),
-	MixerrBase:                            1024,
-	MixerrInvalcontrol:                    (1024 + 1),
-	MixerrInvalline:                       (1024 + 0),
-	MixerrInvalvalue:                      (1024 + 2),
-	MixerrLasterror:                       (1024 + 2),
-	MixerSetcontroldetailsfCustom:         (0x00000001),
-	MixerSetcontroldetailsfQuerymask:      (0x0000000F),
-	MixerSetcontroldetailsfValue:          (0x00000000),
-	MixerShortNameChars:                   16,
-	MmDrvmClose:                           0x3D1,
-	MmDrvmData:                            0x3D2,
-	MmDrvmError:                           0x3D3,
-	MmDrvmOpen:                            0x3D0,
-	MmioAllocbuf:                          0x00010000,
-	MmioCompat:                            0x00000000,
-	MmioCreate:                            0x00001000,
-	MmioCreatelist:                        0x0040,
-	MmioCreateriff:                        0x0020,
-	MmioDefaultbuffer:                     8192,
-	MmioDelete:                            0x00000200,
-	MmioDenynone:                          0x00000040,
-	MmioDenyread:                          0x00000030,
-	MmioDenywrite:                         0x00000020,
-	MmioDirty:                             0x10000000,
-	MmioEmptybuf:                          0x0010,
-	MmioerrAccessdenied:                   (256 + 12),
-	MmioerrBase:                           256,
-	MmioerrCannotclose:                    (256 + 4),
-	MmioerrCannotexpand:                   (256 + 8),
-	MmioerrCannotopen:                     (256 + 3),
-	MmioerrCannotread:                     (256 + 5),
-	MmioerrCannotseek:                     (256 + 7),
-	MmioerrCannotwrite:                    (256 + 6),
-	MmioerrChunknotfound:                  (256 + 9),
-	MmioerrFilenotfound:                   (256 + 1),
-	MmioerrInvalidfile:                    (256 + 16),
-	MmioerrNetworkerror:                   (256 + 14),
-	MmioerrOutofmemory:                    (256 + 2),
-	MmioerrPathnotfound:                   (256 + 11),
-	MmioerrSharingviolation:               (256 + 13),
-	MmioerrToomanyopenfiles:               (256 + 15),
-	MmioerrUnbuffered:                     (256 + 10),
-	MmioExclusive:                         0x00000010,
-	MmioExist:                             0x00004000,
-	MmioFhopen:                            0x0010,
-	MmioFindchunk:                         0x0010,
-	MmioFindlist:                          0x0040,
-	MmioFindproc:                          0x00040000,
-	MmioFindriff:                          0x0020,
-	MmioGettemp:                           0x00020000,
-	MmioGlobalproc:                        0x10000000,
-	MmioInstallproc:                       0x00010000,
-	MmiomClose:                            4,
-	MmiomOpen:                             3,
-	MmiomRead:                             0x00000000,
-	MmiomRename:                           6,
-	MmiomSeek:                             2,
-	MmiomUser:                             0x8000,
-	MmiomWrite:                            0x00000001,
-	MmiomWriteflush:                       5,
-	MmioParse:                             0x00000100,
-	MmioRead:                              0x00000000,
-	MmioReadwrite:                         0x00000002,
-	MmioRemoveproc:                        0x00020000,
-	MmioRwmode:                            0x00000003,
-	MmioSharemode:                         0x00000070,
-	MmioToupper:                           0x0010,
-	MmioUnicodeproc:                       0x01000000,
-	MmioWrite:                             0x00000001,
-	MmJoy1buttondown:                      0x3B5,
-	MmJoy1buttonup:                        0x3B7,
-	MmJoy1move:                            0x3A0,
-	MmJoy1zmove:                           0x3A2,
-	MmJoy2buttondown:                      0x3B6,
-	MmJoy2buttonup:                        0x3B8,
-	MmJoy2move:                            0x3A1,
-	MmJoy2zmove:                           0x3A3,
-	MmMcinotify:                           0x3B9,
-	MmMcisignal:                           0x3CB,
-	MmMimClose:                            0x3C2,
-	MmMimData:                             0x3C3,
-	MmMimError:                            0x3C5,
-	MmMimLongdata:                         0x3C4,
-	MmMimLongerror:                        0x3C6,
-	MmMimMoredata:                         0x3CC,
-	MmMimOpen:                             0x3C1,
-	MmMixmControlChange:                   0x3D1,
-	MmMixmLineChange:                      0x3D0,
-	MmMomClose:                            0x3C8,
-	MmMomDone:                             0x3C9,
-	MmMomOpen:                             0x3C7,
-	MmMomPositioncb:                       0x3CA,
-	MmStreamClose:                         0x3D5,
-	MmStreamDone:                          0x3D6,
-	MmStreamError:                         0x3D7,
-	MmStreamOpen:                          0x3D4,
-	MmsyserrAllocated:                     (0 + 4),
-	MmsyserrBaddb:                         (0 + 14),
-	MmsyserrBaddeviceid:                   (0 + 2),
-	MmsyserrBaderrnum:                     (0 + 9),
-	MmsyserrBase:                          0,
-	MmsyserrDeleteerror:                   (0 + 18),
-	MmsyserrError:                         (0 + 1),
-	MmsyserrHandlebusy:                    (0 + 12),
-	MmsyserrInvalflag:                     (0 + 10),
-	MmsyserrInvalhandle:                   (0 + 5),
-	MmsyserrInvalidalias:                  (0 + 13),
-	MmsyserrInvalparam:                    (0 + 11),
-	MmsyserrKeynotfound:                   (0 + 15),
-	MmsyserrLasterror:                     (0 + 21),
-	MmsyserrMoredata:                      (0 + 21),
-	MmsyserrNodriver:                      (0 + 6),
-	MmsyserrNodrivercb:                    (0 + 20),
-	MmsyserrNoerror:                       0,
-	MmsyserrNomem:                         (0 + 7),
-	MmsyserrNotenabled:                    (0 + 3),
-	MmsyserrNotsupported:                  (0 + 8),
-	MmsyserrReaderror:                     (0 + 16),
-	MmsyserrValnotfound:                   (0 + 19),
-	MmsyserrWriteerror:                    (0 + 17),
-	MmWimClose:                            0x3BF,
-	MmWimData:                             0x3C0,
-	MmWimOpen:                             0x3BE,
-	MmWomClose:                            0x3BC,
-	MmWomDone:                             0x3BD,
-	MmWomOpen:                             0x3BB,
-	ModFmsynth:                            4,
-	ModMapper:                             5,
-	ModMidiport:                           1,
-	ModSqsynth:                            3,
-	ModSwsynth:                            7,
-	ModSynth:                              2,
-	ModWavetable:                          6,
-	MomClose:                              0x3C8,
-	MomDone:                               0x3C9,
-	MomOpen:                               0x3C7,
-	MomPositioncb:                         0x3CA,
-	Newtransparent:                        3,
-	Queryropsupport:                       40,
-	ScScreensave:                          0xF140,
-	SeekCur:                               1,
-	SeekEnd:                               2,
-	SeekSet:                               0,
-	Selectdib:                             41,
-	SndAlias:                              (0x00010000),
-	SndAliasId:                            (0x00110000),
-	SndAliasStart:                         0,
-	SndApplication:                        0x0080,
-	SndAsync:                              0x0001,
-	SndFilename:                           (0x00020000),
-	SndLoop:                               0x0008,
-	SndMemory:                             0x0004,
-	SndNodefault:                          0x0002,
-	SndNostop:                             0x0010,
-	SndNowait:                             (0x00002000),
-	SndPurge:                              0x0040,
-	SndResource:                           (0x00040004),
-	SndSync:                               0x0000,
-	TimeBytes:                             0x0004,
-	TimeCallbackEventPulse:                0x0020,
-	TimeCallbackEventSet:                  0x0010,
-	TimeCallbackFunction:                  0x0000,
-	TimeKillSynchronous:                   0x0100,
-	TimeMidi:                              0x0010,
-	TimeMs:                                0x0001,
-	TimeOneshot:                           0x0000,
-	TimePeriodic:                          0x0001,
-	TimerrBase:                            96,
-	TimerrNocando:                         (96 + 1),
-	TimerrNoerror:                         (0),
-	TimerrStruct:                          (96 + 33),
-	TimeSamples:                           0x0002,
-	TimeSmpte:                             0x0008,
-	TimeTicks:                             0x0020,
-	WaveAllowsync:                         0x0002,
-	WavecapsLrvolume:                      0x0008,
-	WavecapsPitch:                         0x0001,
-	WavecapsPlaybackrate:                  0x0002,
-	WavecapsSampleaccurate:                0x0020,
-	WavecapsSync:                          0x0010,
-	WavecapsVolume:                        0x0004,
-	WaveFormat1m08:                        0x00000001,
-	WaveFormat1m16:                        0x00000004,
-	WaveFormat1s08:                        0x00000002,
-	WaveFormat1s16:                        0x00000008,
-	WaveFormat2m08:                        0x00000010,
-	WaveFormat2m16:                        0x00000040,
-	WaveFormat2s08:                        0x00000020,
-	WaveFormat2s16:                        0x00000080,
-	WaveFormat44m08:                       0x00000100,
-	WaveFormat44m16:                       0x00000400,
-	WaveFormat44s08:                       0x00000200,
-	WaveFormat44s16:                       0x00000800,
-	WaveFormat48m08:                       0x00001000,
-	WaveFormat48m16:                       0x00004000,
-	WaveFormat48s08:                       0x00002000,
-	WaveFormat48s16:                       0x00008000,
-	WaveFormat4m08:                        0x00000100,
-	WaveFormat4m16:                        0x00000400,
-	WaveFormat4s08:                        0x00000200,
-	WaveFormat4s16:                        0x00000800,
-	WaveFormat96m08:                       0x00010000,
-	WaveFormat96m16:                       0x00040000,
-	WaveFormat96s08:                       0x00020000,
-	WaveFormat96s16:                       0x00080000,
-	WaveFormatDirect:                      0x0008,
-	WaveFormatDirectQuery:                 (0x0001 | 0x0008),
-	WaveFormatPcm:                         1,
-	WaveFormatQuery:                       0x0001,
-	WaveInvalidformat:                     0x00000000,
-	WaveMapped:                            0x0004,
-	WaveMappedDefaultCommunicationDevice:  0x0010,
-	WaveMapper:                            (-1),
-	WaverrBadformat:                       (32 + 0),
-	WaverrBase:                            32,
-	WaverrLasterror:                       (32 + 3),
-	WaverrStillplaying:                    (32 + 1),
-	WaverrSync:                            (32 + 3),
-	WaverrUnprepared:                      (32 + 2),
-	WhdrBeginloop:                         0x00000004,
-	WhdrDone:                              0x00000001,
-	WhdrEndloop:                           0x00000008,
-	WhdrInqueue:                           0x00000010,
-	WhdrPrepared:                          0x00000002,
-	WimClose:                              0x3BF,
-	WimData:                               0x3C0,
-	WimOpen:                               0x3BE,
-	WomClose:                              0x3BC,
-	WomDone:                               0x3BD,
-	WomOpen:                               0x3BB,
+	Newtransparent:  3,
+	Queryropsupport: 40,
+	ScScreensave:    0xF140,
+	Selectdib:       41,
 }
 
 // Nb30 contains constants from nb30.h
@@ -3570,6 +1856,76 @@ var Shellapi = struct {
 	SiidWorld:                   13,
 	SiidZipfile:                 105,
 	WcNetaddress:                "msctls_netaddress",
+}
+
+// Stdlib contains constants from stdlib.h
+var Stdlib = struct {
+	CallReportfault uintptr
+	Cvtbufsize      uintptr
+	ExitFailure     uintptr
+	ExitSuccess     uintptr
+	MaxDir          uintptr
+	MaxDrive        uintptr
+	MaxEnv          uintptr
+	MaxExt          uintptr
+	MaxFname        uintptr
+	MaxPath         uintptr
+	Null            uintptr
+	OutToDefault    uintptr
+	OutToMsgbox     uintptr
+	OutToStderr     uintptr
+	RandMax         uintptr
+	ReportErrmode   uintptr
+	WriteAbortMsg   uintptr
+}{
+	CallReportfault: 0x2,
+	Cvtbufsize:      (309 + 40),
+	ExitFailure:     1,
+	ExitSuccess:     0,
+	MaxDir:          256,
+	MaxDrive:        3,
+	MaxEnv:          32767,
+	MaxExt:          256,
+	MaxFname:        256,
+	MaxPath:         260,
+	Null:            0,
+	OutToDefault:    0,
+	OutToMsgbox:     2,
+	OutToStderr:     1,
+	RandMax:         0x7fff,
+	ReportErrmode:   3,
+	WriteAbortMsg:   0x1,
+}
+
+// Tlhelp32 contains constants from tlhelp32.h
+var Tlhelp32 = struct {
+	Default         uintptr
+	Fixed           uintptr
+	Free            uintptr
+	Inherit         uintptr
+	MaxModuleName32 uintptr
+	Moveable        uintptr
+	Shared          uintptr
+	SnapAll         uintptr
+	SnapHeapList    uintptr
+	SnapModule      uintptr
+	SnapModule32    uintptr
+	SnapProcess     uintptr
+	SnapThread      uintptr
+}{
+	Default:         1,
+	Fixed:           0x00000001,
+	Free:            0x00000002,
+	Inherit:         0x80000000,
+	MaxModuleName32: 255,
+	Moveable:        0x00000004,
+	Shared:          2,
+	SnapAll:         (0x00000001 | 0x00000002 | 0x00000004 | 0x00000008),
+	SnapHeapList:    0x00000001,
+	SnapModule:      0x00000008,
+	SnapModule32:    0x00000010,
+	SnapProcess:     0x00000002,
+	SnapThread:      0x00000004,
 }
 
 // Winapifamily contains constants from winapifamily.h
@@ -11398,6 +9754,7 @@ var Winnt = struct {
 	AccessDsObjectTypeNameW                                        string
 	AccessDsSourceA                                                string
 	AccessDsSourceW                                                string
+	AccessFilterSecurityInformation                                uintptr
 	AccessMaxLevel                                                 uintptr
 	AccessMaxMsAceType                                             uintptr
 	AccessMaxMsObjectAceType                                       uintptr
@@ -11417,6 +9774,7 @@ var Winnt = struct {
 	AccessReasonDeniedParentAce                                    uintptr
 	AccessReasonEmptyDacl                                          uintptr
 	AccessReasonExdataMask                                         uintptr
+	AccessReasonFilterAce                                          uintptr
 	AccessReasonFromPrivilege                                      uintptr
 	AccessReasonIntegrityLevel                                     uintptr
 	AccessReasonMissingPrivilege                                   uintptr
@@ -11429,6 +9787,7 @@ var Winnt = struct {
 	AccessReasonNullDacl                                           uintptr
 	AccessReasonOwnership                                          uintptr
 	AccessReasonStagingMask                                        uintptr
+	AccessReasonTrustLabel                                         uintptr
 	AccessReasonTypeMask                                           uintptr
 	AccessSystemSecurity                                           uintptr
 	AceInheritedObjectTypePresent                                  uintptr
@@ -11470,6 +9829,7 @@ var Winnt = struct {
 	ActivationContextSectionDllRedirection                         uintptr
 	ActivationContextSectionGlobalObjectRenameTable                uintptr
 	ActivationContextSectionWindowClassRedirection                 uintptr
+	ActivationContextSectionWinrtActivatableClasses                uintptr
 	AdapterType                                                    uintptr
 	AdministratorPowerPolicy                                       uintptr
 	AllProcessorGroups                                             uintptr
@@ -11554,6 +9914,7 @@ var Winnt = struct {
 	ApplyLowPowerScenarioSettings                                  uintptr
 	Arm64MaxBreakpoints                                            uintptr
 	Arm64MaxWatchpoints                                            uintptr
+	ArmCacheAlignmentSize                                          uintptr
 	ArmMaxBreakpoints                                              uintptr
 	ArmMaxWatchpoints                                              uintptr
 	AssemblyDetailedInformationInActivationContext                 uintptr
@@ -11573,8 +9934,10 @@ var Winnt = struct {
 	CacheTrace                                                     uintptr
 	CacheUnified                                                   uintptr
 	CfgCallTargetConvertExportSuppressedToValid                    uintptr
+	CfgCallTargetConvertXfgToCfg                                   uintptr
 	CfgCallTargetProcessed                                         uintptr
 	CfgCallTargetValid                                             uintptr
+	CfgCallTargetValidXfg                                          uintptr
 	ClaimSecurityAttributeCustomFlags                              uintptr
 	ClaimSecurityAttributeDisabled                                 uintptr
 	ClaimSecurityAttributeDisabledByDefault                        uintptr
@@ -11638,10 +10001,12 @@ var Winnt = struct {
 	ContextIa32Control                                             uintptr
 	ContextIa64                                                    uintptr
 	ContextInteger                                                 uintptr
+	ContextKernelCet                                               uintptr
 	ContextLowerFloatingPoint                                      uintptr
 	ContextSegments                                                uintptr
 	ContextServiceActive                                           uintptr
 	ContextUnwoundToCall                                           uintptr
+	ContextXstate                                                  uintptr
 	CorDeletedNameLength                                           uintptr
 	CoreParkingPolicyChangeIdeal                                   uintptr
 	CoreParkingPolicyChangeMax                                     uintptr
@@ -11657,7 +10022,9 @@ var Winnt = struct {
 	CorVtableCallMostDerived                                       uintptr
 	CorVtableFromUnmanaged                                         uintptr
 	CorVtablegapNameLength                                         uintptr
+	CpuSetInformation                                              uintptr
 	CreateBoundaryDescriptorAddAppcontainerSid                     uintptr
+	CriticalAceFlag                                                uintptr
 	CriticalError                                                  uintptr
 	CsDeviceNotification                                           uintptr
 	CtmfIncludeAppcontainer                                        uintptr
@@ -11671,9 +10038,11 @@ var Winnt = struct {
 	DbgExceptionNotHandled                                         uintptr
 	DbgPrintexceptionC                                             uintptr
 	DbgPrintexceptionWideC                                         uintptr
+	DbgReplyLater                                                  uintptr
 	DbgRipexception                                                uintptr
 	DbgTerminateProcess                                            uintptr
 	DbgTerminateThread                                             uintptr
+	DedicatedMemoryCacheEligible                                   uintptr
 	DefaultCompartmentId                                           uintptr
 	DefaultImpersonationLevel                                      uintptr
 	Delete                                                         uintptr
@@ -11702,6 +10071,8 @@ var Winnt = struct {
 	DomainAliasRidCertsvcDcomAccessGroup                           uintptr
 	DomainAliasRidCryptoOperators                                  uintptr
 	DomainAliasRidDcomUsers                                        uintptr
+	DomainAliasRidDefaultAccount                                   uintptr
+	DomainAliasRidDeviceOwners                                     uintptr
 	DomainAliasRidEventLogReadersGroup                             uintptr
 	DomainAliasRidGuests                                           uintptr
 	DomainAliasRidHyperVAdmins                                     uintptr
@@ -11721,27 +10092,34 @@ var Winnt = struct {
 	DomainAliasRidRemoteDesktopUsers                               uintptr
 	DomainAliasRidRemoteManagementUsers                            uintptr
 	DomainAliasRidReplicator                                       uintptr
+	DomainAliasRidStorageReplicaAdmins                             uintptr
 	DomainAliasRidSystemOps                                        uintptr
 	DomainAliasRidTsLicenseServers                                 uintptr
 	DomainAliasRidUsers                                            uintptr
 	DomainGroupRidAdmins                                           uintptr
 	DomainGroupRidAuthorizationDataContainsClaims                  uintptr
 	DomainGroupRidAuthorizationDataIsCompounded                    uintptr
+	DomainGroupRidCdcReserved                                      uintptr
 	DomainGroupRidCertAdmins                                       uintptr
 	DomainGroupRidCloneableControllers                             uintptr
 	DomainGroupRidComputers                                        uintptr
 	DomainGroupRidControllers                                      uintptr
 	DomainGroupRidEnterpriseAdmins                                 uintptr
+	DomainGroupRidEnterpriseKeyAdmins                              uintptr
 	DomainGroupRidEnterpriseReadonlyDomainControllers              uintptr
 	DomainGroupRidGuests                                           uintptr
+	DomainGroupRidKeyAdmins                                        uintptr
 	DomainGroupRidPolicyAdmins                                     uintptr
+	DomainGroupRidProtectedUsers                                   uintptr
 	DomainGroupRidReadonlyControllers                              uintptr
 	DomainGroupRidSchemaAdmins                                     uintptr
 	DomainGroupRidUsers                                            uintptr
 	DomainUserRidAdmin                                             uintptr
+	DomainUserRidDefaultAccount                                    uintptr
 	DomainUserRidGuest                                             uintptr
 	DomainUserRidKrbtgt                                            uintptr
 	DomainUserRidMax                                               uintptr
+	DomainUserRidWdagAccount                                       uintptr
 	DriverType                                                     uintptr
 	DuplicateCloseSource                                           uintptr
 	DuplicateSameAccess                                            uintptr
@@ -11781,6 +10159,13 @@ var Winnt = struct {
 	EmarchEncI17SignInstWordX                                      uintptr
 	EmarchEncI17SignSizeX                                          uintptr
 	EmarchEncI17SignValPosX                                        uintptr
+	EnclaveLongIdLength                                            uintptr
+	EnclaveShortIdLength                                           uintptr
+	EnclaveTypeSgx                                                 uintptr
+	EnclaveTypeSgx2                                                uintptr
+	EnclaveTypeVbs                                                 uintptr
+	EnclaveTypeVbsBasic                                            uintptr
+	EnclaveVbsFlagDebug                                            uintptr
 	EnlistmentAllAccess                                            uintptr
 	EnlistmentBasicInformation                                     uintptr
 	EnlistmentCrmInformation                                       uintptr
@@ -11857,16 +10242,24 @@ var Winnt = struct {
 	FileAttributeCompressed                                        uintptr
 	FileAttributeDevice                                            uintptr
 	FileAttributeDirectory                                         uintptr
+	FileAttributeEa                                                uintptr
 	FileAttributeEncrypted                                         uintptr
 	FileAttributeHidden                                            uintptr
+	FileAttributeIntegrityStream                                   uintptr
 	FileAttributeNormal                                            uintptr
+	FileAttributeNoScrubData                                       uintptr
 	FileAttributeNotContentIndexed                                 uintptr
 	FileAttributeOffline                                           uintptr
+	FileAttributePinned                                            uintptr
 	FileAttributeReadonly                                          uintptr
+	FileAttributeRecallOnDataAccess                                uintptr
+	FileAttributeRecallOnOpen                                      uintptr
 	FileAttributeReparsePoint                                      uintptr
 	FileAttributeSparseFile                                        uintptr
+	FileAttributeStrictlySequential                                uintptr
 	FileAttributeSystem                                            uintptr
 	FileAttributeTemporary                                         uintptr
+	FileAttributeUnpinned                                          uintptr
 	FileAttributeVirtual                                           uintptr
 	FileCasePreservedNames                                         uintptr
 	FileCaseSensitiveSearch                                        uintptr
@@ -11874,6 +10267,8 @@ var Winnt = struct {
 	FileCreate                                                     uintptr
 	FileCreatePipeInstance                                         uintptr
 	FileCreateTreeConnection                                       uintptr
+	FileCsFlagCaseSensitiveDir                                     uintptr
+	FileDaxVolume                                                  uintptr
 	FileDeleteChild                                                uintptr
 	FileDeleteOnClose                                              uintptr
 	FileDirectoryFile                                              uintptr
@@ -11885,9 +10280,15 @@ var Winnt = struct {
 	FileGenericWrite                                               uintptr
 	FileInformationInAssemblyOfAssemblyInActivationContext         uintptr
 	FileInformationInAssemblyOfAssemblyInActivationContxt          uintptr
+	FileInvalidFileId                                              int
 	FileListDirectory                                              uintptr
 	FileMaximumDisposition                                         uintptr
 	FileNamedStreams                                               uintptr
+	FileNameFlagBoth                                               uintptr
+	FileNameFlagDos                                                uintptr
+	FileNameFlagHardlink                                           uintptr
+	FileNameFlagNtfs                                               uintptr
+	FileNameFlagsUnspecified                                       uintptr
 	FileNoCompression                                              uintptr
 	FileNoEaKnowledge                                              uintptr
 	FileNoIntermediateBuffering                                    uintptr
@@ -11918,6 +10319,7 @@ var Winnt = struct {
 	FileReadEa                                                     uintptr
 	FileReadOnlyVolume                                             uintptr
 	FileReserveOpfilter                                            uintptr
+	FileReturnsCleanupResultInfo                                   uintptr
 	FileSequentialOnly                                             uintptr
 	FileSequentialWriteOnce                                        uintptr
 	FileShareDelete                                                uintptr
@@ -11925,15 +10327,22 @@ var Winnt = struct {
 	FileShareValidFlags                                            uintptr
 	FileShareWrite                                                 uintptr
 	FileSupersede                                                  uintptr
+	FileSupportsBlockRefcounting                                   uintptr
+	FileSupportsBypassIo                                           uintptr
+	FileSupportsCaseSensitiveDirs                                  uintptr
 	FileSupportsEncryption                                         uintptr
 	FileSupportsExtendedAttributes                                 uintptr
+	FileSupportsGhosting                                           uintptr
 	FileSupportsHardLinks                                          uintptr
 	FileSupportsIntegrityStreams                                   uintptr
 	FileSupportsObjectIds                                          uintptr
 	FileSupportsOpenByFileId                                       uintptr
+	FileSupportsPosixUnlinkRename                                  uintptr
 	FileSupportsRemoteStorage                                      uintptr
 	FileSupportsReparsePoints                                      uintptr
 	FileSupportsSparseFiles                                        uintptr
+	FileSupportsSparseVdl                                          uintptr
+	FileSupportsStreamSnapshots                                    uintptr
 	FileSupportsTransactions                                       uintptr
 	FileSupportsUsnJournal                                         uintptr
 	FileSynchronousIoAlert                                         uintptr
@@ -11953,6 +10362,9 @@ var Winnt = struct {
 	FirmwareTypeUefi                                               uintptr
 	FirmwareTypeUnknown                                            uintptr
 	FlsMaximumAvailable                                            uintptr
+	FlushFlagsFileDataOnly                                         uintptr
+	FlushFlagsFileDataSyncOnly                                     uintptr
+	FlushFlagsNoSync                                               uintptr
 	ForestUserRidMax                                               uintptr
 	FrameFpo                                                       uintptr
 	FrameNonfpo                                                    uintptr
@@ -12495,6 +10907,7 @@ var Winnt = struct {
 	IoReparseTagCloudF                                             uintptr
 	IoReparseTagCloudMask                                          uintptr
 	IoReparseTagCsv                                                uintptr
+	IoReparseTagDatalessCim                                        uintptr
 	IoReparseTagDedup                                              uintptr
 	IoReparseTagDfs                                                uintptr
 	IoReparseTagDfsr                                               uintptr
@@ -12512,6 +10925,7 @@ var Winnt = struct {
 	IoReparseTagProjfsTombstone                                    uintptr
 	IoReparseTagReservedOne                                        uintptr
 	IoReparseTagReservedRange                                      uintptr
+	IoReparseTagReservedTwo                                        uintptr
 	IoReparseTagReservedZero                                       uintptr
 	IoReparseTagSis                                                uintptr
 	IoReparseTagStorageSync                                        uintptr
@@ -12519,6 +10933,8 @@ var Winnt = struct {
 	IoReparseTagUnhandled                                          uintptr
 	IoReparseTagWci                                                uintptr
 	IoReparseTagWci1                                               uintptr
+	IoReparseTagWciLink                                            uintptr
+	IoReparseTagWciLink1                                           uintptr
 	IoReparseTagWciTombstone                                       uintptr
 	IoReparseTagWim                                                uintptr
 	IoReparseTagWof                                                uintptr
@@ -12553,24 +10969,40 @@ var Winnt = struct {
 	JobObjectCpuRateControlEnable                                  uintptr
 	JobObjectCpuRateControlHardCap                                 uintptr
 	JobObjectCpuRateControlInformation                             uintptr
+	JobObjectCpuRateControlMinMaxRate                              uintptr
 	JobObjectCpuRateControlNotify                                  uintptr
 	JobObjectCpuRateControlValidFlags                              uintptr
 	JobObjectCpuRateControlWeightBased                             uintptr
+	JobObjectCreateSilo                                            uintptr
 	JobObjectEndOfJobTimeInformation                               uintptr
 	JobObjectExtendedLimitInformation                              uintptr
 	JobObjectExtendedLimitValidFlags                               uintptr
 	JobObjectGroupInformation                                      uintptr
 	JobObjectGroupInformationEx                                    uintptr
+	JobObjectImpersonate                                           uintptr
+	JobobjectIoAttributionControlDisable                           uintptr
+	JobobjectIoAttributionControlEnable                            uintptr
+	JobobjectIoAttributionControlValidFlags                        uintptr
+	JobObjectIoRateControlEnable                                   uintptr
+	JobObjectIoRateControlForceUnitAccessAll                       uintptr
+	JobObjectIoRateControlForceUnitAccessOnSoftCap                 uintptr
+	JobObjectIoRateControlStandaloneVolume                         uintptr
+	JobObjectIoRateControlValidFlags                               uintptr
 	JobObjectJobSetInformation                                     uintptr
 	JobObjectLimitActiveProcess                                    uintptr
 	JobObjectLimitAffinity                                         uintptr
 	JobObjectLimitBreakawayOk                                      uintptr
+	JobObjectLimitCpuRateControl                                   uintptr
 	JobObjectLimitDieOnUnhandledException                          uintptr
+	JobObjectLimitIoRateControl                                    uintptr
 	JobObjectLimitJobMemory                                        uintptr
+	JobObjectLimitJobMemoryHigh                                    uintptr
+	JobObjectLimitJobMemoryLow                                     uintptr
 	JobObjectLimitJobReadBytes                                     uintptr
 	JobObjectLimitJobTime                                          uintptr
 	JobObjectLimitJobWriteBytes                                    uintptr
 	JobObjectLimitKillOnJobClose                                   uintptr
+	JobObjectLimitNetRateControl                                   uintptr
 	JobObjectLimitPreserveJobTime                                  uintptr
 	JobObjectLimitPriorityClass                                    uintptr
 	JobObjectLimitProcessMemory                                    uintptr
@@ -12585,6 +11017,7 @@ var Winnt = struct {
 	JobObjectLimitSubsetAffinity                                   uintptr
 	JobObjectLimitValidFlags                                       uintptr
 	JobObjectLimitViolationInformation                             uintptr
+	JobObjectLimitViolationInformation2                            uintptr
 	JobObjectLimitWorkingset                                       uintptr
 	JobObjectMsgAbnormalExitProcess                                uintptr
 	JobObjectMsgActiveProcessLimit                                 uintptr
@@ -12599,11 +11032,35 @@ var Winnt = struct {
 	JobObjectMsgNewProcess                                         uintptr
 	JobObjectMsgNotificationLimit                                  uintptr
 	JobObjectMsgProcessMemoryLimit                                 uintptr
+	JobObjectMsgSiloTerminated                                     uintptr
+	JobObjectNetRateControlDscpTag                                 uintptr
+	JobObjectNetRateControlEnable                                  uintptr
+	JobObjectNetRateControlInformation                             uintptr
+	JobObjectNetRateControlMaxBandwidth                            uintptr
+	JobObjectNetRateControlMaxDscpTag                              uintptr
+	JobObjectNetRateControlValidFlags                              uintptr
 	JobObjectNotificationLimitInformation                          uintptr
+	JobObjectNotificationLimitInformation2                         uintptr
 	JobObjectNotificationLimitValidFlags                           uintptr
 	JobObjectPostAtEndOfJob                                        uintptr
 	JobObjectQuery                                                 uintptr
+	JobObjectReserved10Information                                 uintptr
+	JobObjectReserved11Information                                 uintptr
+	JobObjectReserved12Information                                 uintptr
+	JobObjectReserved13Information                                 uintptr
+	JobObjectReserved14Information                                 uintptr
+	JobObjectReserved15Information                                 uintptr
+	JobObjectReserved16Information                                 uintptr
+	JobObjectReserved17Information                                 uintptr
+	JobObjectReserved18Information                                 uintptr
+	JobObjectReserved19Information                                 uintptr
 	JobObjectReserved1Information                                  uintptr
+	JobObjectReserved20Information                                 uintptr
+	JobObjectReserved21Information                                 uintptr
+	JobObjectReserved22Information                                 uintptr
+	JobObjectReserved23Information                                 uintptr
+	JobObjectReserved24Information                                 uintptr
+	JobObjectReserved25Information                                 uintptr
 	JobObjectReserved2Information                                  uintptr
 	JobObjectReserved3Information                                  uintptr
 	JobObjectReserved4Information                                  uintptr
@@ -12611,6 +11068,7 @@ var Winnt = struct {
 	JobObjectReserved6Information                                  uintptr
 	JobObjectReserved7Information                                  uintptr
 	JobObjectReserved8Information                                  uintptr
+	JobObjectReserved9Information                                  uintptr
 	JobObjectReservedLimitValidFlags                               uintptr
 	JobObjectSecurityFilterTokens                                  uintptr
 	JobObjectSecurityLimitInformation                              uintptr
@@ -12620,6 +11078,7 @@ var Winnt = struct {
 	JobObjectSecurityValidFlags                                    uintptr
 	JobObjectSetAttributes                                         uintptr
 	JobObjectSetSecurityAttributes                                 uintptr
+	JobObjectSiloBasicInformation                                  uintptr
 	JobObjectTerminate                                             uintptr
 	JobObjectTerminateAtEndOfJob                                   uintptr
 	JobObjectUilimitAll                                            uintptr
@@ -12633,6 +11092,7 @@ var Winnt = struct {
 	JobObjectUilimitSystemparameters                               uintptr
 	JobObjectUilimitWriteclipboard                                 uintptr
 	JobObjectUiValidFlags                                          uintptr
+	JobObjectValidCompletionFilter                                 int
 	KeyAllAccess                                                   uintptr
 	KeyCreateLink                                                  uintptr
 	KeyCreateSubKey                                                uintptr
@@ -12699,6 +11159,7 @@ var Winnt = struct {
 	LangGreenlandic                                                uintptr
 	LangGujarati                                                   uintptr
 	LangHausa                                                      uintptr
+	LangHawaiian                                                   uintptr
 	LangHebrew                                                     uintptr
 	LangHindi                                                      uintptr
 	LangHungarian                                                  uintptr
@@ -12795,6 +11256,10 @@ var Winnt = struct {
 	LastSleepTime                                                  uintptr
 	LastWakeTime                                                   uintptr
 	LocaleNameMaxLength                                            uintptr
+	LocaleTransientKeyboard1                                       uintptr
+	LocaleTransientKeyboard2                                       uintptr
+	LocaleTransientKeyboard3                                       uintptr
+	LocaleTransientKeyboard4                                       uintptr
 	LocalserviceLuid                                               []uintptr
 	LogicalProcessorIdling                                         uintptr
 	LtDontCare                                                     uintptr
@@ -12842,19 +11307,30 @@ var Winnt = struct {
 	MdLfhintNta                                                    uintptr
 	Mem4mbPages                                                    uintptr
 	Mem64kPages                                                    uintptr
+	MemCoalescePlaceholders                                        uintptr
 	MemCommit                                                      uintptr
 	MemDecommit                                                    uintptr
+	MemDedicatedAttributeMax                                       uintptr
+	MemDedicatedAttributeReadBandwidth                             uintptr
+	MemDedicatedAttributeReadLatency                               uintptr
+	MemDedicatedAttributeWriteBandwidth                            uintptr
+	MemDedicatedAttributeWriteLatency                              uintptr
 	MemDifferentImageBaseOk                                        uintptr
 	MemExtendedParameterAddressRequirements                        uintptr
 	MemExtendedParameterAttributeFlags                             uintptr
+	MemExtendedParameterEcCode                                     uintptr
 	MemExtendedParameterGraphics                                   uintptr
+	MemExtendedParameterImageMachine                               uintptr
+	MemExtendedParameterImageNoHpat                                uintptr
 	MemExtendedParameterInvalidType                                uintptr
 	MemExtendedParameterMax                                        uintptr
 	MemExtendedParameterNonpaged                                   uintptr
 	MemExtendedParameterNonpagedHuge                               uintptr
 	MemExtendedParameterNonpagedLarge                              uintptr
 	MemExtendedParameterNumaNode                                   uintptr
+	MemExtendedParameterNumaNodeMandatory                          uintptr
 	MemExtendedParameterPartitionHandle                            uintptr
+	MemExtendedParameterSoftFaultPages                             uintptr
 	MemExtendedParameterTypeBits                                   uintptr
 	MemExtendedParameterUserPhysicalHandle                         uintptr
 	MemExtendedParameterZeroPagesOptional                          uintptr
@@ -12863,16 +11339,23 @@ var Winnt = struct {
 	MemLargePages                                                  uintptr
 	MemMapped                                                      uintptr
 	MemoryAllocationAlignment                                      uintptr
+	MemoryPartitionAllAccess                                       uintptr
+	MemoryPartitionModifyAccess                                    uintptr
+	MemoryPartitionQueryAccess                                     uintptr
 	MemPhysical                                                    uintptr
+	MemPreservePlaceholder                                         uintptr
 	MemPrivate                                                     uintptr
 	MemRelease                                                     uintptr
+	MemReplacePlaceholder                                          uintptr
 	MemReserve                                                     uintptr
+	MemReservePlaceholder                                          uintptr
 	MemReset                                                       uintptr
 	MemResetUndo                                                   uintptr
 	MemRotate                                                      uintptr
 	MemSectionExtendedParameterInvalidType                         uintptr
 	MemSectionExtendedParameterMax                                 uintptr
 	MemSectionExtendedParameterNumaNode                            uintptr
+	MemSectionExtendedParameterSigningLevel                        uintptr
 	MemSectionExtendedParameterUserPhysicalFlags                   uintptr
 	MemTopDown                                                     uintptr
 	MemUnmapWithTransientBoost                                     uintptr
@@ -12922,6 +11405,9 @@ var Winnt = struct {
 	OutOfProcessFunctionTableCallbackExportName                    string
 	OwnerSecurityInformation                                       uintptr
 	PageEnclaveDecommit                                            uintptr
+	PageEnclaveMask                                                uintptr
+	PageEnclaveSsFirst                                             uintptr
+	PageEnclaveSsRest                                              uintptr
 	PageEnclaveThreadControl                                       uintptr
 	PageEnclaveUnvalidated                                         uintptr
 	PageExecute                                                    uintptr
@@ -12933,6 +11419,7 @@ var Winnt = struct {
 	PageGraphicsExecuteRead                                        uintptr
 	PageGraphicsExecuteReadwrite                                   uintptr
 	PageGraphicsNoaccess                                           uintptr
+	PageGraphicsNocache                                            uintptr
 	PageGraphicsReadonly                                           uintptr
 	PageGraphicsReadwrite                                          uintptr
 	PageGuard                                                      uintptr
@@ -12946,6 +11433,13 @@ var Winnt = struct {
 	PageWritecombine                                               uintptr
 	PageWritecopy                                                  uintptr
 	PcTeb                                                          uintptr
+	PdataCrChained                                                 uintptr
+	PdataCrChainedWithPac                                          uintptr
+	PdataCrUnchained                                               uintptr
+	PdataCrUnchainedSavedLr                                        uintptr
+	PdataPackedUnwindFragment                                      uintptr
+	PdataPackedUnwindFunction                                      uintptr
+	PdataRefToFullXdata                                            uintptr
 	PdcapD0Supported                                               uintptr
 	PdcapD1Supported                                               uintptr
 	PdcapD2Supported                                               uintptr
@@ -12971,6 +11465,7 @@ var Winnt = struct {
 	PfArmV81AtomicInstructionsAvailable                            uintptr
 	PfArmV82DpInstructionsAvailable                                uintptr
 	PfArmV83JscvtInstructionsAvailable                             uintptr
+	PfArmV83LrcpcInstructionsAvailable                             uintptr
 	PfArmV8Crc32InstructionsAvailable                              uintptr
 	PfArmV8CryptoInstructionsAvailable                             uintptr
 	PfArmV8InstructionsAvailable                                   uintptr
@@ -13004,6 +11499,8 @@ var Winnt = struct {
 	PfSseDazModeAvailable                                          uintptr
 	PfSsse3InstructionsAvailable                                   uintptr
 	PfTemporalLevel1                                               uintptr
+	PfTemporalLevel2                                               uintptr
+	PfTemporalLevel3                                               uintptr
 	PfVirtFirmwareEnabled                                          uintptr
 	PfXmmi64InstructionsAvailable                                  uintptr
 	PfXmmiInstructionsAvailable                                    uintptr
@@ -13216,7 +11713,9 @@ var Winnt = struct {
 	ProcessQueryInformation                                        uintptr
 	ProcessQueryLimitedInformation                                 uintptr
 	ProcessRedirectionTrustPolicy                                  uintptr
+	Processsehoppolicy                                             uintptr
 	ProcessSetInformation                                          uintptr
+	ProcessSetLimitedInformation                                   uintptr
 	ProcessSetQuota                                                uintptr
 	ProcessSetSessionid                                            uintptr
 	ProcessSideChannelIsolationPolicy                              uintptr
@@ -13226,6 +11725,8 @@ var Winnt = struct {
 	ProcessSystemCallDisablePolicy                                 uintptr
 	ProcessSystemCallFilterPolicy                                  uintptr
 	ProcessTerminate                                               uintptr
+	ProcessTrustLabelSecurityInformation                           uintptr
+	ProcessUserPointerAuthPolicy                                   uintptr
 	ProcessUserShadowStackPolicy                                   uintptr
 	ProcessVmOperation                                             uintptr
 	ProcessVmRead                                                  uintptr
@@ -13233,9 +11734,20 @@ var Winnt = struct {
 	ProcIdleBucketCount                                            uintptr
 	ProcIdleBucketCountEx                                          uintptr
 	ProductArm64Server                                             uintptr
+	ProductAzureNanoServer                                         uintptr
+	ProductAzureServerCloudhost                                    uintptr
+	ProductAzureServerCloudmos                                     uintptr
+	ProductAzureServerCore                                         uintptr
+	ProductAzurestackhciServerCore                                 uintptr
 	ProductBusiness                                                uintptr
 	ProductBusinessN                                               uintptr
+	ProductCloud                                                   uintptr
+	ProductCloude                                                  uintptr
+	ProductCloudedition                                            uintptr
+	ProductCloudeditionn                                           uintptr
+	ProductClouden                                                 uintptr
 	ProductCloudHostInfrastructureServer                           uintptr
+	ProductCloudn                                                  uintptr
 	ProductCloudStorageServer                                      uintptr
 	ProductClusterServer                                           uintptr
 	ProductClusterServerV                                          uintptr
@@ -13250,11 +11762,17 @@ var Winnt = struct {
 	ProductCoreLanguagespecific                                    uintptr
 	ProductCoreN                                                   uintptr
 	ProductCoreSinglelanguage                                      uintptr
+	ProductDatacenterAServerCore                                   uintptr
 	ProductDatacenterEvaluationServer                              uintptr
+	ProductDatacenterEvaluationServerCore                          uintptr
+	ProductDatacenterNanoServer                                    uintptr
 	ProductDatacenterServer                                        uintptr
+	ProductDatacenterServerAzureEdition                            uintptr
 	ProductDatacenterServerCore                                    uintptr
+	ProductDatacenterServerCoreAzureEdition                        uintptr
 	ProductDatacenterServerCoreV                                   uintptr
 	ProductDatacenterServerV                                       uintptr
+	ProductDatacenterWsServerCore                                  uintptr
 	ProductEducation                                               uintptr
 	ProductEducationN                                              uintptr
 	ProductEmbedded                                                uintptr
@@ -13272,6 +11790,8 @@ var Winnt = struct {
 	ProductEnterprise                                              uintptr
 	ProductEnterpriseE                                             uintptr
 	ProductEnterpriseEvaluation                                    uintptr
+	ProductEnterpriseg                                             uintptr
+	ProductEnterprisegn                                            uintptr
 	ProductEnterpriseN                                             uintptr
 	ProductEnterpriseNEvaluation                                   uintptr
 	ProductEnterpriseS                                             uintptr
@@ -13283,10 +11803,14 @@ var Winnt = struct {
 	ProductEnterpriseSEvaluation                                   uintptr
 	ProductEnterpriseSN                                            uintptr
 	ProductEnterpriseSNEvaluation                                  uintptr
+	ProductEnterpriseSubscription                                  uintptr
+	ProductEnterpriseSubscriptionN                                 uintptr
 	ProductEssentialbusinessServerAddl                             uintptr
 	ProductEssentialbusinessServerAddlsvc                          uintptr
 	ProductEssentialbusinessServerMgmt                             uintptr
 	ProductEssentialbusinessServerMgmtsvc                          uintptr
+	ProductHolographic                                             uintptr
+	ProductHolographicBusiness                                     uintptr
 	ProductHomeBasic                                               uintptr
 	ProductHomeBasicE                                              uintptr
 	ProductHomeBasicN                                              uintptr
@@ -13295,9 +11819,15 @@ var Winnt = struct {
 	ProductHomePremiumN                                            uintptr
 	ProductHomePremiumServer                                       uintptr
 	ProductHomeServer                                              uintptr
+	ProductHubos                                                   uintptr
 	ProductHyperv                                                  uintptr
 	ProductIndustryHandheld                                        uintptr
+	ProductIotedgeos                                               uintptr
+	ProductIotenterprise                                           uintptr
+	ProductIotenterprises                                          uintptr
+	ProductIotos                                                   uintptr
 	ProductIotuap                                                  uintptr
+	ProductLite                                                    uintptr
 	ProductMediumbusinessServerManagement                          uintptr
 	ProductMediumbusinessServerMessaging                           uintptr
 	ProductMediumbusinessServerSecurity                            uintptr
@@ -13306,7 +11836,9 @@ var Winnt = struct {
 	ProductMultipointPremiumServer                                 uintptr
 	ProductMultipointStandardServer                                uintptr
 	ProductNanoServer                                              uintptr
+	ProductOnecoreupdateos                                         uintptr
 	ProductPpiPro                                                  uintptr
+	ProductProChina                                                uintptr
 	ProductProfessional                                            uintptr
 	ProductProfessionalE                                           uintptr
 	ProductProfessionalEmbedded                                    uintptr
@@ -13316,6 +11848,11 @@ var Winnt = struct {
 	ProductProfessionalStudent                                     uintptr
 	ProductProfessionalStudentN                                    uintptr
 	ProductProfessionalWmc                                         uintptr
+	ProductProForEducation                                         uintptr
+	ProductProForEducationN                                        uintptr
+	ProductProSingleLanguage                                       uintptr
+	ProductProWorkstation                                          uintptr
+	ProductProWorkstationN                                         uintptr
 	ProductSbSolutionServer                                        uintptr
 	ProductSbSolutionServerEm                                      uintptr
 	ProductServerForSbSolutions                                    uintptr
@@ -13323,19 +11860,24 @@ var Winnt = struct {
 	ProductServerForSmallbusiness                                  uintptr
 	ProductServerForSmallbusinessV                                 uintptr
 	ProductServerFoundation                                        uintptr
+	ProductServerrdsh                                              uintptr
 	ProductServerV                                                 uintptr
 	ProductSmallbusinessServer                                     uintptr
 	ProductSmallbusinessServerPremium                              uintptr
 	ProductSmallbusinessServerPremiumCore                          uintptr
 	ProductSolutionEmbeddedserver                                  uintptr
 	ProductSolutionEmbeddedserverCore                              uintptr
+	ProductStandardAServerCore                                     uintptr
 	ProductStandardEvaluationServer                                uintptr
+	ProductStandardEvaluationServerCore                            uintptr
+	ProductStandardNanoServer                                      uintptr
 	ProductStandardServer                                          uintptr
 	ProductStandardServerCore                                      uintptr
 	ProductStandardServerCoreV                                     uintptr
 	ProductStandardServerSolutions                                 uintptr
 	ProductStandardServerSolutionsCore                             uintptr
 	ProductStandardServerV                                         uintptr
+	ProductStandardWsServerCore                                    uintptr
 	ProductStarter                                                 uintptr
 	ProductStarterE                                                uintptr
 	ProductStarterN                                                uintptr
@@ -13355,10 +11897,19 @@ var Winnt = struct {
 	ProductUltimateN                                               uintptr
 	ProductUndefined                                               uintptr
 	ProductUnlicensed                                              uintptr
+	ProductUtilityVm                                               uintptr
 	ProductWebServer                                               uintptr
 	ProductWebServerCore                                           uintptr
+	ProductXboxDurangohostos                                       uintptr
+	ProductXboxEraos                                               uintptr
+	ProductXboxGameos                                              uintptr
+	ProductXboxKeystone                                            uintptr
+	ProductXboxNativeos                                            uintptr
+	ProductXboxScarletthostos                                      uintptr
+	ProductXboxSystemos                                            uintptr
 	ProtectedDaclSecurityInformation                               uintptr
 	ProtectedSaclSecurityInformation                               uintptr
+	ProtectedToSystemLuid                                          []uintptr
 	QuotaLimitsHardwsMaxDisable                                    uintptr
 	QuotaLimitsHardwsMaxEnable                                     uintptr
 	QuotaLimitsHardwsMinDisable                                    uintptr
@@ -13416,7 +11967,10 @@ var Winnt = struct {
 	RelationCache                                                  uintptr
 	RelationGroup                                                  uintptr
 	RelationNumaNode                                               uintptr
+	RelationNumaNodeEx                                             uintptr
 	RelationProcessorCore                                          uintptr
+	RelationProcessorDie                                           uintptr
+	RelationProcessorModule                                        uintptr
 	RelationProcessorPackage                                       uintptr
 	ResourcemanagerAllAccess                                       uintptr
 	ResourceManagerBasicInformation                                uintptr
@@ -13477,11 +12031,24 @@ var Winnt = struct {
 	SandboxInert                                                   uintptr
 	ScopeSecurityInformation                                       uintptr
 	ScreenOff                                                      uintptr
+	ScrubDataInputFlagIgnoreRedundancy                             uintptr
+	ScrubDataInputFlagOplockNotAcquired                            uintptr
 	ScrubDataInputFlagResume                                       uintptr
+	ScrubDataInputFlagScrubByObjectId                              uintptr
+	ScrubDataInputFlagSkipData                                     uintptr
 	ScrubDataInputFlagSkipInSync                                   uintptr
 	ScrubDataInputFlagSkipNonIntegrityData                         uintptr
 	ScrubDataOutputFlagIncomplete                                  uintptr
 	ScrubDataOutputFlagNonUserDataRange                            uintptr
+	ScrubDataOutputFlagParityExtentDataReturned                    uintptr
+	ScrubDataOutputFlagResumeContextLengthSpecified                uintptr
+	SeAccessCheckFlagNoLearningModeLogging                         uintptr
+	SeAccessCheckValidFlags                                        uintptr
+	SeActivateAsUserCapability                                     string
+	SeAppSiloPrintCapability                                       string
+	SeAppSiloProfilesRootMinimalCapability                         string
+	SeAppSiloUserProfileMinimalCapability                          string
+	SeAppSiloVolumeRootMinimalCapability                           string
 	SeAssignprimarytokenName                                       string
 	SeAuditName                                                    string
 	SeBackupName                                                   string
@@ -13489,10 +12056,12 @@ var Winnt = struct {
 	SecCommit                                                      uintptr
 	SecFile                                                        uintptr
 	SeChangeNotifyName                                             string
+	SecHugePages                                                   uintptr
 	SecImage                                                       uintptr
 	SecImageNoExecute                                              uintptr
 	SecLargePages                                                  uintptr
 	SecNocache                                                     uintptr
+	SeConstrainedImpersonationCapability                           string
 	SecPartitionOwnerHandle                                        uintptr
 	SecProtectedImage                                              uintptr
 	SeCreateGlobalName                                             string
@@ -13519,6 +12088,10 @@ var Winnt = struct {
 	SecurityAuthenticationAuthority                                []uintptr
 	SecurityAuthenticationAuthorityAssertedRid                     uintptr
 	SecurityAuthenticationAuthorityRidCount                        uintptr
+	SecurityAuthenticationFreshKeyAuthRid                          uintptr
+	SecurityAuthenticationKeyPropertyAttestationRid                uintptr
+	SecurityAuthenticationKeyPropertyMfaRid                        uintptr
+	SecurityAuthenticationKeyTrustRid                              uintptr
 	SecurityAuthenticationServiceAssertedRid                       uintptr
 	SecurityBatchRid                                               uintptr
 	SecurityBuiltinAppPackageRidCount                              uintptr
@@ -13527,6 +12100,8 @@ var Winnt = struct {
 	SecurityBuiltinPackageAnyPackage                               uintptr
 	SecurityBuiltinPackageAnyRestrictedPackage                     uintptr
 	SecurityCapabilityAppointments                                 uintptr
+	SecurityCapabilityAppRid                                       uintptr
+	SecurityCapabilityAppSiloRid                                   uintptr
 	SecurityCapabilityBaseRid                                      uintptr
 	SecurityCapabilityContacts                                     uintptr
 	SecurityCapabilityDocumentsLibrary                             uintptr
@@ -13541,6 +12116,8 @@ var Winnt = struct {
 	SecurityCapabilityRidCount                                     uintptr
 	SecurityCapabilitySharedUserCertificates                       uintptr
 	SecurityCapabilityVideosLibrary                                uintptr
+	SecurityCcgIdBaseRid                                           uintptr
+	SecurityChildPackageRidCount                                   uintptr
 	SecurityCloudInfrastructureServicesIdBaseRid                   uintptr
 	SecurityCloudInfrastructureServicesIdRidCount                  uintptr
 	SecurityComIdBaseRid                                           uintptr
@@ -13564,8 +12141,13 @@ var Winnt = struct {
 	SecurityEnterpriseReadonlyControllersRid                       uintptr
 	SecurityIdentification                                         uintptr
 	SecurityImpersonation                                          uintptr
+	SecurityInstallerCapabilityRidCount                            uintptr
+	SecurityInstallerGroupCapabilityBase                           uintptr
+	SecurityInstallerGroupCapabilityRidCount                       uintptr
 	SecurityInteractiveRid                                         uintptr
 	SecurityIuserRid                                               uintptr
+	SecurityLocalAccountAndAdminRid                                uintptr
+	SecurityLocalAccountRid                                        uintptr
 	SecurityLocalLogonRid                                          uintptr
 	SecurityLocalRid                                               uintptr
 	SecurityLocalServiceRid                                        uintptr
@@ -13577,6 +12159,7 @@ var Winnt = struct {
 	SecurityMandatoryLabelAuthority                                []uintptr
 	SecurityMandatoryLowRid                                        uintptr
 	SecurityMandatoryMaximumUserRid                                uintptr
+	SecurityMandatoryMediumPlusRid                                 uintptr
 	SecurityMandatoryMediumRid                                     uintptr
 	SecurityMandatoryProtectedProcessRid                           uintptr
 	SecurityMandatorySystemRid                                     uintptr
@@ -13602,7 +12185,19 @@ var Winnt = struct {
 	SecurityPackageNtlmRid                                         uintptr
 	SecurityPackageRidCount                                        uintptr
 	SecurityPackageSchannelRid                                     uintptr
+	SecurityParentPackageRidCount                                  uintptr
 	SecurityPrincipalSelfRid                                       uintptr
+	SecurityProcessProtectionLevelAntimalwareRid                   uintptr
+	SecurityProcessProtectionLevelAppRid                           uintptr
+	SecurityProcessProtectionLevelAuthenticodeRid                  uintptr
+	SecurityProcessProtectionLevelNoneRid                          uintptr
+	SecurityProcessProtectionLevelWindowsRid                       uintptr
+	SecurityProcessProtectionLevelWintcbRid                        uintptr
+	SecurityProcessProtectionTypeFullRid                           uintptr
+	SecurityProcessProtectionTypeLiteRid                           uintptr
+	SecurityProcessProtectionTypeNoneRid                           uintptr
+	SecurityProcessTrustAuthority                                  []uintptr
+	SecurityProcessTrustAuthorityRidCount                          uintptr
 	SecurityProxyRid                                               uintptr
 	SecurityRdvGfxBaseRid                                          uintptr
 	SecurityRemoteLogonRid                                         uintptr
@@ -13623,6 +12218,9 @@ var Winnt = struct {
 	SecurityTrustedInstallerRid3                                   uintptr
 	SecurityTrustedInstallerRid4                                   uintptr
 	SecurityTrustedInstallerRid5                                   uintptr
+	SecurityUmfdBaseRid                                            uintptr
+	SecurityUsermanagerIdBaseRid                                   uintptr
+	SecurityUsermanagerIdRidCount                                  uintptr
 	SecurityUsermodedriverhostIdBaseRid                            uintptr
 	SecurityUsermodedriverhostIdRidCount                           uintptr
 	SecurityVirtualaccountIdRidCount                               uintptr
@@ -13630,6 +12228,8 @@ var Winnt = struct {
 	SecurityVirtualserverIdRidCount                                uintptr
 	SecurityWindowManagerBaseRid                                   uintptr
 	SecurityWindowsmobileIdBaseRid                                 uintptr
+	SecurityWinrmIdBaseRid                                         uintptr
+	SecurityWinrmIdRidCount                                        uintptr
 	SecurityWmihostIdBaseRid                                       uintptr
 	SecurityWmihostIdRidCount                                      uintptr
 	SecurityWorldRid                                               uintptr
@@ -13642,6 +12242,8 @@ var Winnt = struct {
 	SeDaclPresent                                                  uintptr
 	SeDaclProtected                                                uintptr
 	SeDebugName                                                    string
+	SeDelegateSessionUserImpersonateName                           string
+	SeDevelopmentModeNetworkCapability                             string
 	SeEnableDelegationName                                         string
 	SefAvoidOwnerCheck                                             uintptr
 	SefAvoidOwnerRestriction                                       uintptr
@@ -13666,12 +12268,21 @@ var Winnt = struct {
 	SeGroupResource                                                uintptr
 	SeGroupUseForDenyOnly                                          uintptr
 	SeGroupValidAttributes                                         uintptr
+	SeImageSignatureCache                                          uintptr
+	SeImageSignatureCatalogCached                                  uintptr
+	SeImageSignatureCatalogHint                                    uintptr
+	SeImageSignatureCatalogNotCached                               uintptr
+	SeImageSignatureEmbedded                                       uintptr
+	SeImageSignatureNone                                           uintptr
+	SeImageSignaturePackageCatalog                                 uintptr
+	SeImageSignaturePplMitigated                                   uintptr
 	SeImpersonateName                                              string
 	SeIncBasePriorityName                                          string
 	SeIncreaseQuotaName                                            string
 	SeIncWorkingSetName                                            string
 	SeLearningModeFlagPermissive                                   uintptr
 	SeLearningModeInvalidType                                      uintptr
+	SeLearningModeLoggingCapability                                string
 	SeLearningModeMax                                              uintptr
 	SeLearningModeSettings                                         uintptr
 	SeLoadDriverName                                               string
@@ -13680,7 +12291,9 @@ var Winnt = struct {
 	SeManageVolumeName                                             string
 	SemaphoreAllAccess                                             uintptr
 	SemaphoreModifyState                                           uintptr
+	SeMumaCapability                                               string
 	SeOwnerDefaulted                                               uintptr
+	SePermissiveLearningModeCapability                             string
 	SePrivilegeEnabled                                             uintptr
 	SePrivilegeEnabledByDefault                                    uintptr
 	SePrivilegeRemoved                                             uintptr
@@ -13691,6 +12304,11 @@ var Winnt = struct {
 	SeRemoteShutdownName                                           string
 	SeRestoreName                                                  string
 	SeRmControlValid                                               uintptr
+	ServersiloIniting                                              uintptr
+	ServersiloShuttingDown                                         uintptr
+	ServersiloStarted                                              uintptr
+	ServersiloTerminated                                           uintptr
+	ServersiloTerminating                                          uintptr
 	ServiceAdapter                                                 uintptr
 	ServiceAutoStart                                               uintptr
 	ServiceBootStart                                               uintptr
@@ -13715,12 +12333,32 @@ var Winnt = struct {
 	SeSaclDefaulted                                                uintptr
 	SeSaclPresent                                                  uintptr
 	SeSaclProtected                                                uintptr
+	SeSecurityDescriptorFlagNoAccessFilterAce                      uintptr
 	SeSecurityDescriptorFlagNoLabelAce                             uintptr
 	SeSecurityDescriptorFlagNoOwnerAce                             uintptr
 	SeSecurityDescriptorValidFlags                                 uintptr
 	SeSecurityName                                                 string
 	SeSelfRelative                                                 uintptr
+	SeSessionImpersonationCapability                               string
 	SeShutdownName                                                 string
+	SeSigningLevelAntimalware                                      uintptr
+	SeSigningLevelAuthenticode                                     uintptr
+	SeSigningLevelCustom1                                          uintptr
+	SeSigningLevelCustom2                                          uintptr
+	SeSigningLevelCustom3                                          uintptr
+	SeSigningLevelCustom4                                          uintptr
+	SeSigningLevelCustom5                                          uintptr
+	SeSigningLevelCustom6                                          uintptr
+	SeSigningLevelCustom7                                          uintptr
+	SeSigningLevelDeveloper                                        uintptr
+	SeSigningLevelDynamicCodegen                                   uintptr
+	SeSigningLevelEnterprise                                       uintptr
+	SeSigningLevelMicrosoft                                        uintptr
+	SeSigningLevelStore                                            uintptr
+	SeSigningLevelUnchecked                                        uintptr
+	SeSigningLevelUnsigned                                         uintptr
+	SeSigningLevelWindows                                          uintptr
+	SeSigningLevelWindowsTcb                                       uintptr
 	SessionAllAccess                                               uintptr
 	SessionConnectNotification                                     uintptr
 	SessionDisplayState                                            uintptr
@@ -13786,13 +12424,16 @@ var Winnt = struct {
 	StandardRightsWrite                                            uintptr
 	StatusAbandonedWait0                                           uintptr
 	StatusAccessViolation                                          uintptr
+	StatusAlreadyRegistered                                        uintptr
 	StatusArrayBoundsExceeded                                      uintptr
 	StatusAssertionFailure                                         uintptr
 	StatusBreakpoint                                               uintptr
 	StatusControlCExit                                             uintptr
+	StatusControlStackViolation                                    uintptr
 	StatusDatatypeMisalignment                                     uintptr
 	StatusDllInitFailed                                            uintptr
 	StatusDllNotFound                                              uintptr
+	StatusEnclaveViolation                                         uintptr
 	StatusEntrypointNotFound                                       uintptr
 	StatusFatalAppExit                                             uintptr
 	StatusFloatDenormalOperand                                     uintptr
@@ -13810,6 +12451,7 @@ var Winnt = struct {
 	StatusInPageError                                              uintptr
 	StatusIntegerDivideByZero                                      uintptr
 	StatusIntegerOverflow                                          uintptr
+	StatusInterrupted                                              uintptr
 	StatusInvalidCruntimeParameter                                 uintptr
 	StatusInvalidDisposition                                       uintptr
 	StatusInvalidHandle                                            uintptr
@@ -13827,6 +12469,7 @@ var Winnt = struct {
 	StatusStackOverflow                                            uintptr
 	StatusSxsEarlyDeactivation                                     uintptr
 	StatusSxsInvalidDeactivation                                   uintptr
+	StatusThreadNotRunning                                         uintptr
 	StatusTimeout                                                  uintptr
 	StatusUnwindConsolidate                                        uintptr
 	StatusUserApc                                                  uintptr
@@ -13976,6 +12619,7 @@ var Winnt = struct {
 	SublangNorwegianBokmal                                         uintptr
 	SublangNorwegianNynorsk                                        uintptr
 	SublangOccitanFrance                                           uintptr
+	SublangOdiaIndia                                               uintptr
 	SublangOriyaIndia                                              uintptr
 	SublangPashtoAfghanistan                                       uintptr
 	SublangPersianIran                                             uintptr
@@ -14006,6 +12650,7 @@ var Winnt = struct {
 	SublangScottishGaelic                                          uintptr
 	SublangSerbianBosniaHerzegovinaCyrillic                        uintptr
 	SublangSerbianBosniaHerzegovinaLatin                           uintptr
+	SublangSerbianCroatia                                          uintptr
 	SublangSerbianCyrillic                                         uintptr
 	SublangSerbianLatin                                            uintptr
 	SublangSerbianMontenegroCyrillic                               uintptr
@@ -14085,6 +12730,9 @@ var Winnt = struct {
 	SuspendResumeInvocation                                        uintptr
 	SymlinkFlagRelative                                            uintptr
 	Synchronize                                                    uintptr
+	SystemAccessFilterAceType                                      uintptr
+	SystemAccessFilterNoconstraintMask                             uintptr
+	SystemAccessFilterValidMask                                    uintptr
 	SystemAlarmAceType                                             uintptr
 	SystemAlarmCallbackAceType                                     uintptr
 	SystemAlarmCallbackObjectAceType                               uintptr
@@ -14095,6 +12743,10 @@ var Winnt = struct {
 	SystemAuditObjectAceType                                       uintptr
 	SystemBatteryState                                             uintptr
 	SystemCacheAlignmentSize                                       uintptr
+	SystemCpuSetInformationAllocated                               uintptr
+	SystemCpuSetInformationAllocatedToTargetProcess                uintptr
+	SystemCpuSetInformationParked                                  uintptr
+	SystemCpuSetInformationRealtime                                uintptr
 	SystemExecutionState                                           uintptr
 	SystemHiberbootState                                           uintptr
 	SystemHiberFileInformation                                     uintptr
@@ -14116,6 +12768,9 @@ var Winnt = struct {
 	SystemPowerStateHandler                                        uintptr
 	SystemPowerStateLogging                                        uintptr
 	SystemPowerStateNotifyHandler                                  uintptr
+	SystemProcessTrustLabelAceType                                 uintptr
+	SystemProcessTrustLabelValidMask                               uintptr
+	SystemProcessTrustNoconstraintMask                             uintptr
 	SystemReserveHiberFile                                         uintptr
 	SystemResourceAttributeAceType                                 uintptr
 	SystemScopedPolicyIdAceType                                    uintptr
@@ -14230,11 +12885,13 @@ var Winnt = struct {
 	ThreadBasePriorityMax                                          uintptr
 	ThreadBasePriorityMin                                          int
 	ThreadDirectImpersonation                                      uintptr
+	ThreadDynamicCodeAllow                                         uintptr
 	ThreadGetContext                                               uintptr
 	ThreadImpersonate                                              uintptr
 	ThreadProfilingFlagDispatch                                    uintptr
 	ThreadQueryInformation                                         uintptr
 	ThreadQueryLimitedInformation                                  uintptr
+	ThreadResume                                                   uintptr
 	ThreadSetContext                                               uintptr
 	ThreadSetInformation                                           uintptr
 	ThreadSetLimitedInformation                                    uintptr
@@ -14249,6 +12906,7 @@ var Winnt = struct {
 	TimeZoneIdUnknown                                              uintptr
 	TlsMinimumAvailable                                            uintptr
 	TokenAccessInformation                                         uintptr
+	TokenAccessPseudoHandleWin8                                    uintptr
 	TokenAdjustDefault                                             uintptr
 	TokenAdjustGroups                                              uintptr
 	TokenAdjustPrivileges                                          uintptr
@@ -14259,7 +12917,9 @@ var Winnt = struct {
 	TokenAppContainerSid                                           uintptr
 	TokenAssignPrimary                                             uintptr
 	TokenAuditPolicy                                               uintptr
+	TokenBnoIsolation                                              uintptr
 	TokenCapabilities                                              uintptr
+	TokenChildProcessFlags                                         uintptr
 	TokenDefaultDacl                                               uintptr
 	TokenDeviceClaimAttributes                                     uintptr
 	TokenDeviceGroups                                              uintptr
@@ -14278,7 +12938,10 @@ var Winnt = struct {
 	TokenImpersonationLevel                                        uintptr
 	TokenIntegrityLevel                                            uintptr
 	TokenIsAppContainer                                            uintptr
+	TokenIsAppSilo                                                 uintptr
+	TokenIsLessPrivilegedAppContainer                              uintptr
 	TokenIsRestricted                                              uintptr
+	TokenIsSandboxed                                               uintptr
 	TokenLinkedToken                                               uintptr
 	TokenLogonSid                                                  uintptr
 	TokenMandatoryPolicy                                           uintptr
@@ -14290,7 +12953,9 @@ var Winnt = struct {
 	TokenOwner                                                     uintptr
 	TokenPrimary                                                   uintptr
 	TokenPrimaryGroup                                              uintptr
+	TokenPrivateNameSpace                                          uintptr
 	TokenPrivileges                                                uintptr
+	TokenProcessTrustLevel                                         uintptr
 	TokenQuery                                                     uintptr
 	TokenQuerySource                                               uintptr
 	TokenRead                                                      uintptr
@@ -14302,9 +12967,11 @@ var Winnt = struct {
 	TokenSecurityAttributes                                        uintptr
 	TokenSessionId                                                 uintptr
 	TokenSessionReference                                          uintptr
+	TokenSingletonAttributes                                       uintptr
 	TokenSource                                                    uintptr
 	TokenSourceLength                                              uintptr
 	TokenStatistics                                                uintptr
+	TokenTrustConstraintMask                                       uintptr
 	TokenType                                                      uintptr
 	Tokenuiaccess                                                  uintptr
 	TokenUser                                                      uintptr
@@ -14366,6 +13033,11 @@ var Winnt = struct {
 	TransactionStateIndoubt                                        uintptr
 	TransactionStateNormal                                         uintptr
 	TransactionSuperiorEnlistmentInformation                       uintptr
+	TreeConnectAttributeGlobal                                     uintptr
+	TreeConnectAttributeIntegrity                                  uintptr
+	TreeConnectAttributePinned                                     uintptr
+	TreeConnectAttributePrivacy                                    uintptr
+	TrustProtectedFilterAceFlag                                    uintptr
 	UcscharInvalidCharacter                                        uintptr
 	UmsSchedulerStartup                                            uintptr
 	UmsSchedulerThreadBlocked                                      uintptr
@@ -14397,6 +13069,11 @@ var Winnt = struct {
 	UserPresent                                                    uintptr
 	UserUnknown                                                    uintptr
 	ValidInheritFlags                                              uintptr
+	VbsBasicPageMeasuredData                                       uintptr
+	VbsBasicPageSystemCall                                         uintptr
+	VbsBasicPageThreadDescriptor                                   uintptr
+	VbsBasicPageUnmeasuredData                                     uintptr
+	VbsBasicPageZeroFill                                           uintptr
 	VerAnd                                                         uintptr
 	VerBuildnumber                                                 uintptr
 	VerConditionMask                                               uintptr
@@ -14432,6 +13109,7 @@ var Winnt = struct {
 	VerSuiteEmbeddednt                                             uintptr
 	VerSuiteEmbeddedRestricted                                     uintptr
 	VerSuiteEnterprise                                             uintptr
+	VerSuiteMultiuserts                                            uintptr
 	VerSuitename                                                   uintptr
 	VerSuitePersonal                                               uintptr
 	VerSuiteSecurityAppliance                                      uintptr
@@ -14472,6 +13150,7 @@ var Winnt = struct {
 	WinApplicationPackageAuthoritySid                              uintptr
 	WinAuthenticatedUserSid                                        uintptr
 	WinAuthenticationAuthorityAssertedSid                          uintptr
+	WinAuthenticationFreshKeyAuthSid                               uintptr
 	WinAuthenticationKeyPropertyAttestationSid                     uintptr
 	WinAuthenticationKeyPropertyMFASid                             uintptr
 	WinAuthenticationKeyTrustSid                                   uintptr
@@ -14487,6 +13166,7 @@ var Winnt = struct {
 	WinBuiltinCryptoOperatorsSid                                   uintptr
 	WinBuiltinDCOMUsersSid                                         uintptr
 	WinBuiltinDefaultSystemManagedGroupSid                         uintptr
+	WinBuiltinDeviceOwnersSid                                      uintptr
 	WinBuiltinDomainSid                                            uintptr
 	WinBuiltinEventLogReadersGroup                                 uintptr
 	WinBuiltinGuestsSid                                            uintptr
@@ -14640,6 +13320,9 @@ var Winnt = struct {
 	X3TmpltInstWordX                                               uintptr
 	X3TmpltSignValPosX                                             uintptr
 	X3TmpltSizeX                                                   uintptr
+	X86CacheAlignmentSize                                          uintptr
+	XstateAlignBit                                                 uintptr
+	XstateAlignMask                                                uintptr
 	XstateAmxTileConfig                                            uintptr
 	XstateAmxTileData                                              uintptr
 	XstateAvx                                                      uintptr
@@ -14648,6 +13331,12 @@ var Winnt = struct {
 	XstateAvx512ZmmH                                               uintptr
 	XstateCetS                                                     uintptr
 	XstateCetU                                                     uintptr
+	XstateCompactionEnable                                         uintptr
+	XstateCompactionEnableMask                                     uintptr
+	XstateControlflagValidMask                                     uintptr
+	XstateControlflagXfdMask                                       uintptr
+	XstateControlflagXsavecMask                                    uintptr
+	XstateControlflagXsaveoptMask                                  uintptr
 	XstateGsse                                                     uintptr
 	XstateIpt                                                      uintptr
 	XstateLegacyFloatingPoint                                      uintptr
@@ -14673,6 +13362,8 @@ var Winnt = struct {
 	XstateMpxBndcsr                                                uintptr
 	XstateMpxBndregs                                               uintptr
 	XstatePasid                                                    uintptr
+	XstateXfdBit                                                   uintptr
+	XstateXfdMask                                                  uintptr
 }{
 	AccessAllowedAceType:                                           (0x0),
 	AccessAllowedCallbackAceType:                                   (0x9),
@@ -14687,13 +13378,14 @@ var Winnt = struct {
 	AccessDsObjectTypeNameW:                                        "Directory Service Object",
 	AccessDsSourceA:                                                "DS",
 	AccessDsSourceW:                                                "DS",
+	AccessFilterSecurityInformation:                                (0x00000100),
 	AccessMaxLevel:                                                 4,
 	AccessMaxMsAceType:                                             (0x8),
 	AccessMaxMsObjectAceType:                                       (0x8),
 	AccessMaxMsV2AceType:                                           (0x3),
 	AccessMaxMsV3AceType:                                           (0x4),
 	AccessMaxMsV4AceType:                                           (0x8),
-	AccessMaxMsV5AceType:                                           (0x13),
+	AccessMaxMsV5AceType:                                           (0x15),
 	AccessMinMsAceType:                                             (0x0),
 	AccessMinMsObjectAceType:                                       (0x5),
 	AccessObjectGuid:                                               0,
@@ -14706,6 +13398,7 @@ var Winnt = struct {
 	AccessReasonDeniedParentAce:                                    0x00040000,
 	AccessReasonEmptyDacl:                                          0x00600000,
 	AccessReasonExdataMask:                                         0x7f000000,
+	AccessReasonFilterAce:                                          0x00a00000,
 	AccessReasonFromPrivilege:                                      0x00200000,
 	AccessReasonIntegrityLevel:                                     0x00300000,
 	AccessReasonMissingPrivilege:                                   0x00100000,
@@ -14718,6 +13411,7 @@ var Winnt = struct {
 	AccessReasonNullDacl:                                           0x00500000,
 	AccessReasonOwnership:                                          0x00400000,
 	AccessReasonStagingMask:                                        0x80000000,
+	AccessReasonTrustLabel:                                         0x00900000,
 	AccessReasonTypeMask:                                           0x00ff0000,
 	AccessSystemSecurity:                                           (0x01000000),
 	AceInheritedObjectTypePresent:                                  0x2,
@@ -14759,6 +13453,7 @@ var Winnt = struct {
 	ActivationContextSectionDllRedirection:                         (2),
 	ActivationContextSectionGlobalObjectRenameTable:                (8),
 	ActivationContextSectionWindowClassRedirection:                 (3),
+	ActivationContextSectionWinrtActivatableClasses:                (12),
 	AdapterType:                                                    0x00000004,
 	AdministratorPowerPolicy:                                       9,
 	AllProcessorGroups:                                             0xffff,
@@ -14843,6 +13538,7 @@ var Winnt = struct {
 	ApplyLowPowerScenarioSettings:                                  79,
 	Arm64MaxBreakpoints:                                            8,
 	Arm64MaxWatchpoints:                                            2,
+	ArmCacheAlignmentSize:                                          128,
 	ArmMaxBreakpoints:                                              8,
 	ArmMaxWatchpoints:                                              1,
 	AssemblyDetailedInformationInActivationContext:                 3,
@@ -14862,8 +13558,10 @@ var Winnt = struct {
 	CacheTrace:                                                     3,
 	CacheUnified:                                                   0,
 	CfgCallTargetConvertExportSuppressedToValid:                    0x04,
+	CfgCallTargetConvertXfgToCfg:                                   (0x10),
 	CfgCallTargetProcessed:                                         0x02,
 	CfgCallTargetValid:                                             0x01,
+	CfgCallTargetValidXfg:                                          (0x08),
 	ClaimSecurityAttributeCustomFlags:                              0xffff0000,
 	ClaimSecurityAttributeDisabled:                                 0x0010,
 	ClaimSecurityAttributeDisabledByDefault:                        0x0008,
@@ -14927,10 +13625,12 @@ var Winnt = struct {
 	ContextIa32Control:                                             (0x00080000 | (0x00000020)),
 	ContextIa64:                                                    0x00080000,
 	ContextInteger:                                                 (0x100000 | (0x2)),
+	ContextKernelCet:                                               (0x100000 | (0x80)),
 	ContextLowerFloatingPoint:                                      (0x00080000 | (0x00000002)),
 	ContextSegments:                                                (0x100000 | (0x4)),
 	ContextServiceActive:                                           0x10000000,
 	ContextUnwoundToCall:                                           0x20000000,
+	ContextXstate:                                                  (0x100000 | (0x40)),
 	CorDeletedNameLength:                                           8,
 	CoreParkingPolicyChangeIdeal:                                   0,
 	CoreParkingPolicyChangeMax:                                     3,
@@ -14946,7 +13646,9 @@ var Winnt = struct {
 	CorVtableCallMostDerived:                                       0x10,
 	CorVtableFromUnmanaged:                                         0x04,
 	CorVtablegapNameLength:                                         8,
+	CpuSetInformation:                                              0,
 	CreateBoundaryDescriptorAddAppcontainerSid:                     0x1,
+	CriticalAceFlag:                                                (0x20),
 	CriticalError:                                                  0x00000003,
 	CsDeviceNotification:                                           74,
 	CtmfIncludeAppcontainer:                                        (0x1),
@@ -14960,9 +13662,11 @@ var Winnt = struct {
 	DbgExceptionNotHandled:                                         (0x80010001),
 	DbgPrintexceptionC:                                             (0x40010006),
 	DbgPrintexceptionWideC:                                         (0x4001000A),
+	DbgReplyLater:                                                  (0x40010001),
 	DbgRipexception:                                                (0x40010007),
 	DbgTerminateProcess:                                            (0x40010004),
 	DbgTerminateThread:                                             (0x40010003),
+	DedicatedMemoryCacheEligible:                                   0x1,
 	DefaultCompartmentId:                                           1,
 	DefaultImpersonationLevel:                                      2,
 	Delete:                                                         (0x00010000),
@@ -14991,6 +13695,8 @@ var Winnt = struct {
 	DomainAliasRidCertsvcDcomAccessGroup:                           (0x0000023e),
 	DomainAliasRidCryptoOperators:                                  (0x00000239),
 	DomainAliasRidDcomUsers:                                        (0x00000232),
+	DomainAliasRidDefaultAccount:                                   (0x00000245),
+	DomainAliasRidDeviceOwners:                                     (0x00000247),
 	DomainAliasRidEventLogReadersGroup:                             (0x0000023D),
 	DomainAliasRidGuests:                                           (0x00000222),
 	DomainAliasRidHyperVAdmins:                                     (0x00000242),
@@ -15010,27 +13716,34 @@ var Winnt = struct {
 	DomainAliasRidRemoteDesktopUsers:                               (0x0000022B),
 	DomainAliasRidRemoteManagementUsers:                            (0x00000244),
 	DomainAliasRidReplicator:                                       (0x00000228),
+	DomainAliasRidStorageReplicaAdmins:                             (0x00000246),
 	DomainAliasRidSystemOps:                                        (0x00000225),
 	DomainAliasRidTsLicenseServers:                                 (0x00000231),
 	DomainAliasRidUsers:                                            (0x00000221),
 	DomainGroupRidAdmins:                                           (0x00000200),
 	DomainGroupRidAuthorizationDataContainsClaims:                  (0x000001f1),
 	DomainGroupRidAuthorizationDataIsCompounded:                    (0x000001f0),
+	DomainGroupRidCdcReserved:                                      (0x0000020c),
 	DomainGroupRidCertAdmins:                                       (0x00000205),
 	DomainGroupRidCloneableControllers:                             (0x0000020a),
 	DomainGroupRidComputers:                                        (0x00000203),
 	DomainGroupRidControllers:                                      (0x00000204),
 	DomainGroupRidEnterpriseAdmins:                                 (0x00000207),
+	DomainGroupRidEnterpriseKeyAdmins:                              (0x0000020f),
 	DomainGroupRidEnterpriseReadonlyDomainControllers:              (0x000001f2),
 	DomainGroupRidGuests:                                           (0x00000202),
+	DomainGroupRidKeyAdmins:                                        (0x0000020e),
 	DomainGroupRidPolicyAdmins:                                     (0x00000208),
+	DomainGroupRidProtectedUsers:                                   (0x0000020d),
 	DomainGroupRidReadonlyControllers:                              (0x00000209),
 	DomainGroupRidSchemaAdmins:                                     (0x00000206),
 	DomainGroupRidUsers:                                            (0x00000201),
 	DomainUserRidAdmin:                                             (0x000001F4),
+	DomainUserRidDefaultAccount:                                    (0x000001F7),
 	DomainUserRidGuest:                                             (0x000001F5),
 	DomainUserRidKrbtgt:                                            (0x000001F6),
 	DomainUserRidMax:                                               (0x000003E7),
+	DomainUserRidWdagAccount:                                       (0x000001F8),
 	DriverType:                                                     0x00000001,
 	DuplicateCloseSource:                                           0x00000001,
 	DuplicateSameAccess:                                            0x00000002,
@@ -15070,6 +13783,13 @@ var Winnt = struct {
 	EmarchEncI17SignInstWordX:                                      3,
 	EmarchEncI17SignSizeX:                                          1,
 	EmarchEncI17SignValPosX:                                        63,
+	EnclaveLongIdLength:                                            32,
+	EnclaveShortIdLength:                                           16,
+	EnclaveTypeSgx:                                                 0x00000001,
+	EnclaveTypeSgx2:                                                0x00000002,
+	EnclaveTypeVbs:                                                 0x00000010,
+	EnclaveTypeVbsBasic:                                            0x00000011,
+	EnclaveVbsFlagDebug:                                            0x00000001,
 	EnlistmentAllAccess:                                            ((0x000F0000) | ((0x00020000) | 1) | ((0x00020000) | 2 | 4 | 8 | 0x10) | ((0x00020000) | 4 | 8 | 0x10)),
 	EnlistmentBasicInformation:                                     0,
 	EnlistmentCrmInformation:                                       2,
@@ -15146,16 +13866,24 @@ var Winnt = struct {
 	FileAttributeCompressed:                                        0x00000800,
 	FileAttributeDevice:                                            0x00000040,
 	FileAttributeDirectory:                                         0x00000010,
+	FileAttributeEa:                                                0x00040000,
 	FileAttributeEncrypted:                                         0x00004000,
 	FileAttributeHidden:                                            0x00000002,
+	FileAttributeIntegrityStream:                                   0x00008000,
 	FileAttributeNormal:                                            0x00000080,
+	FileAttributeNoScrubData:                                       0x00020000,
 	FileAttributeNotContentIndexed:                                 0x00002000,
 	FileAttributeOffline:                                           0x00001000,
+	FileAttributePinned:                                            0x00080000,
 	FileAttributeReadonly:                                          0x00000001,
+	FileAttributeRecallOnDataAccess:                                0x00400000,
+	FileAttributeRecallOnOpen:                                      0x00040000,
 	FileAttributeReparsePoint:                                      0x00000400,
 	FileAttributeSparseFile:                                        0x00000200,
+	FileAttributeStrictlySequential:                                0x20000000,
 	FileAttributeSystem:                                            0x00000004,
 	FileAttributeTemporary:                                         0x00000100,
+	FileAttributeUnpinned:                                          0x00100000,
 	FileAttributeVirtual:                                           0x00010000,
 	FileCasePreservedNames:                                         0x00000002,
 	FileCaseSensitiveSearch:                                        0x00000001,
@@ -15163,6 +13891,8 @@ var Winnt = struct {
 	FileCreate:                                                     0x00000002,
 	FileCreatePipeInstance:                                         (0x0004),
 	FileCreateTreeConnection:                                       0x00000080,
+	FileCsFlagCaseSensitiveDir:                                     0x00000001,
+	FileDaxVolume:                                                  0x20000000,
 	FileDeleteChild:                                                (0x0040),
 	FileDeleteOnClose:                                              0x00001000,
 	FileDirectoryFile:                                              0x00000001,
@@ -15174,9 +13904,15 @@ var Winnt = struct {
 	FileGenericWrite:                                               ((0x00020000) | (0x0002) | (0x0100) | (0x0010) | (0x0004) | (0x00100000)),
 	FileInformationInAssemblyOfAssemblyInActivationContext:         4,
 	FileInformationInAssemblyOfAssemblyInActivationContxt:          4,
+	FileInvalidFileId:                                              (-1),
 	FileListDirectory:                                              (0x0001),
 	FileMaximumDisposition:                                         0x00000005,
 	FileNamedStreams:                                               0x00040000,
+	FileNameFlagBoth:                                               0x03,
+	FileNameFlagDos:                                                0x02,
+	FileNameFlagHardlink:                                           0,
+	FileNameFlagNtfs:                                               0x01,
+	FileNameFlagsUnspecified:                                       0x80,
 	FileNoCompression:                                              0x00008000,
 	FileNoEaKnowledge:                                              0x00000200,
 	FileNoIntermediateBuffering:                                    0x00000008,
@@ -15207,6 +13943,7 @@ var Winnt = struct {
 	FileReadEa:                                                     (0x0008),
 	FileReadOnlyVolume:                                             0x00080000,
 	FileReserveOpfilter:                                            0x00100000,
+	FileReturnsCleanupResultInfo:                                   0x00000200,
 	FileSequentialOnly:                                             0x00000004,
 	FileSequentialWriteOnce:                                        0x00100000,
 	FileShareDelete:                                                0x00000004,
@@ -15214,15 +13951,22 @@ var Winnt = struct {
 	FileShareValidFlags:                                            0x00000007,
 	FileShareWrite:                                                 0x00000002,
 	FileSupersede:                                                  0x00000000,
+	FileSupportsBlockRefcounting:                                   0x08000000,
+	FileSupportsBypassIo:                                           0x00000800,
+	FileSupportsCaseSensitiveDirs:                                  0x00002000,
 	FileSupportsEncryption:                                         0x00020000,
 	FileSupportsExtendedAttributes:                                 0x00800000,
+	FileSupportsGhosting:                                           0x40000000,
 	FileSupportsHardLinks:                                          0x00400000,
 	FileSupportsIntegrityStreams:                                   0x04000000,
 	FileSupportsObjectIds:                                          0x00010000,
 	FileSupportsOpenByFileId:                                       0x01000000,
+	FileSupportsPosixUnlinkRename:                                  0x00000400,
 	FileSupportsRemoteStorage:                                      0x00000100,
 	FileSupportsReparsePoints:                                      0x00000080,
 	FileSupportsSparseFiles:                                        0x00000040,
+	FileSupportsSparseVdl:                                          0x10000000,
+	FileSupportsStreamSnapshots:                                    0x00001000,
 	FileSupportsTransactions:                                       0x00200000,
 	FileSupportsUsnJournal:                                         0x02000000,
 	FileSynchronousIoAlert:                                         0x00000010,
@@ -15241,7 +13985,10 @@ var Winnt = struct {
 	FirmwareTypeMax:                                                3,
 	FirmwareTypeUefi:                                               2,
 	FirmwareTypeUnknown:                                            0,
-	FlsMaximumAvailable:                                            128,
+	FlsMaximumAvailable:                                            4080,
+	FlushFlagsFileDataOnly:                                         0x00000001,
+	FlushFlagsFileDataSyncOnly:                                     0x00000004,
+	FlushFlagsNoSync:                                               0x00000002,
 	ForestUserRidMax:                                               (0x000001F3),
 	FrameFpo:                                                       0,
 	FrameNonfpo:                                                    3,
@@ -15784,6 +14531,7 @@ var Winnt = struct {
 	IoReparseTagCloudF:                                             (0x9000F01A),
 	IoReparseTagCloudMask:                                          (0x0000F000),
 	IoReparseTagCsv:                                                (0x80000009),
+	IoReparseTagDatalessCim:                                        (0xA0000028),
 	IoReparseTagDedup:                                              (0x80000013),
 	IoReparseTagDfs:                                                (0x8000000A),
 	IoReparseTagDfsr:                                               (0x80000012),
@@ -15800,7 +14548,8 @@ var Winnt = struct {
 	IoReparseTagProjfs:                                             (0x9000001C),
 	IoReparseTagProjfsTombstone:                                    (0xA0000022),
 	IoReparseTagReservedOne:                                        (1),
-	IoReparseTagReservedRange:                                      (1),
+	IoReparseTagReservedRange:                                      (2),
+	IoReparseTagReservedTwo:                                        (2),
 	IoReparseTagReservedZero:                                       (0),
 	IoReparseTagSis:                                                (0x80000007),
 	IoReparseTagStorageSync:                                        (0x8000001E),
@@ -15808,6 +14557,8 @@ var Winnt = struct {
 	IoReparseTagUnhandled:                                          (0x80000020),
 	IoReparseTagWci:                                                (0x80000018),
 	IoReparseTagWci1:                                               (0x90001018),
+	IoReparseTagWciLink:                                            (0xA0000027),
+	IoReparseTagWciLink1:                                           (0xA0001027),
 	IoReparseTagWciTombstone:                                       (0xA000001F),
 	IoReparseTagWim:                                                (0x80000008),
 	IoReparseTagWof:                                                (0x80000017),
@@ -15828,7 +14579,7 @@ var Winnt = struct {
 	IsTextUnicodeStatistics:                                        0x0002,
 	IsTextUnicodeUnicodeMask:                                       0x000F,
 	IuserLuid:                                                      []uintptr{0x3e3, 0x0},
-	JobObjectAllAccess:                                             ((0x000F0000) | (0x00100000) | 0x1F),
+	JobObjectAllAccess:                                             ((0x000F0000) | (0x00100000) | 0x3F),
 	JobObjectAssignProcess:                                         (0x0001),
 	JobObjectAssociateCompletionPortInformation:                    7,
 	JobObjectBasicAccountingInformation:                            1,
@@ -15842,24 +14593,40 @@ var Winnt = struct {
 	JobObjectCpuRateControlEnable:                                  0x1,
 	JobObjectCpuRateControlHardCap:                                 0x4,
 	JobObjectCpuRateControlInformation:                             15,
+	JobObjectCpuRateControlMinMaxRate:                              0x10,
 	JobObjectCpuRateControlNotify:                                  0x8,
-	JobObjectCpuRateControlValidFlags:                              0xf,
+	JobObjectCpuRateControlValidFlags:                              0x1f,
 	JobObjectCpuRateControlWeightBased:                             0x2,
+	JobObjectCreateSilo:                                            35,
 	JobObjectEndOfJobTimeInformation:                               6,
 	JobObjectExtendedLimitInformation:                              9,
 	JobObjectExtendedLimitValidFlags:                               0x00007fff,
 	JobObjectGroupInformation:                                      11,
 	JobObjectGroupInformationEx:                                    14,
+	JobObjectImpersonate:                                           (0x0020),
+	JobobjectIoAttributionControlDisable:                           0x2,
+	JobobjectIoAttributionControlEnable:                            0x1,
+	JobobjectIoAttributionControlValidFlags:                        0x3,
+	JobObjectIoRateControlEnable:                                   0x1,
+	JobObjectIoRateControlForceUnitAccessAll:                       0x4,
+	JobObjectIoRateControlForceUnitAccessOnSoftCap:                 0x8,
+	JobObjectIoRateControlStandaloneVolume:                         0x2,
+	JobObjectIoRateControlValidFlags:                               0x1 | 0x2 | 0x4 | 0x8,
 	JobObjectJobSetInformation:                                     10,
 	JobObjectLimitActiveProcess:                                    0x00000008,
 	JobObjectLimitAffinity:                                         0x00000010,
 	JobObjectLimitBreakawayOk:                                      0x00000800,
+	JobObjectLimitCpuRateControl:                                   0x00040000,
 	JobObjectLimitDieOnUnhandledException:                          0x00000400,
+	JobObjectLimitIoRateControl:                                    0x00080000,
 	JobObjectLimitJobMemory:                                        0x00000200,
+	JobObjectLimitJobMemoryHigh:                                    0x00000200,
+	JobObjectLimitJobMemoryLow:                                     0x00008000,
 	JobObjectLimitJobReadBytes:                                     0x00010000,
 	JobObjectLimitJobTime:                                          0x00000004,
 	JobObjectLimitJobWriteBytes:                                    0x00020000,
 	JobObjectLimitKillOnJobClose:                                   0x00002000,
+	JobObjectLimitNetRateControl:                                   0x00100000,
 	JobObjectLimitPreserveJobTime:                                  0x00000040,
 	JobObjectLimitPriorityClass:                                    0x00000020,
 	JobObjectLimitProcessMemory:                                    0x00000100,
@@ -15874,6 +14641,7 @@ var Winnt = struct {
 	JobObjectLimitSubsetAffinity:                                   0x00004000,
 	JobObjectLimitValidFlags:                                       0x0007ffff,
 	JobObjectLimitViolationInformation:                             13,
+	JobObjectLimitViolationInformation2:                            34,
 	JobObjectLimitWorkingset:                                       0x00000001,
 	JobObjectMsgAbnormalExitProcess:                                8,
 	JobObjectMsgActiveProcessLimit:                                 3,
@@ -15888,11 +14656,35 @@ var Winnt = struct {
 	JobObjectMsgNewProcess:                                         6,
 	JobObjectMsgNotificationLimit:                                  11,
 	JobObjectMsgProcessMemoryLimit:                                 9,
+	JobObjectMsgSiloTerminated:                                     13,
+	JobObjectNetRateControlDscpTag:                                 0x4,
+	JobObjectNetRateControlEnable:                                  0x1,
+	JobObjectNetRateControlInformation:                             32,
+	JobObjectNetRateControlMaxBandwidth:                            0x2,
+	JobObjectNetRateControlMaxDscpTag:                              64,
+	JobObjectNetRateControlValidFlags:                              0x7,
 	JobObjectNotificationLimitInformation:                          12,
+	JobObjectNotificationLimitInformation2:                         33,
 	JobObjectNotificationLimitValidFlags:                           0x00070204,
 	JobObjectPostAtEndOfJob:                                        1,
 	JobObjectQuery:                                                 (0x0004),
+	JobObjectReserved10Information:                                 27,
+	JobObjectReserved11Information:                                 28,
+	JobObjectReserved12Information:                                 29,
+	JobObjectReserved13Information:                                 30,
+	JobObjectReserved14Information:                                 31,
+	JobObjectReserved15Information:                                 37,
+	JobObjectReserved16Information:                                 38,
+	JobObjectReserved17Information:                                 39,
+	JobObjectReserved18Information:                                 40,
+	JobObjectReserved19Information:                                 41,
 	JobObjectReserved1Information:                                  18,
+	JobObjectReserved20Information:                                 42,
+	JobObjectReserved21Information:                                 43,
+	JobObjectReserved22Information:                                 44,
+	JobObjectReserved23Information:                                 45,
+	JobObjectReserved24Information:                                 46,
+	JobObjectReserved25Information:                                 47,
 	JobObjectReserved2Information:                                  19,
 	JobObjectReserved3Information:                                  20,
 	JobObjectReserved4Information:                                  21,
@@ -15900,6 +14692,7 @@ var Winnt = struct {
 	JobObjectReserved6Information:                                  23,
 	JobObjectReserved7Information:                                  24,
 	JobObjectReserved8Information:                                  25,
+	JobObjectReserved9Information:                                  26,
 	JobObjectReservedLimitValidFlags:                               0x0007ffff,
 	JobObjectSecurityFilterTokens:                                  0x00000008,
 	JobObjectSecurityLimitInformation:                              5,
@@ -15909,6 +14702,7 @@ var Winnt = struct {
 	JobObjectSecurityValidFlags:                                    0x0000000f,
 	JobObjectSetAttributes:                                         (0x0002),
 	JobObjectSetSecurityAttributes:                                 (0x0010),
+	JobObjectSiloBasicInformation:                                  36,
 	JobObjectTerminate:                                             (0x0008),
 	JobObjectTerminateAtEndOfJob:                                   0,
 	JobObjectUilimitAll:                                            0x000000FF,
@@ -15922,6 +14716,7 @@ var Winnt = struct {
 	JobObjectUilimitSystemparameters:                               0x00000008,
 	JobObjectUilimitWriteclipboard:                                 0x00000004,
 	JobObjectUiValidFlags:                                          0x000000FF,
+	JobObjectValidCompletionFilter:                                 ((((1) << (12 + 1)) - 1) - (((1) << 1) - 1)),
 	KeyAllAccess:                                                   (((0x001F0000) | (0x0001) | (0x0002) | (0x0004) | (0x0008) | (0x0010) | (0x0020)) & (0xffffffff ^ (0x00100000))),
 	KeyCreateLink:                                                  (0x0020),
 	KeyCreateSubKey:                                                (0x0004),
@@ -15988,6 +14783,7 @@ var Winnt = struct {
 	LangGreenlandic:                                                0x6f,
 	LangGujarati:                                                   0x47,
 	LangHausa:                                                      0x68,
+	LangHawaiian:                                                   0x75,
 	LangHebrew:                                                     0x0d,
 	LangHindi:                                                      0x39,
 	LangHungarian:                                                  0x0e,
@@ -16084,6 +14880,10 @@ var Winnt = struct {
 	LastSleepTime:                                                  15,
 	LastWakeTime:                                                   14,
 	LocaleNameMaxLength:                                            85,
+	LocaleTransientKeyboard1:                                       0x2000,
+	LocaleTransientKeyboard2:                                       0x2400,
+	LocaleTransientKeyboard3:                                       0x2800,
+	LocaleTransientKeyboard4:                                       0x2c00,
 	LocalserviceLuid:                                               []uintptr{0x3e5, 0x0},
 	LogicalProcessorIdling:                                         56,
 	LtDontCare:                                                     0,
@@ -16114,15 +14914,15 @@ var Winnt = struct {
 	MaximumSuspendCount:                                            0x7f,
 	MaximumWaitObjects:                                             64,
 	MaximumXstateFeatures:                                          (64),
-	MaxJobObjectInfoClass:                                          26,
+	MaxJobObjectInfoClass:                                          48,
 	Maxlogicallognamesize:                                          256,
 	Maxlong:                                                        0x7fffffff,
 	Maxlonglong:                                                    (0x7fffffffffffffff),
 	MaxPackageName:                                                 1024,
-	MaxProcessMitigationPolicy:                                     17,
+	MaxProcessMitigationPolicy:                                     19,
 	Maxshort:                                                       0x7fff,
 	MaxSupportedOsNum:                                              (4),
-	MaxTokenInfoClass:                                              41,
+	MaxTokenInfoClass:                                              49,
 	MaxUcschar:                                                     (0x0010ffff),
 	Maxword:                                                        0xffff,
 	MdLfhintNone:                                                   0x00,
@@ -16131,19 +14931,30 @@ var Winnt = struct {
 	MdLfhintNta:                                                    0x03,
 	Mem4mbPages:                                                    0x80000000,
 	Mem64kPages:                                                    (0x20000000 | 0x400000),
+	MemCoalescePlaceholders:                                        0x00000001,
 	MemCommit:                                                      0x1000,
 	MemDecommit:                                                    0x4000,
+	MemDedicatedAttributeMax:                                       4,
+	MemDedicatedAttributeReadBandwidth:                             0,
+	MemDedicatedAttributeReadLatency:                               1,
+	MemDedicatedAttributeWriteBandwidth:                            2,
+	MemDedicatedAttributeWriteLatency:                              3,
 	MemDifferentImageBaseOk:                                        0x800000,
 	MemExtendedParameterAddressRequirements:                        1,
 	MemExtendedParameterAttributeFlags:                             5,
+	MemExtendedParameterEcCode:                                     0x40,
 	MemExtendedParameterGraphics:                                   0x01,
+	MemExtendedParameterImageMachine:                               6,
+	MemExtendedParameterImageNoHpat:                                0x80,
 	MemExtendedParameterInvalidType:                                0,
-	MemExtendedParameterMax:                                        6,
+	MemExtendedParameterMax:                                        7,
 	MemExtendedParameterNonpaged:                                   0x02,
 	MemExtendedParameterNonpagedHuge:                               0x10,
 	MemExtendedParameterNonpagedLarge:                              0x08,
 	MemExtendedParameterNumaNode:                                   2,
+	MemExtendedParameterNumaNodeMandatory:                          0x8000000064,
 	MemExtendedParameterPartitionHandle:                            3,
+	MemExtendedParameterSoftFaultPages:                             0x20,
 	MemExtendedParameterTypeBits:                                   8,
 	MemExtendedParameterUserPhysicalHandle:                         4,
 	MemExtendedParameterZeroPagesOptional:                          0x04,
@@ -16152,19 +14963,26 @@ var Winnt = struct {
 	MemLargePages:                                                  0x20000000,
 	MemMapped:                                                      0x40000,
 	MemoryAllocationAlignment:                                      16,
+	MemoryPartitionAllAccess:                                       ((0x000F0000) | (0x00100000) | 0x0001 | 0x0002),
+	MemoryPartitionModifyAccess:                                    0x0002,
+	MemoryPartitionQueryAccess:                                     0x0001,
 	MemPhysical:                                                    0x400000,
+	MemPreservePlaceholder:                                         0x00000002,
 	MemPrivate:                                                     0x20000,
 	MemRelease:                                                     0x8000,
+	MemReplacePlaceholder:                                          0x4000,
 	MemReserve:                                                     0x2000,
+	MemReservePlaceholder:                                          0x40000,
 	MemReset:                                                       0x80000,
 	MemResetUndo:                                                   0x1000000,
 	MemRotate:                                                      0x800000,
 	MemSectionExtendedParameterInvalidType:                         0,
-	MemSectionExtendedParameterMax:                                 3,
+	MemSectionExtendedParameterMax:                                 4,
 	MemSectionExtendedParameterNumaNode:                            2,
+	MemSectionExtendedParameterSigningLevel:                        3,
 	MemSectionExtendedParameterUserPhysicalFlags:                   1,
 	MemTopDown:                                                     0x100000,
-	MemUnmapWithTransientBoost:                                     0x01,
+	MemUnmapWithTransientBoost:                                     0x00000001,
 	MemWriteWatch:                                                  0x200000,
 	MessageResourceUnicode:                                         0x0001,
 	Minchar:                                                        0x80,
@@ -16210,7 +15028,10 @@ var Winnt = struct {
 	ObjectInheritAce:                                               (0x1),
 	OutOfProcessFunctionTableCallbackExportName:                    "OutOfProcessFunctionTableCallback",
 	OwnerSecurityInformation:                                       (0x00000001),
-	PageEnclaveDecommit:                                            0x10000000,
+	PageEnclaveDecommit:                                            (0x10000000),
+	PageEnclaveMask:                                                0x10000000,
+	PageEnclaveSsFirst:                                             (0x10000000 | 1),
+	PageEnclaveSsRest:                                              (0x10000000 | 2),
 	PageEnclaveThreadControl:                                       0x80000000,
 	PageEnclaveUnvalidated:                                         0x20000000,
 	PageExecute:                                                    0x10,
@@ -16222,6 +15043,7 @@ var Winnt = struct {
 	PageGraphicsExecuteRead:                                        0x8000,
 	PageGraphicsExecuteReadwrite:                                   0x10000,
 	PageGraphicsNoaccess:                                           0x0800,
+	PageGraphicsNocache:                                            0x40000,
 	PageGraphicsReadonly:                                           0x1000,
 	PageGraphicsReadwrite:                                          0x2000,
 	PageGuard:                                                      0x100,
@@ -16235,6 +15057,13 @@ var Winnt = struct {
 	PageWritecombine:                                               0x400,
 	PageWritecopy:                                                  0x08,
 	PcTeb:                                                          0x18,
+	PdataCrChained:                                                 3,
+	PdataCrChainedWithPac:                                          2,
+	PdataCrUnchained:                                               0,
+	PdataCrUnchainedSavedLr:                                        1,
+	PdataPackedUnwindFragment:                                      2,
+	PdataPackedUnwindFunction:                                      1,
+	PdataRefToFullXdata:                                            0,
 	PdcapD0Supported:                                               0x00000001,
 	PdcapD1Supported:                                               0x00000002,
 	PdcapD2Supported:                                               0x00000004,
@@ -16260,6 +15089,7 @@ var Winnt = struct {
 	PfArmV81AtomicInstructionsAvailable:                            34,
 	PfArmV82DpInstructionsAvailable:                                43,
 	PfArmV83JscvtInstructionsAvailable:                             44,
+	PfArmV83LrcpcInstructionsAvailable:                             45,
 	PfArmV8Crc32InstructionsAvailable:                              31,
 	PfArmV8CryptoInstructionsAvailable:                             30,
 	PfArmV8InstructionsAvailable:                                   29,
@@ -16277,7 +15107,7 @@ var Winnt = struct {
 	PfFloatingPointPrecisionErrata:                                 0,
 	PfMmxInstructionsAvailable:                                     3,
 	PfMonitorxInstructionAvailable:                                 35,
-	PfNonTemporalLevelAll:                                          0x03,
+	PfNonTemporalLevelAll:                                          3,
 	PfNxEnabled:                                                    12,
 	PfPaeEnabled:                                                   9,
 	PfPpcMovemem64bitOk:                                            4,
@@ -16292,7 +15122,9 @@ var Winnt = struct {
 	PfSse42InstructionsAvailable:                                   38,
 	PfSseDazModeAvailable:                                          11,
 	PfSsse3InstructionsAvailable:                                   36,
-	PfTemporalLevel1:                                               0x00,
+	PfTemporalLevel1:                                               0,
+	PfTemporalLevel2:                                               1,
+	PfTemporalLevel3:                                               2,
 	PfVirtFirmwareEnabled:                                          21,
 	PfXmmi64InstructionsAvailable:                                  10,
 	PfXmmiInstructionsAvailable:                                    6,
@@ -16505,7 +15337,9 @@ var Winnt = struct {
 	ProcessQueryInformation:                                        (0x0400),
 	ProcessQueryLimitedInformation:                                 (0x1000),
 	ProcessRedirectionTrustPolicy:                                  16,
+	Processsehoppolicy:                                             18,
 	ProcessSetInformation:                                          (0x0200),
+	ProcessSetLimitedInformation:                                   (0x2000),
 	ProcessSetQuota:                                                (0x0100),
 	ProcessSetSessionid:                                            (0x0004),
 	ProcessSideChannelIsolationPolicy:                              14,
@@ -16515,6 +15349,8 @@ var Winnt = struct {
 	ProcessSystemCallDisablePolicy:                                 4,
 	ProcessSystemCallFilterPolicy:                                  11,
 	ProcessTerminate:                                               (0x0001),
+	ProcessTrustLabelSecurityInformation:                           (0x00000080),
+	ProcessUserPointerAuthPolicy:                                   17,
 	ProcessUserShadowStackPolicy:                                   15,
 	ProcessVmOperation:                                             (0x0008),
 	ProcessVmRead:                                                  (0x0010),
@@ -16522,9 +15358,20 @@ var Winnt = struct {
 	ProcIdleBucketCount:                                            6,
 	ProcIdleBucketCountEx:                                          16,
 	ProductArm64Server:                                             0x78,
+	ProductAzureNanoServer:                                         0xA9,
+	ProductAzureServerCloudhost:                                    0xC7,
+	ProductAzureServerCloudmos:                                     0xC8,
+	ProductAzureServerCore:                                         0xA8,
+	ProductAzurestackhciServerCore:                                 0x196,
 	ProductBusiness:                                                0x6,
 	ProductBusinessN:                                               0x10,
+	ProductCloud:                                                   0xB2,
+	ProductCloude:                                                  0xB7,
+	ProductCloudedition:                                            0xCB,
+	ProductCloudeditionn:                                           0xCA,
+	ProductClouden:                                                 0xBA,
 	ProductCloudHostInfrastructureServer:                           0x7C,
+	ProductCloudn:                                                  0xB3,
 	ProductCloudStorageServer:                                      0x6E,
 	ProductClusterServer:                                           0x12,
 	ProductClusterServerV:                                          0x40,
@@ -16539,11 +15386,17 @@ var Winnt = struct {
 	ProductCoreLanguagespecific:                                    0x64,
 	ProductCoreN:                                                   0x62,
 	ProductCoreSinglelanguage:                                      0x64,
+	ProductDatacenterAServerCore:                                   0x91,
 	ProductDatacenterEvaluationServer:                              0x50,
+	ProductDatacenterEvaluationServerCore:                          0x9F,
+	ProductDatacenterNanoServer:                                    0x8F,
 	ProductDatacenterServer:                                        0x8,
+	ProductDatacenterServerAzureEdition:                            0x197,
 	ProductDatacenterServerCore:                                    0xc,
+	ProductDatacenterServerCoreAzureEdition:                        0x198,
 	ProductDatacenterServerCoreV:                                   0x27,
 	ProductDatacenterServerV:                                       0x25,
+	ProductDatacenterWsServerCore:                                  0x93,
 	ProductEducation:                                               0x79,
 	ProductEducationN:                                              0x7a,
 	ProductEmbedded:                                                0x41,
@@ -16561,6 +15414,8 @@ var Winnt = struct {
 	ProductEnterprise:                                              0x4,
 	ProductEnterpriseE:                                             0x46,
 	ProductEnterpriseEvaluation:                                    0x48,
+	ProductEnterpriseg:                                             0xAB,
+	ProductEnterprisegn:                                            0xAC,
 	ProductEnterpriseN:                                             0x1b,
 	ProductEnterpriseNEvaluation:                                   0x54,
 	ProductEnterpriseS:                                             0x7D,
@@ -16572,10 +15427,14 @@ var Winnt = struct {
 	ProductEnterpriseSEvaluation:                                   0x81,
 	ProductEnterpriseSN:                                            0x7E,
 	ProductEnterpriseSNEvaluation:                                  0x82,
+	ProductEnterpriseSubscription:                                  0x8C,
+	ProductEnterpriseSubscriptionN:                                 0x8D,
 	ProductEssentialbusinessServerAddl:                             0x3C,
 	ProductEssentialbusinessServerAddlsvc:                          0x3E,
 	ProductEssentialbusinessServerMgmt:                             0x3B,
 	ProductEssentialbusinessServerMgmtsvc:                          0x3D,
+	ProductHolographic:                                             0x87,
+	ProductHolographicBusiness:                                     0x88,
 	ProductHomeBasic:                                               0x2,
 	ProductHomeBasicE:                                              0x43,
 	ProductHomeBasicN:                                              0x5,
@@ -16584,9 +15443,15 @@ var Winnt = struct {
 	ProductHomePremiumN:                                            0x1a,
 	ProductHomePremiumServer:                                       0x22,
 	ProductHomeServer:                                              0x13,
+	ProductHubos:                                                   0xB4,
 	ProductHyperv:                                                  0x2a,
 	ProductIndustryHandheld:                                        0x76,
+	ProductIotedgeos:                                               0xBB,
+	ProductIotenterprise:                                           0xBC,
+	ProductIotenterprises:                                          0xBF,
+	ProductIotos:                                                   0xB9,
 	ProductIotuap:                                                  0x7B,
+	ProductLite:                                                    0xBD,
 	ProductMediumbusinessServerManagement:                          0x1e,
 	ProductMediumbusinessServerMessaging:                           0x20,
 	ProductMediumbusinessServerSecurity:                            0x1f,
@@ -16595,7 +15460,9 @@ var Winnt = struct {
 	ProductMultipointPremiumServer:                                 0x4D,
 	ProductMultipointStandardServer:                                0x4C,
 	ProductNanoServer:                                              0x6D,
+	ProductOnecoreupdateos:                                         0xB6,
 	ProductPpiPro:                                                  0x77,
+	ProductProChina:                                                0x8B,
 	ProductProfessional:                                            0x30,
 	ProductProfessionalE:                                           0x45,
 	ProductProfessionalEmbedded:                                    0x3A,
@@ -16605,6 +15472,11 @@ var Winnt = struct {
 	ProductProfessionalStudent:                                     0x70,
 	ProductProfessionalStudentN:                                    0x72,
 	ProductProfessionalWmc:                                         0x67,
+	ProductProForEducation:                                         0xA4,
+	ProductProForEducationN:                                        0xA5,
+	ProductProSingleLanguage:                                       0x8A,
+	ProductProWorkstation:                                          0xA1,
+	ProductProWorkstationN:                                         0xA2,
 	ProductSbSolutionServer:                                        0x32,
 	ProductSbSolutionServerEm:                                      0x36,
 	ProductServerForSbSolutions:                                    0x33,
@@ -16612,19 +15484,24 @@ var Winnt = struct {
 	ProductServerForSmallbusiness:                                  0x18,
 	ProductServerForSmallbusinessV:                                 0x23,
 	ProductServerFoundation:                                        0x21,
+	ProductServerrdsh:                                              0xAF,
 	ProductServerV:                                                 0x25,
 	ProductSmallbusinessServer:                                     0x9,
 	ProductSmallbusinessServerPremium:                              0x19,
 	ProductSmallbusinessServerPremiumCore:                          0x3f,
 	ProductSolutionEmbeddedserver:                                  0x38,
 	ProductSolutionEmbeddedserverCore:                              0x39,
+	ProductStandardAServerCore:                                     0x92,
 	ProductStandardEvaluationServer:                                0x4F,
+	ProductStandardEvaluationServerCore:                            0xA0,
+	ProductStandardNanoServer:                                      0x90,
 	ProductStandardServer:                                          0x7,
 	ProductStandardServerCore:                                      0xd,
 	ProductStandardServerCoreV:                                     0x28,
 	ProductStandardServerSolutions:                                 0x34,
 	ProductStandardServerSolutionsCore:                             0x35,
 	ProductStandardServerV:                                         0x24,
+	ProductStandardWsServerCore:                                    0x94,
 	ProductStarter:                                                 0xb,
 	ProductStarterE:                                                0x42,
 	ProductStarterN:                                                0x2f,
@@ -16644,10 +15521,19 @@ var Winnt = struct {
 	ProductUltimateN:                                               0x1c,
 	ProductUndefined:                                               0x0,
 	ProductUnlicensed:                                              0xabcdabcd,
+	ProductUtilityVm:                                               0x95,
 	ProductWebServer:                                               0x11,
 	ProductWebServerCore:                                           0x1d,
+	ProductXboxDurangohostos:                                       0xC4,
+	ProductXboxEraos:                                               0xC3,
+	ProductXboxGameos:                                              0xC2,
+	ProductXboxKeystone:                                            0xC6,
+	ProductXboxNativeos:                                            0xC1,
+	ProductXboxScarletthostos:                                      0xC5,
+	ProductXboxSystemos:                                            0xC0,
 	ProtectedDaclSecurityInformation:                               (0x80000000),
 	ProtectedSaclSecurityInformation:                               (0x40000000),
+	ProtectedToSystemLuid:                                          []uintptr{0x3e2, 0x0},
 	QuotaLimitsHardwsMaxDisable:                                    0x00000008,
 	QuotaLimitsHardwsMaxEnable:                                     0x00000004,
 	QuotaLimitsHardwsMinDisable:                                    0x00000002,
@@ -16705,7 +15591,10 @@ var Winnt = struct {
 	RelationCache:                                                  2,
 	RelationGroup:                                                  4,
 	RelationNumaNode:                                               1,
+	RelationNumaNodeEx:                                             6,
 	RelationProcessorCore:                                          0,
+	RelationProcessorDie:                                           5,
+	RelationProcessorModule:                                        7,
 	RelationProcessorPackage:                                       3,
 	ResourcemanagerAllAccess:                                       ((0x000F0000) | ((0x00020000) | (0x0001) | (0x00100000)) | ((0x00020000) | (0x0002) | (0x0004) | (0x0008) | (0x0010) | (0x0020) | (0x0040) | (0x00100000)) | ((0x00020000) | (0x0004) | (0x0008) | (0x0010) | (0x0040) | (0x00100000))),
 	ResourceManagerBasicInformation:                                0,
@@ -16766,11 +15655,24 @@ var Winnt = struct {
 	SandboxInert:                                                   0x2,
 	ScopeSecurityInformation:                                       (0x00000040),
 	ScreenOff:                                                      73,
+	ScrubDataInputFlagIgnoreRedundancy:                             0x00000008,
+	ScrubDataInputFlagOplockNotAcquired:                            0x00000040,
 	ScrubDataInputFlagResume:                                       0x00000001,
+	ScrubDataInputFlagScrubByObjectId:                              0x00000020,
+	ScrubDataInputFlagSkipData:                                     0x00000010,
 	ScrubDataInputFlagSkipInSync:                                   0x00000002,
 	ScrubDataInputFlagSkipNonIntegrityData:                         0x00000004,
 	ScrubDataOutputFlagIncomplete:                                  0x00000001,
 	ScrubDataOutputFlagNonUserDataRange:                            0x00010000,
+	ScrubDataOutputFlagParityExtentDataReturned:                    0x00020000,
+	ScrubDataOutputFlagResumeContextLengthSpecified:                0x00040000,
+	SeAccessCheckFlagNoLearningModeLogging:                         0x00000008,
+	SeAccessCheckValidFlags:                                        0x00000008,
+	SeActivateAsUserCapability:                                     "activateAsUser",
+	SeAppSiloPrintCapability:                                       "isolatedWin32-print",
+	SeAppSiloProfilesRootMinimalCapability:                         "isolatedWin32-profilesRootMinimal",
+	SeAppSiloUserProfileMinimalCapability:                          "isolatedWin32-userProfileMinimal",
+	SeAppSiloVolumeRootMinimalCapability:                           "isolatedWin32-volumeRootMinimal",
 	SeAssignprimarytokenName:                                       "SeAssignPrimaryTokenPrivilege",
 	SeAuditName:                                                    "SeAuditPrivilege",
 	SeBackupName:                                                   "SeBackupPrivilege",
@@ -16778,10 +15680,12 @@ var Winnt = struct {
 	SecCommit:                                                      0x8000000,
 	SecFile:                                                        0x800000,
 	SeChangeNotifyName:                                             "SeChangeNotifyPrivilege",
+	SecHugePages:                                                   0x20000,
 	SecImage:                                                       0x1000000,
 	SecImageNoExecute:                                              (0x1000000 | 0x10000000),
 	SecLargePages:                                                  0x80000000,
 	SecNocache:                                                     0x10000000,
+	SeConstrainedImpersonationCapability:                           "constrainedImpersonation",
 	SecPartitionOwnerHandle:                                        0x40000,
 	SecProtectedImage:                                              0x2000000,
 	SeCreateGlobalName:                                             "SeCreateGlobalPrivilege",
@@ -16808,6 +15712,10 @@ var Winnt = struct {
 	SecurityAuthenticationAuthority:                                []uintptr{0, 0, 0, 0, 0, 18},
 	SecurityAuthenticationAuthorityAssertedRid:                     (0x00000001),
 	SecurityAuthenticationAuthorityRidCount:                        (1),
+	SecurityAuthenticationFreshKeyAuthRid:                          (0x00000003),
+	SecurityAuthenticationKeyPropertyAttestationRid:                (0x00000006),
+	SecurityAuthenticationKeyPropertyMfaRid:                        (0x00000005),
+	SecurityAuthenticationKeyTrustRid:                              (0x00000004),
 	SecurityAuthenticationServiceAssertedRid:                       (0x00000002),
 	SecurityBatchRid:                                               (0x00000003),
 	SecurityBuiltinAppPackageRidCount:                              (2),
@@ -16816,6 +15724,8 @@ var Winnt = struct {
 	SecurityBuiltinPackageAnyPackage:                               (0x00000001),
 	SecurityBuiltinPackageAnyRestrictedPackage:                     (0x00000002),
 	SecurityCapabilityAppointments:                                 (0x0000000b),
+	SecurityCapabilityAppRid:                                       (0x000000400),
+	SecurityCapabilityAppSiloRid:                                   (0x00010000),
 	SecurityCapabilityBaseRid:                                      (0x00000003),
 	SecurityCapabilityContacts:                                     (0x0000000c),
 	SecurityCapabilityDocumentsLibrary:                             (0x00000007),
@@ -16830,6 +15740,8 @@ var Winnt = struct {
 	SecurityCapabilityRidCount:                                     (5),
 	SecurityCapabilitySharedUserCertificates:                       (0x00000009),
 	SecurityCapabilityVideosLibrary:                                (0x00000005),
+	SecurityCcgIdBaseRid:                                           (0x0000005f),
+	SecurityChildPackageRidCount:                                   (12),
 	SecurityCloudInfrastructureServicesIdBaseRid:                   (0x00000055),
 	SecurityCloudInfrastructureServicesIdRidCount:                  (6),
 	SecurityComIdBaseRid:                                           (0x00000059),
@@ -16853,8 +15765,13 @@ var Winnt = struct {
 	SecurityEnterpriseReadonlyControllersRid:                       (0x00000016),
 	SecurityIdentification:                                         1,
 	SecurityImpersonation:                                          2,
+	SecurityInstallerCapabilityRidCount:                            (10),
+	SecurityInstallerGroupCapabilityBase:                           (0x20),
+	SecurityInstallerGroupCapabilityRidCount:                       (9),
 	SecurityInteractiveRid:                                         (0x00000004),
 	SecurityIuserRid:                                               (0x00000011),
+	SecurityLocalAccountAndAdminRid:                                (0x00000072),
+	SecurityLocalAccountRid:                                        (0x00000071),
 	SecurityLocalLogonRid:                                          (0x00000001),
 	SecurityLocalRid:                                               (0x00000000),
 	SecurityLocalServiceRid:                                        (0x00000013),
@@ -16866,6 +15783,7 @@ var Winnt = struct {
 	SecurityMandatoryLabelAuthority:                                []uintptr{0, 0, 0, 0, 0, 16},
 	SecurityMandatoryLowRid:                                        (0x00001000),
 	SecurityMandatoryMaximumUserRid:                                (0x00004000),
+	SecurityMandatoryMediumPlusRid:                                 ((0x00002000) + 0x100),
 	SecurityMandatoryMediumRid:                                     (0x00002000),
 	SecurityMandatoryProtectedProcessRid:                           (0x00005000),
 	SecurityMandatorySystemRid:                                     (0x00004000),
@@ -16891,7 +15809,19 @@ var Winnt = struct {
 	SecurityPackageNtlmRid:                                         (0x0000000A),
 	SecurityPackageRidCount:                                        (2),
 	SecurityPackageSchannelRid:                                     (0x0000000E),
+	SecurityParentPackageRidCount:                                  (8),
 	SecurityPrincipalSelfRid:                                       (0x0000000A),
+	SecurityProcessProtectionLevelAntimalwareRid:                   (0x00000600),
+	SecurityProcessProtectionLevelAppRid:                           (0x00000800),
+	SecurityProcessProtectionLevelAuthenticodeRid:                  (0x00000400),
+	SecurityProcessProtectionLevelNoneRid:                          (0x00000000),
+	SecurityProcessProtectionLevelWindowsRid:                       (0x00001000),
+	SecurityProcessProtectionLevelWintcbRid:                        (0x00002000),
+	SecurityProcessProtectionTypeFullRid:                           (0x00000400),
+	SecurityProcessProtectionTypeLiteRid:                           (0x00000200),
+	SecurityProcessProtectionTypeNoneRid:                           (0x00000000),
+	SecurityProcessTrustAuthority:                                  []uintptr{0, 0, 0, 0, 0, 19},
+	SecurityProcessTrustAuthorityRidCount:                          (2),
 	SecurityProxyRid:                                               (0x00000008),
 	SecurityRdvGfxBaseRid:                                          (0x0000005b),
 	SecurityRemoteLogonRid:                                         (0x0000000E),
@@ -16912,6 +15842,9 @@ var Winnt = struct {
 	SecurityTrustedInstallerRid3:                                   1831038044,
 	SecurityTrustedInstallerRid4:                                   1853292631,
 	SecurityTrustedInstallerRid5:                                   2271478464,
+	SecurityUmfdBaseRid:                                            (0x00000060),
+	SecurityUsermanagerIdBaseRid:                                   (0x0000005d),
+	SecurityUsermanagerIdRidCount:                                  (6),
 	SecurityUsermodedriverhostIdBaseRid:                            (0x00000054),
 	SecurityUsermodedriverhostIdRidCount:                           (6),
 	SecurityVirtualaccountIdRidCount:                               (6),
@@ -16919,6 +15852,8 @@ var Winnt = struct {
 	SecurityVirtualserverIdRidCount:                                (6),
 	SecurityWindowManagerBaseRid:                                   (0x0000005a),
 	SecurityWindowsmobileIdBaseRid:                                 (0x00000070),
+	SecurityWinrmIdBaseRid:                                         (0x0000005e),
+	SecurityWinrmIdRidCount:                                        (6),
 	SecurityWmihostIdBaseRid:                                       (0x00000056),
 	SecurityWmihostIdRidCount:                                      (6),
 	SecurityWorldRid:                                               (0x00000000),
@@ -16931,6 +15866,8 @@ var Winnt = struct {
 	SeDaclPresent:                                                  (0x0004),
 	SeDaclProtected:                                                (0x1000),
 	SeDebugName:                                                    "SeDebugPrivilege",
+	SeDelegateSessionUserImpersonateName:                           "SeDelegateSessionUserImpersonatePrivilege",
+	SeDevelopmentModeNetworkCapability:                             "developmentModeNetwork",
 	SeEnableDelegationName:                                         "SeEnableDelegationPrivilege",
 	SefAvoidOwnerCheck:                                             0x10,
 	SefAvoidOwnerRestriction:                                       0x1000,
@@ -16955,12 +15892,21 @@ var Winnt = struct {
 	SeGroupResource:                                                (0x20000000),
 	SeGroupUseForDenyOnly:                                          (0x00000010),
 	SeGroupValidAttributes:                                         ((0x00000001) | (0x00000002) | (0x00000004) | (0x00000008) | (0x00000010) | (0xC0000000) | (0x20000000) | (0x00000020) | (0x00000040)),
+	SeImageSignatureCache:                                          2,
+	SeImageSignatureCatalogCached:                                  3,
+	SeImageSignatureCatalogHint:                                    5,
+	SeImageSignatureCatalogNotCached:                               4,
+	SeImageSignatureEmbedded:                                       1,
+	SeImageSignatureNone:                                           0,
+	SeImageSignaturePackageCatalog:                                 6,
+	SeImageSignaturePplMitigated:                                   7,
 	SeImpersonateName:                                              "SeImpersonatePrivilege",
 	SeIncBasePriorityName:                                          "SeIncreaseBasePriorityPrivilege",
 	SeIncreaseQuotaName:                                            "SeIncreaseQuotaPrivilege",
 	SeIncWorkingSetName:                                            "SeIncreaseWorkingSetPrivilege",
 	SeLearningModeFlagPermissive:                                   0x00000001,
 	SeLearningModeInvalidType:                                      0,
+	SeLearningModeLoggingCapability:                                "learningModeLogging",
 	SeLearningModeMax:                                              2,
 	SeLearningModeSettings:                                         1,
 	SeLoadDriverName:                                               "SeLoadDriverPrivilege",
@@ -16969,7 +15915,9 @@ var Winnt = struct {
 	SeManageVolumeName:                                             "SeManageVolumePrivilege",
 	SemaphoreAllAccess:                                             ((0x000F0000) | (0x00100000) | 0x3),
 	SemaphoreModifyState:                                           0x0002,
+	SeMumaCapability:                                               "muma",
 	SeOwnerDefaulted:                                               (0x0001),
+	SePermissiveLearningModeCapability:                             "permissiveLearningMode",
 	SePrivilegeEnabled:                                             (0x00000002),
 	SePrivilegeEnabledByDefault:                                    (0x00000001),
 	SePrivilegeRemoved:                                             (0x00000004),
@@ -16980,6 +15928,11 @@ var Winnt = struct {
 	SeRemoteShutdownName:                                           "SeRemoteShutdownPrivilege",
 	SeRestoreName:                                                  "SeRestorePrivilege",
 	SeRmControlValid:                                               (0x4000),
+	ServersiloIniting:                                              0,
+	ServersiloShuttingDown:                                         2,
+	ServersiloStarted:                                              1,
+	ServersiloTerminated:                                           4,
+	ServersiloTerminating:                                          3,
 	ServiceAdapter:                                                 0x00000004,
 	ServiceAutoStart:                                               0x00000002,
 	ServiceBootStart:                                               0x00000000,
@@ -17004,12 +15957,32 @@ var Winnt = struct {
 	SeSaclDefaulted:                                                (0x0020),
 	SeSaclPresent:                                                  (0x0010),
 	SeSaclProtected:                                                (0x2000),
+	SeSecurityDescriptorFlagNoAccessFilterAce:                      0x00000004,
 	SeSecurityDescriptorFlagNoLabelAce:                             0x00000002,
 	SeSecurityDescriptorFlagNoOwnerAce:                             0x00000001,
-	SeSecurityDescriptorValidFlags:                                 0x00000003,
+	SeSecurityDescriptorValidFlags:                                 0x00000007,
 	SeSecurityName:                                                 "SeSecurityPrivilege",
 	SeSelfRelative:                                                 (0x8000),
+	SeSessionImpersonationCapability:                               "sessionImpersonation",
 	SeShutdownName:                                                 "SeShutdownPrivilege",
+	SeSigningLevelAntimalware:                                      0x00000007,
+	SeSigningLevelAuthenticode:                                     0x00000004,
+	SeSigningLevelCustom1:                                          0x00000003,
+	SeSigningLevelCustom2:                                          0x00000005,
+	SeSigningLevelCustom3:                                          0x00000007,
+	SeSigningLevelCustom4:                                          0x00000009,
+	SeSigningLevelCustom5:                                          0x0000000A,
+	SeSigningLevelCustom6:                                          0x0000000F,
+	SeSigningLevelCustom7:                                          0x0000000D,
+	SeSigningLevelDeveloper:                                        0x00000003,
+	SeSigningLevelDynamicCodegen:                                   0x0000000B,
+	SeSigningLevelEnterprise:                                       0x00000002,
+	SeSigningLevelMicrosoft:                                        0x00000008,
+	SeSigningLevelStore:                                            0x00000006,
+	SeSigningLevelUnchecked:                                        0x00000000,
+	SeSigningLevelUnsigned:                                         0x00000001,
+	SeSigningLevelWindows:                                          0x0000000C,
+	SeSigningLevelWindowsTcb:                                       0x0000000E,
 	SessionAllAccess:                                               ((0x000F0000) | 0x1 | 0x2),
 	SessionConnectNotification:                                     62,
 	SessionDisplayState:                                            42,
@@ -17075,13 +16048,16 @@ var Winnt = struct {
 	StandardRightsWrite:                                            (0x00020000),
 	StatusAbandonedWait0:                                           (0x00000080),
 	StatusAccessViolation:                                          (0xC0000005),
+	StatusAlreadyRegistered:                                        (0xC0000718),
 	StatusArrayBoundsExceeded:                                      (0xC000008C),
 	StatusAssertionFailure:                                         (0xC0000420),
 	StatusBreakpoint:                                               (0x80000003),
 	StatusControlCExit:                                             (0xC000013A),
+	StatusControlStackViolation:                                    (0xC00001B2),
 	StatusDatatypeMisalignment:                                     (0x80000002),
 	StatusDllInitFailed:                                            (0xC0000142),
 	StatusDllNotFound:                                              (0xC0000135),
+	StatusEnclaveViolation:                                         (0xC00004A2),
 	StatusEntrypointNotFound:                                       (0xC0000139),
 	StatusFatalAppExit:                                             (0x40000015),
 	StatusFloatDenormalOperand:                                     (0xC000008D),
@@ -17099,6 +16075,7 @@ var Winnt = struct {
 	StatusInPageError:                                              (0xC0000006),
 	StatusIntegerDivideByZero:                                      (0xC0000094),
 	StatusIntegerOverflow:                                          (0xC0000095),
+	StatusInterrupted:                                              (0xC0000515),
 	StatusInvalidCruntimeParameter:                                 (0xC0000417),
 	StatusInvalidDisposition:                                       (0xC0000026),
 	StatusInvalidHandle:                                            (0xC0000008),
@@ -17116,6 +16093,7 @@ var Winnt = struct {
 	StatusStackOverflow:                                            (0xC00000FD),
 	StatusSxsEarlyDeactivation:                                     (0xC015000F),
 	StatusSxsInvalidDeactivation:                                   (0xC0150010),
+	StatusThreadNotRunning:                                         (0xC0000516),
 	StatusTimeout:                                                  (0x00000102),
 	StatusUnwindConsolidate:                                        (0x80000029),
 	StatusUserApc:                                                  (0x000000C0),
@@ -17265,6 +16243,7 @@ var Winnt = struct {
 	SublangNorwegianBokmal:                                         0x01,
 	SublangNorwegianNynorsk:                                        0x02,
 	SublangOccitanFrance:                                           0x01,
+	SublangOdiaIndia:                                               0x01,
 	SublangOriyaIndia:                                              0x01,
 	SublangPashtoAfghanistan:                                       0x01,
 	SublangPersianIran:                                             0x01,
@@ -17295,6 +16274,7 @@ var Winnt = struct {
 	SublangScottishGaelic:                                          0x01,
 	SublangSerbianBosniaHerzegovinaCyrillic:                        0x07,
 	SublangSerbianBosniaHerzegovinaLatin:                           0x06,
+	SublangSerbianCroatia:                                          0x01,
 	SublangSerbianCyrillic:                                         0x03,
 	SublangSerbianLatin:                                            0x02,
 	SublangSerbianMontenegroCyrillic:                               0x0c,
@@ -17374,6 +16354,9 @@ var Winnt = struct {
 	SuspendResumeInvocation:                                        71,
 	SymlinkFlagRelative:                                            1,
 	Synchronize:                                                    (0x00100000),
+	SystemAccessFilterAceType:                                      (0x15),
+	SystemAccessFilterNoconstraintMask:                             0xffffffff,
+	SystemAccessFilterValidMask:                                    0x00ffffff,
 	SystemAlarmAceType:                                             (0x3),
 	SystemAlarmCallbackAceType:                                     (0xE),
 	SystemAlarmCallbackObjectAceType:                               (0x10),
@@ -17384,6 +16367,10 @@ var Winnt = struct {
 	SystemAuditObjectAceType:                                       (0x7),
 	SystemBatteryState:                                             5,
 	SystemCacheAlignmentSize:                                       64,
+	SystemCpuSetInformationAllocated:                               0x2,
+	SystemCpuSetInformationAllocatedToTargetProcess:                0x4,
+	SystemCpuSetInformationParked:                                  0x1,
+	SystemCpuSetInformationRealtime:                                0x8,
 	SystemExecutionState:                                           16,
 	SystemHiberbootState:                                           65,
 	SystemHiberFileInformation:                                     36,
@@ -17405,6 +16392,9 @@ var Winnt = struct {
 	SystemPowerStateHandler:                                        6,
 	SystemPowerStateLogging:                                        23,
 	SystemPowerStateNotifyHandler:                                  17,
+	SystemProcessTrustLabelAceType:                                 (0x14),
+	SystemProcessTrustLabelValidMask:                               0x00ffffff,
+	SystemProcessTrustNoconstraintMask:                             0xffffffff,
 	SystemReserveHiberFile:                                         10,
 	SystemResourceAttributeAceType:                                 (0x12),
 	SystemScopedPolicyIdAceType:                                    (0x13),
@@ -17519,11 +16509,13 @@ var Winnt = struct {
 	ThreadBasePriorityMax:                                          2,
 	ThreadBasePriorityMin:                                          (-2),
 	ThreadDirectImpersonation:                                      (0x0200),
+	ThreadDynamicCodeAllow:                                         1,
 	ThreadGetContext:                                               (0x0008),
 	ThreadImpersonate:                                              (0x0100),
 	ThreadProfilingFlagDispatch:                                    0x1,
 	ThreadQueryInformation:                                         (0x0040),
 	ThreadQueryLimitedInformation:                                  (0x0800),
+	ThreadResume:                                                   (0x1000),
 	ThreadSetContext:                                               (0x0010),
 	ThreadSetInformation:                                           (0x0020),
 	ThreadSetLimitedInformation:                                    (0x0400),
@@ -17538,6 +16530,7 @@ var Winnt = struct {
 	TimeZoneIdUnknown:                                              0,
 	TlsMinimumAvailable:                                            64,
 	TokenAccessInformation:                                         22,
+	TokenAccessPseudoHandleWin8:                                    ((0x0008) | (0x0010)),
 	TokenAdjustDefault:                                             (0x0080),
 	TokenAdjustGroups:                                              (0x0040),
 	TokenAdjustPrivileges:                                          (0x0020),
@@ -17548,7 +16541,9 @@ var Winnt = struct {
 	TokenAppContainerSid:                                           31,
 	TokenAssignPrimary:                                             (0x0001),
 	TokenAuditPolicy:                                               16,
+	TokenBnoIsolation:                                              44,
 	TokenCapabilities:                                              30,
+	TokenChildProcessFlags:                                         45,
 	TokenDefaultDacl:                                               6,
 	TokenDeviceClaimAttributes:                                     34,
 	TokenDeviceGroups:                                              37,
@@ -17567,7 +16562,10 @@ var Winnt = struct {
 	TokenImpersonationLevel:                                        9,
 	TokenIntegrityLevel:                                            25,
 	TokenIsAppContainer:                                            29,
+	TokenIsAppSilo:                                                 48,
+	TokenIsLessPrivilegedAppContainer:                              46,
 	TokenIsRestricted:                                              40,
+	TokenIsSandboxed:                                               47,
 	TokenLinkedToken:                                               19,
 	TokenLogonSid:                                                  28,
 	TokenMandatoryPolicy:                                           27,
@@ -17579,7 +16577,9 @@ var Winnt = struct {
 	TokenOwner:                                                     4,
 	TokenPrimary:                                                   1,
 	TokenPrimaryGroup:                                              5,
+	TokenPrivateNameSpace:                                          42,
 	TokenPrivileges:                                                3,
+	TokenProcessTrustLevel:                                         41,
 	TokenQuery:                                                     (0x0008),
 	TokenQuerySource:                                               (0x0010),
 	TokenRead:                                                      ((0x00020000) | (0x0008)),
@@ -17591,9 +16591,11 @@ var Winnt = struct {
 	TokenSecurityAttributes:                                        39,
 	TokenSessionId:                                                 12,
 	TokenSessionReference:                                          14,
+	TokenSingletonAttributes:                                       43,
 	TokenSource:                                                    7,
 	TokenSourceLength:                                              8,
 	TokenStatistics:                                                10,
+	TokenTrustConstraintMask:                                       ((0x00020000) | (0x0008) | (0x0010)),
 	TokenType:                                                      8,
 	Tokenuiaccess:                                                  26,
 	TokenUser:                                                      1,
@@ -17655,6 +16657,11 @@ var Winnt = struct {
 	TransactionStateIndoubt:                                        2,
 	TransactionStateNormal:                                         1,
 	TransactionSuperiorEnlistmentInformation:                       3,
+	TreeConnectAttributeGlobal:                                     0x00000004,
+	TreeConnectAttributeIntegrity:                                  0x00008000,
+	TreeConnectAttributePinned:                                     0x00000002,
+	TreeConnectAttributePrivacy:                                    0x00004000,
+	TrustProtectedFilterAceFlag:                                    (0x40),
 	UcscharInvalidCharacter:                                        (0xffffffff),
 	UmsSchedulerStartup:                                            0,
 	UmsSchedulerThreadBlocked:                                      1,
@@ -17686,6 +16693,11 @@ var Winnt = struct {
 	UserPresent:                                                    1,
 	UserUnknown:                                                    0xff,
 	ValidInheritFlags:                                              (0x1F),
+	VbsBasicPageMeasuredData:                                       0x00000001,
+	VbsBasicPageSystemCall:                                         0x00000005,
+	VbsBasicPageThreadDescriptor:                                   0x00000004,
+	VbsBasicPageUnmeasuredData:                                     0x00000002,
+	VbsBasicPageZeroFill:                                           0x00000003,
 	VerAnd:                                                         6,
 	VerBuildnumber:                                                 0x0000004,
 	VerConditionMask:                                               7,
@@ -17721,6 +16733,7 @@ var Winnt = struct {
 	VerSuiteEmbeddednt:                                             0x00000040,
 	VerSuiteEmbeddedRestricted:                                     0x00000800,
 	VerSuiteEnterprise:                                             0x00000002,
+	VerSuiteMultiuserts:                                            0x00020000,
 	VerSuitename:                                                   0x0000040,
 	VerSuitePersonal:                                               0x00000200,
 	VerSuiteSecurityAppliance:                                      0x00001000,
@@ -17761,6 +16774,7 @@ var Winnt = struct {
 	WinApplicationPackageAuthoritySid:                              83,
 	WinAuthenticatedUserSid:                                        17,
 	WinAuthenticationAuthorityAssertedSid:                          103,
+	WinAuthenticationFreshKeyAuthSid:                               118,
 	WinAuthenticationKeyPropertyAttestationSid:                     117,
 	WinAuthenticationKeyPropertyMFASid:                             116,
 	WinAuthenticationKeyTrustSid:                                   115,
@@ -17776,6 +16790,7 @@ var Winnt = struct {
 	WinBuiltinCryptoOperatorsSid:                                   64,
 	WinBuiltinDCOMUsersSid:                                         61,
 	WinBuiltinDefaultSystemManagedGroupSid:                         111,
+	WinBuiltinDeviceOwnersSid:                                      119,
 	WinBuiltinDomainSid:                                            25,
 	WinBuiltinEventLogReadersGroup:                                 76,
 	WinBuiltinGuestsSid:                                            28,
@@ -17929,6 +16944,9 @@ var Winnt = struct {
 	X3TmpltInstWordX:                                               0,
 	X3TmpltSignValPosX:                                             0,
 	X3TmpltSizeX:                                                   4,
+	X86CacheAlignmentSize:                                          64,
+	XstateAlignBit:                                                 (1),
+	XstateAlignMask:                                                (1 << (1)),
 	XstateAmxTileConfig:                                            (17),
 	XstateAmxTileData:                                              (18),
 	XstateAvx:                                                      (2),
@@ -17937,6 +16955,12 @@ var Winnt = struct {
 	XstateAvx512ZmmH:                                               (6),
 	XstateCetS:                                                     (12),
 	XstateCetU:                                                     (11),
+	XstateCompactionEnable:                                         (63),
+	XstateCompactionEnableMask:                                     (1 << (63)),
+	XstateControlflagValidMask:                                     ((1) | (2) | (4)),
+	XstateControlflagXfdMask:                                       (4),
+	XstateControlflagXsavecMask:                                    (2),
+	XstateControlflagXsaveoptMask:                                  (1),
 	XstateGsse:                                                     (2),
 	XstateIpt:                                                      (8),
 	XstateLegacyFloatingPoint:                                      (0),
@@ -17962,6 +16986,8 @@ var Winnt = struct {
 	XstateMpxBndcsr:                                                (4),
 	XstateMpxBndregs:                                               (3),
 	XstatePasid:                                                    (10),
+	XstateXfdBit:                                                   (2),
+	XstateXfdMask:                                                  (1 << (2)),
 }
 
 // Winperf contains constants from winperf.h

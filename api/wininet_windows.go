@@ -14,7 +14,7 @@ import (
 
 var wininet *windows.LazyDLL = windows.NewLazySystemDLL("Wininet")
 
-// HTTPAddRequestHeadersW is from wininet.h
+// HTTPAddRequestHeadersW from wininet.h
 func HTTPAddRequestHeadersW(
 	reqHndl uintptr,
 	header string,
@@ -44,7 +44,7 @@ func HTTPAddRequestHeadersW(
 	return nil
 }
 
-// HTTPOpenRequestW is from wininet.h
+// HTTPOpenRequestW from wininet.h
 func HTTPOpenRequestW(
 	connHndl uintptr,
 	verb string,
@@ -90,7 +90,7 @@ func HTTPOpenRequestW(
 	return reqHndl, nil
 }
 
-// HTTPQueryInfoW is from wininet.h
+// HTTPQueryInfoW from wininet.h
 func HTTPQueryInfoW(
 	reqHndl uintptr,
 	info uintptr,
@@ -127,7 +127,7 @@ func HTTPQueryInfoW(
 	return nil
 }
 
-// HTTPSendRequestW is from wininet.h
+// HTTPSendRequestW from wininet.h
 func HTTPSendRequestW(
 	reqHndl uintptr,
 	headers string,
@@ -159,7 +159,7 @@ func HTTPSendRequestW(
 	return nil
 }
 
-// InternetCloseHandle is from wininet.h
+// InternetCloseHandle from wininet.h
 func InternetCloseHandle(reqHndl uintptr) error {
 	var e error
 	var ok uintptr
@@ -172,7 +172,7 @@ func InternetCloseHandle(reqHndl uintptr) error {
 	return nil
 }
 
-// InternetConnectW is from wininet.h
+// InternetConnectW from wininet.h
 func InternetConnectW(
 	sessionHndl uintptr,
 	serverName string,
@@ -204,7 +204,7 @@ func InternetConnectW(
 	return connHndl, nil
 }
 
-// InternetGetCookieW is from wininet.h
+// InternetGetCookieW from wininet.h
 func InternetGetCookieW(
 	url string,
 	buffer *[]byte,
@@ -238,7 +238,7 @@ func InternetGetCookieW(
 	return nil
 }
 
-// InternetGetCookieExW is from wininet.h
+// InternetGetCookieExW from wininet.h
 func InternetGetCookieExW(
 	url string,
 	name string,
@@ -276,7 +276,7 @@ func InternetGetCookieExW(
 	return nil
 }
 
-// InternetOpenW is from wininet.h
+// InternetOpenW from wininet.h
 func InternetOpenW(
 	userAgent string,
 	accessType uintptr,
@@ -302,7 +302,7 @@ func InternetOpenW(
 	return sessionHndl, nil
 }
 
-// InternetQueryDataAvailable is from wininet.h
+// InternetQueryDataAvailable from wininet.h
 func InternetQueryDataAvailable(
 	reqHndl uintptr,
 	bytesAvailable *int64,
@@ -324,7 +324,7 @@ func InternetQueryDataAvailable(
 	return nil
 }
 
-// InternetReadFile is from wininet.h
+// InternetReadFile from wininet.h
 func InternetReadFile(
 	reqHndl uintptr,
 	buffer *[]byte,
@@ -357,7 +357,7 @@ func InternetReadFile(
 	return nil
 }
 
-// InternetSetOptionW is from wininet.h
+// InternetSetOptionW from wininet.h
 func InternetSetOptionW(
 	hndl uintptr,
 	opt uintptr,
