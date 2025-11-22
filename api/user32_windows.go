@@ -13,7 +13,9 @@ var user32 *windows.LazyDLL = windows.NewLazySystemDLL("user32")
 
 // CreateDesktopW from winuser.h
 func CreateDesktopW(
-	name string, flags uintptr, access uintptr,
+	name string,
+	flags uintptr,
+	access uintptr,
 ) (windows.Handle, error) {
 	var desktop uintptr
 	var e error

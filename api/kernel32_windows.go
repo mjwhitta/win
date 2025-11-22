@@ -45,7 +45,9 @@ var kernel32 *windows.LazyDLL = windows.NewLazySystemDLL("kernel32")
 
 // CopyFile2 from winbase.h
 func CopyFile2(
-	src string, dst string, params CopyFile2ExtendedParameters,
+	src string,
+	dst string,
+	params CopyFile2ExtendedParameters,
 ) error {
 	var e error
 	var ok uintptr

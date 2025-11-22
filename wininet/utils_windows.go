@@ -18,7 +18,9 @@ import (
 )
 
 func buildRequest(
-	sessionHndl uintptr, req *http.Request, timeout time.Duration,
+	sessionHndl uintptr,
+	req *http.Request,
+	timeout time.Duration,
 ) (uintptr, error) {
 	var connHndl uintptr
 	var e error
@@ -97,7 +99,8 @@ func buildRequest(
 }
 
 func buildResponse(
-	reqHndl uintptr, req *http.Request,
+	reqHndl uintptr,
+	req *http.Request,
 ) (*http.Response, error) {
 	var b []byte
 	var body io.ReadCloser
@@ -365,7 +368,8 @@ func readResponse(reqHndl uintptr) (io.ReadCloser, int64, error) {
 }
 
 func sendRequest(
-	reqHndl uintptr, req *http.Request,
+	reqHndl uintptr,
+	req *http.Request,
 ) (*http.Response, error) {
 	var b []byte
 	var e error
@@ -477,7 +481,9 @@ func setTimeouts(reqHndl uintptr, timeout time.Duration) error {
 }
 
 func storeCookies(
-	jar http.CookieJar, uri *url.URL, cookies []*http.Cookie,
+	jar http.CookieJar,
+	uri *url.URL,
+	cookies []*http.Cookie,
 ) error {
 	var e error
 	var path *url.URL

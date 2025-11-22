@@ -139,7 +139,9 @@ func (c *Client) Head(url string) (*http.Response, error) {
 
 // Post will make a POST request using WinINet.dll.
 func (c *Client) Post(
-	url string, contentType string, body io.Reader,
+	url string,
+	contentType string,
+	body io.Reader,
 ) (*http.Response, error) {
 	var e error
 	var req *http.Request
@@ -158,7 +160,8 @@ func (c *Client) Post(
 
 // PostForm will make a POST request using WinINet.dll.
 func (c *Client) PostForm(
-	url string, data url.Values,
+	url string,
+	data url.Values,
 ) (*http.Response, error) {
 	var body io.Reader = bytes.NewReader([]byte(data.Encode()))
 	var e error

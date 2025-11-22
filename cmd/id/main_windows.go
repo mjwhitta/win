@@ -3,9 +3,9 @@
 package main
 
 import (
+	"fmt"
 	"os"
 
-	hl "github.com/mjwhitta/hilighter"
 	"github.com/mjwhitta/log"
 	"github.com/mjwhitta/win/user"
 )
@@ -30,22 +30,22 @@ func main() {
 	}
 
 	if !(flags.groups || flags.privs || flags.user) {
-		hl.Println(id.Whoami())
+		fmt.Println(id.Whoami())
 		os.Exit(Good)
 	}
 
 	if flags.user {
-		hl.Println(id.WhoamiUser())
-		hl.Println()
+		fmt.Println(id.WhoamiUser())
+		fmt.Println()
 	}
 
 	if flags.groups {
-		hl.Println(id.WhoamiGroups())
-		hl.Println()
+		fmt.Println(id.WhoamiGroups())
+		fmt.Println()
 	}
 
 	if flags.privs {
-		hl.Println(id.WhoamiPriv())
-		hl.Println()
+		fmt.Println(id.WhoamiPriv())
+		fmt.Println()
 	}
 }

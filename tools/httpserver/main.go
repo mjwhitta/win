@@ -5,9 +5,10 @@ import (
 	"net/http"
 	"net/http/httputil"
 	"os"
+	"path/filepath"
+	"time"
 
 	"github.com/mjwhitta/cli"
-	hl "github.com/mjwhitta/hilighter"
 	"github.com/mjwhitta/log"
 )
 
@@ -15,13 +16,15 @@ var port uint
 
 func init() {
 	cli.Align = true
-	cli.Banner = hl.Sprintf("%s [OPTIONS]", os.Args[0])
+	cli.Banner = filepath.Base(os.Args[0]) + " [OPTIONS]"
+
 	cli.Info("Super simple HTTP listener.")
+
 	cli.Flag(
 		&port,
 		"p",
 		"port",
-		8080,
+		8080, //nolint:mnd // default non-privileged http port
 		"Listen on specified port (default: 8080).",
 	)
 	cli.Parse()
@@ -70,15 +73,20 @@ func main() {
 	var mux *http.ServeMux
 	var server *http.Server
 
-	addr = hl.Sprintf("0.0.0.0:%d", port)
+	addr = fmt.Sprintf("0.0.0.0:%d", port)
 
 	mux = http.NewServeMux()
 	mux.HandleFunc("/path", rootHandler)
 	mux.HandleFunc("/path/to/login", loginHandler)
 
-	server = &http.Server{Addr: addr, Handler: mux}
+	server = &http.Server{
+		Addr:              addr,
+		Handler:           mux,
+		ReadHeaderTimeout: 10 * time.Second, //nolint:mnd // 10 secs
+	}
 
 	log.Infof("Listening on %s", addr)
+
 	e = server.ListenAndServe()
 
 	switch e {
@@ -105,6 +113,7 @@ func rootHandler(w http.ResponseWriter, req *http.Request) {
 	} else {
 		cookie.Value = "yum"
 	}
+
 	w.Header().Add("Set-Cookie", cookie.String())
 
 	cookie.Name = "cookiemonster"

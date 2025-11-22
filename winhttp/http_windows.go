@@ -27,7 +27,9 @@ func init() {
 
 // Post will make a POST request using the DefaultClient.
 func Post(
-	url string, contentType string, body io.Reader,
+	url string,
+	contentType string,
+	body io.Reader,
 ) (*http.Response, error) {
 	return DefaultClient.Post(url, contentType, body)
 }

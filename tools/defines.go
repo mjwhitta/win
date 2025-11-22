@@ -1,9 +1,9 @@
+//nolint:godox // I'll do the one todo later maybe
 package main
 
 import (
 	"flag"
 	"fmt"
-	"io"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -22,147 +22,188 @@ type cacheEntry struct {
 	Val  string // Value for var
 }
 
-// Cache, indexed by scope
-var cache = map[string][]*cacheEntry{
-	"": { // Global scope
-		{"FALSE", "False", "uintptr", "0"},
-		{"NULL", "Null", "uintptr", "0"},
-		{"TRUE", "True", "uintptr", "1"},
-	},
-}
-var lookup = map[string]*cacheEntry{}
-
-// Regular expressions
 var (
-	bitwisenot = regexp.MustCompile(`\~`)
-	camel      = regexp.MustCompile(`[A-Z][a-z]+[A-Z][a-z]+`)
-	comment    = regexp.MustCompile(`\s*\/\*.*\*\/\s*`)
-	fixcast    = regexp.MustCompile(
+	// Cache, indexed by scope
+	cache = map[string][]*cacheEntry{
+		"": { // Global scope
+			{"FALSE", "False", "uintptr", "0"},
+			{"NULL", "Null", "uintptr", "0"},
+			{"TRUE", "True", "uintptr", "1"},
+		},
+	}
+	// WIN32_LEAN_AND_MEAN... and a bunch of other files
+	headers []string = []string{
+		"accctrl.h",
+		"cderr.h",
+		"dde.h",
+		"ddeml.h",
+		"dlgs.h",
+		"joystickapi.h",
+		"lzexpand.h",
+		"mciapi.h",
+		"mmeapi.h",
+		"mmiscapi.h",
+		"mmiscapi2.h",
+		"mmsyscom.h",
+		"mmsystem.h",
+		"nb30.h",
+		"playsoundapi.h",
+		"poppack.h",
+		"pshpack1.h",
+		"rpc.h",
+		"shellapi.h",
+		"stdlib.h",
+		"timeapi.h",
+		"tlhelp32.h",
+		"winapifamily.h",
+		"wincrypt.h",
+		"winefs.h",
+		"winhttp.h",
+		"wininet.h",
+		"winnt.h",
+		"winperf.h",
+		"winscard.h",
+		"winsock.h",
+		"winuser.h",
+	}
+	lookup = map[string]*cacheEntry{}
+	// Regular expressions
+	reBitwisenot = regexp.MustCompile(`\~`)
+	reCamel      = regexp.MustCompile(`[A-Z][a-z]+[A-Z][a-z]+`)
+	reComment    = regexp.MustCompile(`\s*\/\*.*\*\/\s*`)
+	reFixCast    = regexp.MustCompile(
 		`\([A-Za-z_]+\)\s*(\(?\-?[0-9A-Fa-fXx]+|NULL)`,
 	)
-	fixhex        = regexp.MustCompile(`(0[Xx][0-9A-Fa-f]+)[LlUu]+`)
-	fixlen        = regexp.MustCompile(`(len\(.+?\))`)
-	fixmsabi      = regexp.MustCompile(`__MSABI_LONG([^)]+)`)
-	fixnum        = regexp.MustCompile(`(\d+)[LlUu]+`)
-	fixsizeof     = regexp.MustCompile(`sizeof\s*\(`)
-	spaces        = regexp.MustCompile(`\s+`)
-	uselessOpRepl = []*regexp.Regexp{
+	reFixHex        = regexp.MustCompile(`(0[Xx][0-9A-Fa-f]+)[LlUu]+`)
+	reFixLen        = regexp.MustCompile(`(len\(.+?\))`)
+	reFixMSABI      = regexp.MustCompile(`__MSABI_LONG([^)]+)`)
+	reFixNum        = regexp.MustCompile(`(\d+)[LlUu]+`)
+	reFixSizeOf     = regexp.MustCompile(`sizeof\s*\(`)
+	reSpaces        = regexp.MustCompile(`\s+`)
+	reUselessOpRepl = []*regexp.Regexp{
 		regexp.MustCompile(`\s*\^\s*0([^x])`), // ^ 0
 		regexp.MustCompile(`\s*\|\s*0([^x])`), // | 0
 	}
+	reUselessOpRm = []*regexp.Regexp{
+		regexp.MustCompile(`\s*\^\s*\(0\)`),         // ^ (0)
+		regexp.MustCompile(`\s*\|\s*\(0\)`),         // | (0)
+		regexp.MustCompile(`(0x0{8}\s*\|\s*)+`),     // 0x00000000 |
+		regexp.MustCompile(`(\(0x0{8}\)\s*\|\s*)+`), // (0x00000000) |
+		// ((0x0...0)) |
+		regexp.MustCompile(`(\(\(0x0{8}\)\)\s*\|\s*)+`),
+		regexp.MustCompile(`(\s*\|\s*0x0{8})+`),     // | 0x00000000
+		regexp.MustCompile(`(\s*\|\s*\(0x0{8}\))+`), // | (0x00000000)
+		// | ((0x0...0))
+		regexp.MustCompile(`(\s*\|\s*\(\(0x0{8}\)\))+`),
+	}
+	// Skips
+	skipLContains = map[string][]string{
+		"": {
+			"(",
+			")",
+			"DECLSPEC",
+			"EXTERN_C",
+		},
+		"shellapi.h": {
+			"DUMMY",
+		},
+		"stdlib.h": {
+			"__",
+			"errno",
+		},
+		"winnt.h": {
+			"DUMMY",
+			"XSTATE_MASK_ALLOWED",
+		},
+	}
+	skipRContains = map[string][]string{
+		"": {
+			"__declspec",
+			"__MINGW_NAME",
+			"DECLSPEC",
+			"HRESULT",
+			"len(double)",
+			"len(DWORD)",
+			"len(ULONGLONG)",
+			"WINAPI",
+		},
+		"mciapi.h": {
+			"DRV_",
+			"MM_",
+		},
+		"mmeapi.h": {
+			"MM_",
+		},
+		"nb30.h": {
+			"\\0",
+		},
+		"shellapi.h": {
+			"FIELD_OFFSET",
+		},
+		"stdlib.h": {
+			"__",
+		},
+		"wincrypt.h": {
+			"\\0",
+		},
+		"wininet.h": {
+			"INTERNET_STATUS_CALLBACK",
+		},
+		"winnt.h": {
+			"DWORD64",
+			"FIELD_OFFSET",
+			"HANDLE",
+			"inline",
+			"MAKELANGID(",
+			"MAKELCID(",
+		},
+		"winuser.h": {
+			"len(LRESULT)",
+			"MAKEINTATOM(",
+		},
+	}
+	skipRStarts = map[string][]string{
+		"": {
+			":",
+			"_",
+			"extern",
+			"void",
+		},
+		"accctrl.h": {
+			"LocalFree",
+		},
+		"ddeml.h": {
+			"CALLBACK",
+		},
+		"mmiscapi.h": {
+			"mmioFOURCC",
+		},
+		"playsoundapi.h": {
+			"sndAlias(",
+		},
+		"rpc.h": {
+			"MIDL_user",
+			"struct",
+			"}",
+		},
+		"shellapi.h": {
+			"SHGetDiskFreeSpaceEx",
+			"STDAPI",
+		},
+		"wincrypt.h": {
+			"const",
+		},
+		"winscard.h": {
+			"(&g_rgSCard",
+			"SCardGetAttrib",
+			"SCardSetAttrib",
+		},
+		"winuser.h": {
+			"GET_DEVICE_LPARAM",
+			"(UINT_MAX)",
+		},
+	}
 )
-
-var uselessOpRm = []*regexp.Regexp{
-	regexp.MustCompile(`\s*\^\s*\(0\)`),             // ^ (0)
-	regexp.MustCompile(`\s*\|\s*\(0\)`),             // | (0)
-	regexp.MustCompile(`(0x0{8}\s*\|\s*)+`),         // 0x00000000 |
-	regexp.MustCompile(`(\(0x0{8}\)\s*\|\s*)+`),     // (0x00000000) |
-	regexp.MustCompile(`(\(\(0x0{8}\)\)\s*\|\s*)+`), // ((0x0...0)) |
-	regexp.MustCompile(`(\s*\|\s*0x0{8})+`),         // | 0x00000000
-	regexp.MustCompile(`(\s*\|\s*\(0x0{8}\))+`),     // | (0x00000000)
-	regexp.MustCompile(`(\s*\|\s*\(\(0x0{8}\)\))+`), // | ((0x0...0))
-}
-
-// Skips
-var skipLContains = map[string][]string{
-	"": {
-		"(",
-		")",
-		"DECLSPEC",
-		"EXTERN_C",
-	},
-	"shellapi.h": {
-		"DUMMY",
-	},
-	"stdlib.h": {
-		"__",
-		"errno",
-	},
-	"winnt.h": {
-		"DUMMY",
-		"XSTATE_MASK_ALLOWED",
-	},
-}
-
-var skipRContains = map[string][]string{
-	"": {
-		"__declspec",
-		"__MINGW_NAME",
-		"DECLSPEC",
-		"HRESULT",
-		"len(DWORD)",
-		"len(ULONGLONG)",
-		"WINAPI",
-	},
-	"shellapi.h": {
-		"FIELD_OFFSET",
-	},
-	"wininet.h": {
-		"INTERNET_STATUS_CALLBACK",
-	},
-	"winnt.h": {
-		"DWORD64",
-		"FIELD_OFFSET",
-		"HANDLE",
-		"inline",
-		"MAKELANGID(",
-		"MAKELCID(",
-	},
-	"nb30.h": {
-		"\\0",
-	},
-	"stdlib.h": {
-		"__",
-	},
-	"wincrypt.h": {
-		"\\0",
-	},
-	"winuser.h": {
-		"len(LRESULT)",
-		"MAKEINTATOM(",
-	},
-}
-
-var skipRStarts = map[string][]string{
-	"": {
-		":",
-		"_",
-		"extern",
-		"void",
-	},
-	"accctrl.h": {
-		"LocalFree",
-	},
-	"ddeml.h": {
-		"CALLBACK",
-	},
-	"mmsystem.h": {
-		"mmioFOURCC",
-		"OutputDebugString",
-		"sndAlias(",
-	},
-	"rpc.h": {
-		"MIDL_user",
-		"struct",
-		"}",
-	},
-	"shellapi.h": {
-		"SHGetDiskFreeSpaceEx",
-		"STDAPI",
-	},
-	"wincrypt.h": {
-		"const",
-	},
-	"winscard.h": {
-		"(&g_rgSCard",
-		"SCardGetAttrib",
-		"SCardSetAttrib",
-	},
-	"winuser.h": {
-		"GET_DEVICE_LPARAM",
-		"(UINT_MAX)",
-	},
-}
 
 func buildLookup() {
 	for scope, entries := range cache {
@@ -195,27 +236,28 @@ func cacheVar(fn string, c string, v string) {
 		}
 	}
 
-	if fixlen.MatchString(v) {
-		v = fixlen.ReplaceAllString(v, "uintptr($1)")
+	if reFixLen.MatchString(v) {
+		v = reFixLen.ReplaceAllString(v, "uintptr($1)")
 	}
 
-	if strings.HasPrefix(v, "\"") {
+	switch {
+	case strings.HasPrefix(v, "\""):
 		t = "string"
-	} else if strings.HasPrefix(v, "L\"") {
+	case strings.HasPrefix(v, "L\""):
 		v = v[1:]
 		t = "string"
-	} else if strings.HasPrefix(v, "TEXT(") {
+	case strings.HasPrefix(v, "TEXT("):
 		v = strings.Replace(v[5:], ")", "", 1)
 		t = "string"
-	} else if strings.Contains(v, "L\"") {
+	case strings.Contains(v, "L\""):
 		v = "[]string{" + strings.ReplaceAll(v, " L\"", ", \"") + "}"
 		t = "[]string"
-	} else if strings.Contains(v, "-") {
+	case strings.Contains(v, "-"):
 		t = "int"
-	} else if strings.Contains(v, ".") && strings.HasSuffix(v, "f") {
+	case strings.Contains(v, ".") && strings.HasSuffix(v, "f"):
 		v = strings.TrimSuffix(v, "f")
 		t = "float64"
-	} else if strings.HasPrefix(v, "{") {
+	case strings.HasPrefix(v, "{"):
 		v = "[]uintptr" + v
 		t = "[]uintptr"
 	}
@@ -228,13 +270,14 @@ func fixVarTypes() {
 	for _, entries := range cache {
 		for _, entry := range entries {
 			// Fix types
-			if strings.HasPrefix(entry.Val, "\"") {
+			switch {
+			case strings.HasPrefix(entry.Val, "\""):
 				entry.Type = "string"
-			} else if strings.HasPrefix(entry.Val, "[]string{") {
+			case strings.HasPrefix(entry.Val, "[]string{"):
 				entry.Type = "[]string"
-			} else if strings.HasPrefix(entry.Val, "[]uintptr{") {
+			case strings.HasPrefix(entry.Val, "[]uintptr{"):
 				entry.Type = "[]uintptr"
-			} else if strings.Contains(entry.Val, "-") {
+			case strings.Contains(entry.Val, "-"):
 				entry.Type = "int"
 			}
 		}
@@ -251,7 +294,8 @@ func format(str string) string {
 
 	for _, s := range strings.Split(str, " ") {
 		// Replace _ with CamelCase
-		if strings.Contains(s, "_") {
+		switch {
+		case strings.Contains(s, "_"):
 			// Split on "_"
 			tmp = strings.Split(strings.ToLower(s), "_")
 
@@ -266,9 +310,9 @@ func format(str string) string {
 
 			// Join together for camelcase
 			s = strings.Join(tmp, "")
-		} else if camel.MatchString(s) {
+		case reCamel.MatchString(s):
 			// Do nothing
-		} else {
+		default:
 			s = strings.ToUpper(s[:1]) + strings.ToLower(s[1:])
 		}
 
@@ -304,8 +348,7 @@ func format(str string) string {
 	return strings.Join(out, " ")
 }
 
-func genFile(pkg string) error {
-	var e error
+func genFile() (e error) {
 	var entries []*cacheEntry
 	var f *os.File
 	var scopes []string
@@ -317,10 +360,14 @@ func genFile(pkg string) error {
 	fixVarTypes()
 
 	// Open file to write
-	if f, e = genHeader(pkg); e != nil {
+	if f, e = genHeader(); e != nil {
 		return e
 	}
-	defer f.Close()
+	defer func() {
+		if e == nil {
+			e = f.Close()
+		}
+	}()
 
 	// Get all scopes
 	for scope := range cache {
@@ -366,35 +413,33 @@ func genFile(pkg string) error {
 		)
 
 		// Start scoped section
-		_, _ = f.WriteString(
-			"\n// " + format(scope) + " contains constants from " +
-				scope + ".h\n",
+		_, _ = fmt.Fprintf(
+			f,
+			"\n// %s contains constants from %s.h\n",
+			format(scope),
+			scope,
 		)
-		_, _ = f.WriteString("var " + format(scope) + " = struct {\n")
+		_, _ = fmt.Fprintf(f, "var %s = struct {\n", format(scope))
 
 		// Define struct
 		for _, entry := range entries {
-			_, _ = f.WriteString(
-				fmt.Sprintf("\t%s %s\n", entry.Go, entry.Type),
-			)
+			_, _ = fmt.Fprintf(f, "\t%s %s\n", entry.Go, entry.Type)
 		}
 
-		_, _ = f.WriteString("}{\n")
+		_, _ = fmt.Fprintln(f, "}{")
 
 		// Create struct
 		for _, entry := range entries {
-			_, _ = f.WriteString(
-				fmt.Sprintf("\t%s: %s,\n", entry.Go, entry.Val),
-			)
+			_, _ = fmt.Fprintf(f, "\t%s: %s,\n", entry.Go, entry.Val)
 		}
 
-		_, _ = f.WriteString("}\n")
+		_, _ = fmt.Fprintln(f, "}")
 	}
 
 	return nil
 }
 
-func genHeader(pkg string) (*os.File, error) {
+func genHeader() (*os.File, error) {
 	var e error
 	var f *os.File
 	var fn string = "generated.go"
@@ -405,10 +450,11 @@ func genHeader(pkg string) (*os.File, error) {
 	}
 
 	// Create header
-	_, _ = f.WriteString(
-		"// Code generated by tools/defines.go; DO NOT EDIT.\n",
+	_, _ = fmt.Fprintln(
+		f,
+		"// Code generated by tools/defines.go; DO NOT EDIT.",
 	)
-	_, _ = f.WriteString("package " + pkg + "\n\n")
+	_, _ = fmt.Fprintf(f, "package api\n\n")
 
 	sort.Slice(
 		cache[""], // Global scope
@@ -420,26 +466,25 @@ func genHeader(pkg string) (*os.File, error) {
 		},
 	)
 
-	_, _ = f.WriteString("const (\n")
+	_, _ = fmt.Fprintln(f, "const (")
 
 	for _, entry := range cache[""] {
-		_, _ = f.WriteString(
-			fmt.Sprintf(
-				"\t%s %s = %s\n",
-				entry.Go,
-				entry.Type,
-				entry.Val,
-			),
+		_, _ = fmt.Fprintf(
+			f,
+			"\t%s %s = %s\n",
+			entry.Go,
+			entry.Type,
+			entry.Val,
 		)
 	}
 
-	_, _ = f.WriteString(")\n")
+	_, _ = fmt.Fprintln(f, ")")
 
 	return f, nil
 }
 
-func ignoreType(fn string, l string, sep string) {
-	for _, t := range strings.Split(l, sep) {
+func ignoreType(fn string, line string, sep string) {
+	for _, t := range strings.Split(line, sep) {
 		t = strings.TrimSpace(t)
 		t = strings.TrimPrefix(t, "*")
 		skipRContains[fn] = append(skipRContains[fn], "len("+t+")")
@@ -454,123 +499,107 @@ func init() {
 // This is by no means perfect, but I try to grab as many constants as
 // possible.
 func main() {
-	if flag.NArg() == 0 {
-		return
-	}
-
 	// Find all the things to ignore/skip first (probably can remove
 	// later after implementing struct parsing)
-	for i, arg := range flag.Args() {
-		if i == 0 {
-			continue
-		}
+	for _, header := range headers {
+		header = "/usr/x86_64-w64-mingw32/include/" + header
 
-		arg = "/usr/x86_64-w64-mingw32/include/" + arg
-
-		if ok, e := pathname.DoesExist(arg); e != nil {
+		if ok, e := pathname.DoesExist(header); e != nil {
 			fmt.Println(e.Error())
 			os.Exit(1)
 		} else if !ok {
-			fmt.Printf("file %s not found\n", arg)
+			fmt.Printf("file %s not found\n", header)
 			os.Exit(1)
 		}
 
-		if e := processFileSkips(arg); e != nil {
+		if e := processFileSkips(header); e != nil {
 			panic(e)
 		}
 	}
 
 	// Then process each file for #defines and enums
-	for i, arg := range flag.Args() {
-		if i == 0 {
-			continue
-		}
+	for _, header := range headers {
+		header = "/usr/x86_64-w64-mingw32/include/" + header
 
-		arg = "/usr/x86_64-w64-mingw32/include/" + arg
-
-		if e := processFileDefines(arg); e != nil {
+		if e := processFileDefines(header); e != nil {
 			panic(e)
 		}
 
 		// TODO process structs too
 
-		if e := processFileTypedefs(arg); e != nil {
+		if e := processFileTypedefs(header); e != nil {
 			panic(e)
 		}
 	}
 
-	if e := genFile(flag.Arg(0)); e != nil {
+	if e := genFile(); e != nil {
 		panic(e)
 	}
 }
 
-func processDefine(fn string, l string) {
-	var tmp []string
-
-	if !strings.HasPrefix(l, "#define") {
+func processDefine(fn string, line string) {
+	if !strings.HasPrefix(line, "#define") {
 		return
 	}
 
 	// Remove define
-	l = strings.Replace(l, "#define ", "", 1)
+	line = strings.Replace(line, "#define ", "", 1)
 
 	// Remove comments
-	if comment.MatchString(l) {
-		l = comment.ReplaceAllString(l, "")
+	if reComment.MatchString(line) {
+		line = reComment.ReplaceAllString(line, "")
 	}
 
 	// Fix some Windows-isms
-	if bitwisenot.MatchString(l) {
-		l = bitwisenot.ReplaceAllString(l, "0xffffffff^")
+	if reBitwisenot.MatchString(line) {
+		line = reBitwisenot.ReplaceAllString(line, "0xffffffff^")
 	}
 
-	if fixsizeof.MatchString(l) {
-		l = fixsizeof.ReplaceAllString(l, "len(")
+	if reFixSizeOf.MatchString(line) {
+		line = reFixSizeOf.ReplaceAllString(line, "len(")
 	}
 
 	for _, r := range []*regexp.Regexp{
-		fixhex,
-		fixcast,
-		fixmsabi,
-		fixnum,
+		reFixHex,
+		reFixCast,
+		reFixMSABI,
+		reFixNum,
 	} {
-		if r.MatchString(l) {
-			l = r.ReplaceAllString(l, "$1")
+		if r.MatchString(line) {
+			line = r.ReplaceAllString(line, "$1")
 		}
 	}
 
-	// Split and attempt to skip things we don't want
-	if tmp = strings.SplitN(l, " ", 2); !skip(fn, tmp) {
-		cacheVar(fn, tmp[0], tmp[1])
+	// Cut and attempt to skip things we don't want
+	if k, v, _ := strings.Cut(line, " "); !skip(fn, k, v) {
+		cacheVar(fn, k, v)
 	}
 }
 
-func processFileDefines(fp string) error {
+func processFileDefines(path string) error {
 	var b []byte
 	var e error
-	var f *os.File
-	var fn string = filepath.Base(fp)
+	var fn string = filepath.Base(path)
 	var tmp string
 
-	if f, e = os.Open(pathname.ExpandPath(fp)); e != nil {
-		return errors.Newf("failed to open %s: %w", fp, e)
-	}
-	defer f.Close()
-
-	if b, e = io.ReadAll(f); e != nil {
-		return errors.Newf("failed to read %s: %w", fp, e)
+	if b, e = os.ReadFile(filepath.Clean(path)); e != nil {
+		return errors.Newf("failed to open %s: %w", path, e)
 	}
 
-	for _, l := range strings.Split(string(b), "\n") {
-		l = strings.ReplaceAll(l, "| INTERNET_FLAG_BGUPDATE", "")
-		l = strings.TrimSpace(spaces.ReplaceAllString(l, " "))
+	for _, line := range strings.Split(string(b), "\n") {
+		line = strings.ReplaceAll(
+			line,
+			"| INTERNET_FLAG_BGUPDATE",
+			"",
+		)
+		line = strings.TrimSpace(reSpaces.ReplaceAllString(line, " "))
 
-		if strings.HasSuffix(l, "\\") {
-			tmp += l[:len(l)-1]
+		if strings.HasSuffix(line, "\\") {
+			tmp += strings.TrimSuffix(line, "\\")
 			continue
 		}
 
-		processDefine(fn, strings.TrimSpace(tmp+l))
+		processDefine(fn, strings.TrimSpace(tmp+line))
 
 		// Reset
 		tmp = ""
@@ -579,64 +608,60 @@ func processFileDefines(fp string) error {
 	return nil
 }
 
-func processFileSkips(fp string) error {
+func processFileSkips(path string) error {
 	var b []byte
 	var e error
-	var f *os.File
-	var fn string = filepath.Base(fp)
+	var fn string = filepath.Base(path)
 	var inStructOrTypedef bool
 
-	if f, e = os.Open(pathname.ExpandPath(fp)); e != nil {
-		return errors.Newf("failed to open %s: %w", fp, e)
-	}
-	defer f.Close()
-
-	if b, e = io.ReadAll(f); e != nil {
-		return errors.Newf("failed to read %s: %w", fp, e)
+	if b, e = os.ReadFile(filepath.Clean(path)); e != nil {
+		return errors.Newf("failed to read %s: %w", path, e)
 	}
 
-	for _, l := range strings.Split(string(b), "\n") {
-		l = strings.TrimSpace(spaces.ReplaceAllString(l, " "))
+	for _, line := range strings.Split(string(b), "\n") {
+		line = strings.TrimSpace(reSpaces.ReplaceAllString(line, " "))
 
-		if strings.HasPrefix(l, "#define") {
-			l = strings.TrimPrefix(l, "#define")
-			l = strings.TrimSpace(l)
+		switch {
+		case strings.HasPrefix(line, "#define"):
+			line = strings.TrimPrefix(line, "#define")
+			line = strings.TrimSpace(line)
 
-			if !strings.Contains(l, " ") && (len(l) > 8) {
-				skipRContains[fn] = append(skipRContains[fn], l)
+			//nolint:mnd // Skip anything that's too long
+			if !strings.Contains(line, " ") && (len(line) > 8) {
+				skipRContains[fn] = append(skipRContains[fn], line)
 			}
-		} else if strings.HasPrefix(l, "}") {
+		case strings.HasPrefix(line, "}"):
 			if inStructOrTypedef {
 				// Extract type
-				l = strings.TrimPrefix(l, "} ")
-				l = strings.TrimSuffix(l, ";")
+				line = strings.TrimPrefix(line, "} ")
+				line = strings.TrimSuffix(line, ";")
 
-				ignoreType(fn, l, ",")
+				ignoreType(fn, line, ",")
 			}
 
 			inStructOrTypedef = false
-		} else if strings.HasPrefix(l, "typedef const") {
+		case strings.HasPrefix(line, "typedef const"):
 			// Extract type
-			l = strings.TrimPrefix(l, "typedef const")
-			l = strings.TrimPrefix(l, "struct")
-			l = strings.TrimSuffix(l, ";")
-			l = strings.TrimSpace(l)
+			line = strings.TrimPrefix(line, "typedef const")
+			line = strings.TrimPrefix(line, "struct")
+			line = strings.TrimSuffix(line, ";")
+			line = strings.TrimSpace(line)
 
-			if l != "" {
-				ignoreType(fn, l, " ")
+			if line != "" {
+				ignoreType(fn, line, " ")
 			}
-		} else if strings.HasPrefix(l, "typedef enum") ||
-			strings.HasPrefix(l, "typedef struct") {
+		case strings.HasPrefix(line, "typedef enum"),
+			strings.HasPrefix(line, "typedef struct"):
 			inStructOrTypedef = true
 
 			// Extract type
-			l = strings.TrimPrefix(l, "typedef enum")
-			l = strings.TrimPrefix(l, "typedef struct")
-			l = strings.TrimSuffix(l, "{")
-			l = strings.TrimSpace(l)
+			line = strings.TrimPrefix(line, "typedef enum")
+			line = strings.TrimPrefix(line, "typedef struct")
+			line = strings.TrimSuffix(line, "{")
+			line = strings.TrimSpace(line)
 
-			if l != "" {
-				ignoreType(fn, l, ",")
+			if line != "" {
+				ignoreType(fn, line, ",")
 			}
 		}
 	}
@@ -644,58 +669,53 @@ func processFileSkips(fp string) error {
 	return nil
 }
 
-func processFileTypedefs(fp string) error {
+func processFileTypedefs(path string) error {
 	var b []byte
 	var e error
-	var f *os.File
-	var fn string = filepath.Base(fp)
+	var fn string = filepath.Base(path)
 	var tmp string
 	var inTypedef bool
 
-	if f, e = os.Open(pathname.ExpandPath(fp)); e != nil {
-		return errors.Newf("failed to open %s: %w", fp, e)
-	}
-	defer f.Close()
-
-	if b, e = io.ReadAll(f); e != nil {
-		return errors.Newf("failed to read %s: %w", fp, e)
+	if b, e = os.ReadFile(filepath.Clean(path)); e != nil {
+		return errors.Newf("failed to open %s: %w", path, e)
 	}
 
-	for _, l := range strings.Split(string(b), "\n") {
-		l = strings.TrimSpace(spaces.ReplaceAllString(l, " "))
+	for _, line := range strings.Split(string(b), "\n") {
+		line = strings.TrimSpace(reSpaces.ReplaceAllString(line, " "))
 
 		// Ignore non-defines unless typedef enum
-		if l == "{" {
+		switch {
+		case line == "{":
 			continue
-		} else if strings.HasPrefix(l, "#") {
+		case strings.HasPrefix(line, "#"):
 			// #ifdef and #endif
 			continue
-		} else if strings.HasPrefix(l, "{") {
+		case strings.HasPrefix(line, "{"):
 			if inTypedef {
-				tmp += l[1:]
+				tmp += line[1:]
 			}
 
 			continue
-		} else if strings.HasPrefix(l, "}") {
+		case strings.HasPrefix(line, "}"):
 			if !inTypedef {
 				continue
 			}
 
 			inTypedef = false
-		} else if strings.HasPrefix(l, "typedef enum") {
+		case strings.HasPrefix(line, "typedef enum"):
 			inTypedef = true
 			continue
-		} else {
+		default:
 			if inTypedef {
-				tmp += l
+				tmp += line
 			}
 
 			continue
 		}
 
 		// Remove comments
-		if comment.MatchString(tmp) {
-			tmp = comment.ReplaceAllString(tmp, "")
+		if reComment.MatchString(tmp) {
+			tmp = reComment.ReplaceAllString(tmp, "")
 		}
 
 		processTypedef(fn, tmp)
@@ -707,14 +727,13 @@ func processFileTypedefs(fp string) error {
 	return nil
 }
 
-func processTypedef(fn string, l string) {
+func processTypedef(fn string, line string) {
 	var lhs string
 	var next string = "0"
 	var rhs string
-	var tmp []string
 	var vals map[string]string = map[string]string{}
 
-	for _, d := range strings.Split(l, ",") {
+	for _, d := range strings.Split(line, ",") {
 		d = strings.TrimSpace(d)
 
 		if d == "" {
@@ -722,10 +741,10 @@ func processTypedef(fn string, l string) {
 		}
 
 		if strings.Contains(d, "=") {
-			tmp = strings.SplitN(d, "=", 2)
+			lhs, rhs, _ = strings.Cut(d, "=")
 
-			lhs = format(strings.TrimSpace(tmp[0]))
-			rhs = format(strings.TrimSpace(tmp[1]))
+			lhs = format(strings.TrimSpace(lhs))
+			rhs = format(strings.TrimSpace(rhs))
 
 			// Determine if next needs to be looked up from prev vals
 			next = rhs
@@ -746,11 +765,11 @@ func processTypedef(fn string, l string) {
 			next = fmt.Sprintf("0x%x", i+1)
 		} else {
 			i, _ := strconv.Atoi(next)
-			next = fmt.Sprintf("%d", i+1)
+			next = strconv.Itoa(i + 1)
 		}
 
 		// Kkip things we don't want
-		if !skip(fn, []string{lhs, rhs}) {
+		if !skip(fn, lhs, rhs) {
 			cacheVar(fn, lhs, rhs)
 		}
 	}
@@ -808,18 +827,18 @@ func replaceVars() {
 				}
 			}
 
-			for _, uselessOp := range uselessOpRepl {
-				if uselessOp.MatchString(entry.Val) {
-					entry.Val = uselessOp.ReplaceAllString(
+			for _, reUselessOp := range reUselessOpRepl {
+				if reUselessOp.MatchString(entry.Val) {
+					entry.Val = reUselessOp.ReplaceAllString(
 						entry.Val,
 						"$1",
 					)
 				}
 			}
 
-			for _, uselessOp := range uselessOpRm {
-				if uselessOp.MatchString(entry.Val) {
-					entry.Val = uselessOp.ReplaceAllString(
+			for _, reUselessOp := range reUselessOpRm {
+				if reUselessOp.MatchString(entry.Val) {
+					entry.Val = reUselessOp.ReplaceAllString(
 						entry.Val,
 						"",
 					)
@@ -829,38 +848,39 @@ func replaceVars() {
 	}
 }
 
-func skip(fn string, tmp []string) bool {
-	if len(tmp) != 2 {
-		if len(tmp[0]) > 8 {
-			skipRContains[fn] = append(skipRContains[fn], tmp[0])
+func skip(fn string, k string, v string) bool {
+	if v == "" {
+		//nolint:mnd // Skip anything that's too long
+		if len(k) > 8 {
+			skipRContains[fn] = append(skipRContains[fn], k)
 		}
 
 		return true
 	}
 
-	if strings.ToLower(tmp[1]) == strings.ToLower(tmp[0])+"w" {
-		skipRContains[fn] = append(skipRContains[fn], tmp[0])
+	if strings.ToLower(v) == strings.ToLower(k)+"w" {
+		skipRContains[fn] = append(skipRContains[fn], k)
 		return true
 	}
 
 	for _, scope := range []string{"", fn} {
 		for _, s := range skipLContains[scope] {
-			if strings.Contains(tmp[0], s) {
-				skipRContains[fn] = append(skipRContains[fn], tmp[0])
+			if strings.Contains(k, s) {
+				skipRContains[fn] = append(skipRContains[fn], k)
 				return true
 			}
 		}
 
 		for _, s := range skipRContains[scope] {
-			if strings.Contains(tmp[1], s) {
-				skipRContains[fn] = append(skipRContains[fn], tmp[0])
+			if strings.Contains(v, s) {
+				skipRContains[fn] = append(skipRContains[fn], k)
 				return true
 			}
 		}
 
 		for _, s := range skipRStarts[scope] {
-			if strings.HasPrefix(tmp[1], s) {
-				skipRContains[fn] = append(skipRContains[fn], tmp[0])
+			if strings.HasPrefix(v, s) {
+				skipRContains[fn] = append(skipRContains[fn], k)
 				return true
 			}
 		}

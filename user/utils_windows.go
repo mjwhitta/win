@@ -226,7 +226,9 @@ func output(section string, hdrs []string, data [][]string) string {
 }
 
 func privsFromBytes(
-	b []byte, n uint32, proc windows.Handle,
+	b []byte,
+	n uint32,
+	proc windows.Handle,
 ) ([]*Privilege, error) {
 	var attrs uint32
 	var buf *bytes.Buffer = bytes.NewBuffer(b)
