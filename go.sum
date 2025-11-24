@@ -6,8 +6,8 @@ github.com/mjwhitta/errors v1.0.7 h1:gj4MNIc/DiZMZ7B0+Tz/0ExhpwurzOmuO3THTJZGkHw
 github.com/mjwhitta/errors v1.0.7/go.mod h1:NoDi7MJLuXJuf69DeHiQMveI72TcKJdEAGVb2JJOVOs=
 github.com/mjwhitta/hilighter v1.14.1 h1:2WOKmiQcSND3H3d0nCk+Hdgqk/xt+FfAdUZCGR8trew=
 github.com/mjwhitta/hilighter v1.14.1/go.mod h1:lRbKXyDboGjH+i/fP1wM/5XpCyFdVrW8F5FyQgn/2CU=
-github.com/mjwhitta/log v1.8.3 h1:QfjCp90cwAfXq2u1n7HVgLaBYmY3MxFVfuhYM3bwV/8=
-github.com/mjwhitta/log v1.8.3/go.mod h1:nd5eazUU2/qWfnbmTlyUCBKILQ2LMONdTfJzYYCczvo=
+github.com/mjwhitta/log v1.8.4 h1:Edi8gdy+uH29A84NosfcQkioZJFOZBKKzqIuNSpSkLI=
+github.com/mjwhitta/log v1.8.4/go.mod h1:nd5eazUU2/qWfnbmTlyUCBKILQ2LMONdTfJzYYCczvo=
 github.com/mjwhitta/pathname v1.3.1 h1:hBkMT4ukA8hLEMIRvmWvylNHNzhX0SCf8tJ9KJEFcyo=
 github.com/mjwhitta/pathname v1.3.1/go.mod h1:ZxV5Xv1EiDTmoFYAuzTnTZ8A8EWOD+uR+LugcaTfWd0=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
