@@ -122,7 +122,6 @@ func WinHTTPOpenRequest(
 	var reqHndl uintptr
 
 	// Convert to Windows types
-	ppwszAcceptTypes = make([]*uint16, 1)
 	for _, theType := range acceptTypes {
 		if theType == "" {
 			continue
@@ -132,6 +131,10 @@ func WinHTTPOpenRequest(
 			ppwszAcceptTypes,
 			types.Cwstr(theType),
 		)
+	}
+
+	if len(ppwszAcceptTypes) == 0 {
+		ppwszAcceptTypes = make([]*uint16, 1)
 	}
 
 	reqHndl, _, e = winhttp.NewProc(proc).Call(

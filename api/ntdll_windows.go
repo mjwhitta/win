@@ -169,6 +169,7 @@ func NtOpenProcess(
 	var pHndl windows.Handle
 	var proc string = "NtOpenProcess"
 
+	//nolint:godox // I'll address the TODO's later
 	// TODO allow objectAttrs to be passed in
 	// TODO allow clientID to be passed in
 	err, _, _ = ntdll.NewProc(proc).Call(
@@ -218,7 +219,7 @@ func NtQueueApcThreadEx(
 
 	err, _, _ = ntdll.NewProc(proc).Call(
 		uintptr(tHndl),
-		0x1, // userApcReservedHandle
+		0x1, //nolint:mnd // userApcReservedHandle
 		apcRoutine,
 		0, // arg1
 		0, // arg2

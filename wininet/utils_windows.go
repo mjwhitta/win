@@ -37,8 +37,7 @@ func buildRequest(
 		port, _ = strconv.ParseInt(req.URL.Port(), 10, 64)
 	}
 
-	switch req.URL.Scheme {
-	case "https":
+	if req.URL.Scheme == "https" {
 		flags = w32.Wininet.InternetFlagSecure
 	}
 
@@ -182,7 +181,7 @@ func dbgLog(debug bool, thing any) {
 }
 
 func disableTLS(reqHndl uintptr) error {
-	var b []byte = make([]byte, 4)
+	var b []byte = make([]byte, 4) //nolint:mnd // Size of uint32
 	var e error
 
 	binary.LittleEndian.PutUint32(
@@ -238,7 +237,6 @@ func getHeaders(
 	var major int64
 	var minor int64
 	var proto string
-	var tmp []string
 
 	// Get headers
 	b, e = queryResponse(
@@ -251,29 +249,24 @@ func getHeaders(
 	}
 
 	for _, hdr := range strings.Split(string(b), "\r\n") {
-		tmp = strings.SplitN(hdr, ": ", 2)
-
-		if len(tmp) == 2 {
-			if _, ok := hdrs[tmp[0]]; !ok {
-				hdrs[tmp[0]] = []string{}
+		if hdrName, hdrVal, ok := strings.Cut(hdr, ":"); ok {
+			if _, ok := hdrs[hdrName]; !ok {
+				hdrs[hdrName] = []string{}
 			}
 
-			hdrs[tmp[0]] = append(hdrs[tmp[0]], tmp[1])
+			hdrs[hdrName] = append(hdrs[hdrName], hdrVal)
 		} else if strings.HasPrefix(hdr, "HTTP") {
 			proto = strings.Fields(hdr)[0]
-			tmp = strings.Split(proto, ".")
 
-			if len(tmp) >= 2 {
-				tmp[0] = strings.Replace(tmp[0], "HTTP/", "", 1)
+			if ma, mi, ok := strings.Cut(proto, "."); ok {
+				ma = strings.Replace(ma, "HTTP/", "", 1)
 
-				major, e = strconv.ParseInt(tmp[0], 10, 64)
-				if e != nil {
+				if major, e = strconv.ParseInt(ma, 10, 64); e != nil {
 					e = errors.Newf("invalid HTTP version: %w", e)
 					return "", 0, 0, nil, e
 				}
 
-				minor, e = strconv.ParseInt(tmp[1], 10, 64)
-				if e != nil {
+				if minor, e = strconv.ParseInt(mi, 10, 64); e != nil {
 					e = errors.Newf("invalid HTTP version: %w", e)
 					return "", 0, 0, nil, e
 				}
@@ -311,13 +304,7 @@ func queryResponse(reqHndl, info uintptr, idx int) ([]byte, error) {
 
 		buffer = make([]byte, size)
 
-		e = w32.HTTPQueryInfoW(
-			reqHndl,
-			info,
-			&buffer,
-			&size,
-			&idx,
-		)
+		e = w32.HTTPQueryInfoW(reqHndl, info, &buffer, &size, &idx)
 		if e != nil {
 			return nil, errors.Newf("failed to query info: %w", e)
 		}
@@ -357,6 +344,7 @@ func readResponse(reqHndl uintptr) (io.ReadCloser, int64, error) {
 
 		// Update fields
 		contentLen += chunkLen
+
 		b = append(b, chunk...)
 	}
 
@@ -413,17 +401,14 @@ func sendRequest(
 			return nil, e
 		}
 
-		req.Body.Close()
+		if e = req.Body.Close(); e != nil {
+			e = errors.Newf("failed to close request body: %w", e)
+			return nil, e
+		}
 	}
 
 	// Send HTTP request
-	e = w32.HTTPSendRequestW(
-		reqHndl,
-		"",
-		0,
-		b,
-		len(b),
-	)
+	e = w32.HTTPSendRequestW(reqHndl, "", 0, b, len(b))
 	if e != nil {
 		e = errors.Newf("%s \"%s\": %w", req.Method, req.URL, e)
 		return nil, e
@@ -439,13 +424,14 @@ func sendRequest(
 func setTimeouts(reqHndl uintptr, timeout time.Duration) error {
 	var b []byte
 	var e error
+	var millis uintptr = uintptr(timeout.Milliseconds())
 
 	if timeout <= 0 {
 		return nil
 	}
 
-	b = make([]byte, 4)
-	binary.LittleEndian.PutUint32(b, uint32(timeout.Milliseconds()))
+	b = make([]byte, 4) //nolint:mnd // Size of uint32
+	binary.LittleEndian.PutUint32(b, uint32(millis))
 
 	e = w32.InternetSetOptionW(
 		reqHndl,

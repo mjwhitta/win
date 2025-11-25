@@ -5,7 +5,7 @@ package user
 import (
 	"bytes"
 	"encoding/binary"
-	"sort"
+	"slices"
 	"strings"
 	"unsafe"
 
@@ -15,8 +15,7 @@ import (
 	w32 "github.com/mjwhitta/win/api"
 )
 
-func adjustToken(p *Privilege) error {
-	var e error
+func adjustToken(p *Privilege) (e error) {
 	var t windows.Token
 	var tp *windows.Tokenprivileges = &windows.Tokenprivileges{
 		PrivilegeCount: 1,
@@ -31,11 +30,15 @@ func adjustToken(p *Privilege) error {
 		&t,
 	)
 	if e != nil {
-		return errors.Newf("failed to adjust token privileges: %w", e)
+		return errors.Newf("failed to get process token: %w", e)
 	}
-	defer t.Close()
+	defer func() {
+		if e == nil {
+			e = t.Close()
+		}
+	}()
 
-	return windows.AdjustTokenPrivileges(
+	e = windows.AdjustTokenPrivileges(
 		t,
 		false,
 		tp,
@@ -43,12 +46,17 @@ func adjustToken(p *Privilege) error {
 		nil,
 		nil,
 	)
+	if e != nil {
+		return errors.Newf("failed to adjust token privileges: %w", e)
+	}
+
+	return nil
 }
 
-func getGroupAttrs(attributes uint32) ([]string, error) {
+func getGroupAttrs(attributes uint32) []string {
 	var attrs []string
-	var keys []int
-	var mask map[int]string = map[int]string{
+	var keys []uint32
+	var mask map[uint32]string = map[uint32]string{
 		0x1:        "Mandatory group",
 		0x2:        "Enabled by default",
 		0x4:        "Enabled group",
@@ -59,42 +67,53 @@ func getGroupAttrs(attributes uint32) ([]string, error) {
 		0xc0000000: "Logon ID",
 		0x20000000: "Local Group", // Resource
 	}
-	var valid int = 0xe000007f
+	var valid uint32 = 0xe000007f
 
-	if int(attributes)|valid != valid {
-		return nil, nil
+	if attributes|valid != valid {
+		return nil
 	}
 
 	for k := range mask {
 		keys = append(keys, k)
 	}
 
-	sort.Ints(keys)
+	slices.Sort(keys)
 
 	for _, k := range keys {
-		if int(attributes)&k > 0 {
+		if attributes&k > 0 {
 			attrs = append(attrs, mask[k])
 		}
 	}
 
-	return attrs, nil
+	return attrs
 }
 
-func getGroupNameAndType(sid *windows.SID) (string, string, error) {
+func getGroupNameAndType(sid *windows.SID) (string, string) {
 	var account string
-	var acctype string
 	var domain string
 	var name string
 	var theType uint32
+	var types map[uint32]string = map[uint32]string{
+		0:  "Unknown SID type",
+		1:  "User",
+		2:  "Group",
+		3:  "Domain",
+		4:  "Alias",
+		5:  "Well-known group",
+		6:  "Deleted",
+		7:  "Invalid",
+		8:  "Computer",
+		10: "Label",
+	}
 
 	account, domain, theType, _ = sid.LookupAccount(".")
 
 	if account == "None" {
-		return "", "", nil
+		return "", ""
 	}
 
 	if strings.HasPrefix(account, "LogonSessionId_") {
-		return "", "", nil
+		return "", ""
 	}
 
 	name = domain + "\\" + account
@@ -102,36 +121,18 @@ func getGroupNameAndType(sid *windows.SID) (string, string, error) {
 		name = account
 	}
 
-	switch theType {
-	case 0:
-		acctype = "Unknown SID type"
-	case 1:
-		acctype = "user"
-	case 2:
-		acctype = "Group"
-	case 3:
-		acctype = "Domain"
-	case 4:
-		acctype = "Alias"
-	case 5:
-		acctype = "Well-known group"
-	case 6:
-		acctype = "Deleted"
-	case 7:
-		acctype = "Invalid"
-	case 8:
-		acctype = "Computer"
-	case 10:
-		acctype = "Label"
+	if accType, ok := types[theType]; ok {
+		return name, accType
 	}
 
-	return name, acctype, nil
+	return name, types[0]
 }
 
 func getPrivName(luid windows.LUID) (string, error) {
 	var b []byte
 	var e error
 	var n int
+	//nolint:mnd // Shift 32 bits left
 	var l int64 = (int64(luid.HighPart) << 32) + int64(luid.LowPart)
 
 	if e = w32.LookupPrivilegeName("", l, &b, &n); e != nil {
@@ -153,6 +154,7 @@ func getPrivDesc(name string) (string, error) {
 	e = w32.LookupPrivilegeDisplayName("", name, &b, &n)
 	if e != nil {
 		b = make([]byte, n)
+
 		e = w32.LookupPrivilegeDisplayName("", name, &b, &n)
 		if e != nil {
 			return "", errors.Newf(
@@ -166,8 +168,8 @@ func getPrivDesc(name string) (string, error) {
 }
 
 func output(section string, hdrs []string, data [][]string) string {
-	var line string
 	var lines []string
+	var sb strings.Builder
 	var width []int = make([]int, len(hdrs))
 
 	// Initial max width
@@ -191,30 +193,34 @@ func output(section string, hdrs []string, data [][]string) string {
 	lines = append(lines, "")
 
 	// Headers
-	line = ""
 	for i, col := range hdrs {
-		line += col + strings.Repeat(" ", width[i]-len(col)) + " "
+		sb.WriteString(col)
+		sb.WriteString(strings.Repeat(" ", width[i]-len(col)))
+		sb.WriteString(" ")
 	}
 
-	lines = append(lines, line)
+	lines = append(lines, sb.String())
 
 	// Dividers
-	line = ""
+	sb.Reset()
+
 	for i := range hdrs {
-		line += strings.Repeat("=", width[i]) + " "
+		sb.WriteString(strings.Repeat("=", width[i]) + " ")
 	}
 
-	lines = append(lines, line)
+	lines = append(lines, sb.String())
 
 	// Data
 	for _, row := range data {
-		line = ""
+		sb.Reset()
 
 		for i, col := range row {
-			line += col + strings.Repeat(" ", width[i]-len(col)) + " "
+			sb.WriteString(col)
+			sb.WriteString(strings.Repeat(" ", width[i]-len(col)))
+			sb.WriteString(" ")
 		}
 
-		lines = append(lines, line)
+		lines = append(lines, sb.String())
 	}
 
 	// Print
@@ -279,13 +285,24 @@ func procOrDefault(proc []windows.Handle) windows.Handle {
 	return proc[0]
 }
 
-func tokenOrDefault(proc []windows.Handle) windows.Token {
+func tokenOrDefault(proc []windows.Handle) (windows.Token, error) {
+	var e error
 	var t windows.Token
 
 	if len(proc) == 0 {
-		return windows.GetCurrentProcessToken()
+		return windows.GetCurrentProcessToken(), nil
 	}
 
-	windows.OpenProcessToken(proc[0], windows.TOKEN_QUERY, &t)
-	return t
+	e = windows.OpenProcessToken(proc[0], windows.TOKEN_QUERY, &t)
+	if e != nil {
+		e = errors.Newf(
+			"failed to open process token for %v: %w",
+			proc[0],
+			e,
+		)
+
+		return 0, e
+	}
+
+	return t, nil
 }

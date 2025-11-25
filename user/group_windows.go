@@ -25,27 +25,25 @@ func Groups(proc ...windows.Handle) ([]Group, error) {
 	var e error
 	var groups []Group
 	var name string
+	var t windows.Token
 	var tg *windows.Tokengroups
 
-	if tg, e = tokenOrDefault(proc).GetTokenGroups(); e != nil {
-		e = errors.Newf("failed to get token groups: %w", e)
-		return nil, e
+	if t, e = tokenOrDefault(proc); e != nil {
+		return nil, errors.Newf("failed to get process token: %w", e)
+	}
+
+	if tg, e = t.GetTokenGroups(); e != nil {
+		return nil, errors.Newf("failed to get token groups: %w", e)
 	}
 
 	for _, g := range tg.AllGroups() {
-		if name, acctype, e = getGroupNameAndType(g.Sid); e != nil {
-			return nil, e
-		}
-
-		if acctype == "" {
+		if name, acctype = getGroupNameAndType(g.Sid); acctype == "" {
 			continue
 		}
 
 		attrs = []string{}
 		if acctype != "Label" {
-			if attrs, e = getGroupAttrs(g.Attributes); e != nil {
-				return nil, e
-			}
+			attrs = getGroupAttrs(g.Attributes)
 		}
 
 		groups = append(

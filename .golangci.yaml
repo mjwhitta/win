@@ -164,6 +164,9 @@ linters:
         - require-doc
         - single-pkg-doc
         - start-with-name
+    gosec:
+      excludes:
+        - G103
     grouper:
       const-require-single-const: true
       const-require-grouping: false

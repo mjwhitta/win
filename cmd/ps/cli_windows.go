@@ -8,7 +8,6 @@ import (
 	"path/filepath"
 
 	"github.com/mjwhitta/cli"
-	hl "github.com/mjwhitta/hilighter"
 	"github.com/mjwhitta/win"
 )
 
@@ -72,8 +71,6 @@ func init() {
 
 // Process cli flags and ensure no issues
 func validate() {
-	hl.Disable(flags.nocolor)
-
 	// Short circuit, if version was requested
 	if flags.version {
 		fmt.Println(

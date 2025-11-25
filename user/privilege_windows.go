@@ -25,10 +25,14 @@ func Privileges(proc ...windows.Handle) ([]*Privilege, error) {
 	var b []byte
 	var e error
 	var n uint32
-	var t windows.Token = tokenOrDefault(proc)
+	var t windows.Token
+
+	if t, e = tokenOrDefault(proc); e != nil {
+		return nil, errors.Newf("failed to get process token: %w", e)
+	}
 
 	// Get number of bytes
-	windows.GetTokenInformation(
+	_ = windows.GetTokenInformation(
 		t,
 		windows.TokenPrivileges,
 		nil,
@@ -36,8 +40,10 @@ func Privileges(proc ...windows.Handle) ([]*Privilege, error) {
 		&n,
 	)
 
-	// Now create memory and fill it in
+	// Now create memory
 	b = make([]byte, n)
+
+	// Now fill it in
 	e = windows.GetTokenInformation(
 		t,
 		windows.TokenPrivileges,
@@ -61,6 +67,7 @@ func (p *Privilege) Disable() error {
 	}
 
 	p.Attributes ^= windows.SE_PRIVILEGE_ENABLED
+
 	return adjustToken(p)
 }
 
@@ -71,6 +78,7 @@ func (p *Privilege) Enable() error {
 	}
 
 	p.Attributes ^= windows.SE_PRIVILEGE_ENABLED
+
 	return adjustToken(p)
 }
 
@@ -92,6 +100,7 @@ func (p *Privilege) Remove() error {
 	}
 
 	p.Attributes ^= windows.SE_PRIVILEGE_REMOVED
+
 	return adjustToken(p)
 }
 

@@ -17,7 +17,7 @@ func Name() (string, error) {
 	var size uint32
 	var tmp []uint16
 
-	windows.GetUserNameEx(windows.NameSamCompatible, name, &size)
+	_ = windows.GetUserNameEx(windows.NameSamCompatible, name, &size)
 
 	if size > 0 {
 		tmp = make([]uint16, size)
@@ -37,9 +37,14 @@ func Name() (string, error) {
 // provided, it defaults to the current process.
 func SID(proc ...windows.Handle) (string, error) {
 	var e error
+	var t windows.Token
 	var tu *windows.Tokenuser
 
-	if tu, e = tokenOrDefault(proc).GetTokenUser(); e != nil {
+	if t, e = tokenOrDefault(proc); e != nil {
+		return "", errors.Newf("failed to get process token: %w", e)
+	}
+
+	if tu, e = t.GetTokenUser(); e != nil {
 		return "", errors.Newf("failed to get token user: %w", e)
 	}
 

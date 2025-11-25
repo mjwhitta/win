@@ -61,7 +61,6 @@ func HTTPOpenRequestW(
 	var reqHndl uintptr
 
 	// Convert to Windows types
-	lplpcwstrAcceptTypes = make([]*uint16, 1)
 	for _, theType := range acceptTypes {
 		if theType == "" {
 			continue
@@ -71,6 +70,10 @@ func HTTPOpenRequestW(
 			lplpcwstrAcceptTypes,
 			types.Cwstr(theType),
 		)
+	}
+
+	if len(lplpcwstrAcceptTypes) == 0 {
+		lplpcwstrAcceptTypes = make([]*uint16, 1)
 	}
 
 	reqHndl, _, e = wininet.NewProc(proc).Call(

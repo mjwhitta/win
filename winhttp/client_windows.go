@@ -55,11 +55,9 @@ func NewClient(ua ...string) (*Client, error) {
 }
 
 // Do will send the HTTP request and return an HTTP response.
-func (c *Client) Do(req *http.Request) (*http.Response, error) {
-	var e error
+func (c *Client) Do(req *http.Request) (res *http.Response, e error) {
 	var redirect *url.URL
 	var reqHndl uintptr
-	var res *http.Response
 	var trans http.RoundTripper = c.Transport
 
 	if trans == nil {
@@ -78,7 +76,11 @@ func (c *Client) Do(req *http.Request) (*http.Response, error) {
 	if reqHndl, e = buildRequest(c.hndl, req, c.Timeout); e != nil {
 		return nil, e
 	}
-	defer w32.WinHTTPCloseHandle(reqHndl)
+	defer func() {
+		if e == nil {
+			e = w32.WinHTTPCloseHandle(reqHndl)
+		}
+	}()
 
 	// Disable TLS verification, if configured to do so
 	if t, ok := trans.(*http.Transport); ok {

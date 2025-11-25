@@ -14,9 +14,15 @@ func main() {
 	defer func() {
 		if r := recover(); r != nil {
 			if flags.verbose {
-				panic(r.(error).Error())
+				panic(r)
 			}
-			log.ErrX(Exception, r.(error).Error())
+
+			switch r := r.(type) {
+			case error:
+				log.ErrX(Exception, r.Error())
+			case string:
+				log.ErrX(Exception, r)
+			}
 		}
 	}()
 
@@ -30,6 +36,7 @@ func main() {
 	}
 
 	fmt.Printf("PPID\tPID\tTHREADS\tNAME\n")
+
 	for _, pe := range procs {
 		fmt.Printf(
 			"%d\t%d\t%d\t%s\n",

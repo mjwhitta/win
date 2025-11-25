@@ -59,6 +59,8 @@ func CreateDesktopW(
 //	func main() {
 //		_ = w32.EnumWindowStationsW(uintptr(unsafe.Pointer(C.cb)), 0)
 //	}
+//
+//nolint:dupword,lll // C being C, go doc stuff uses tabs
 func EnumWindowStationsW(enumFunc uintptr, params uintptr) error {
 	var e error
 	var proc string = "EnumWindowStationsW"

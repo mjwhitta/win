@@ -5,13 +5,12 @@ package types
 import (
 	"unsafe"
 
+	"github.com/mjwhitta/errors"
 	"golang.org/x/sys/windows"
 )
 
 // Cwstr converts a Go string to a Windows wide string.
-func Cwstr(str string) *uint16 {
-	var tmp *uint16
-
+func Cwstr(str string) (tmp *uint16) {
 	tmp, _ = windows.UTF16PtrFromString(str)
 	return tmp
 }
@@ -35,7 +34,7 @@ func Utf16LE(str string) ([]byte, error) {
 	var u []uint16
 
 	if u, e = windows.UTF16FromString(str); e != nil {
-		return nil, e
+		return nil, errors.Newf("failed to create wide string: %w", e)
 	}
 
 	for i, c := range u {
