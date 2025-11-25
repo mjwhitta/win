@@ -17,10 +17,8 @@ If you want to use a minimal, cross-plaform HTTP client, I recommend
 
 This module has been expanded to also include multiple Windows API
 functions and constants. There are nested modules for converting
-Go/Windows types, debugging DLLs, and user identity management.
-
-[inet]: https://github.com/mjwhitta/inet
-[WinINet over WinHTTP]: https://docs.microsoft.com/en-us/windows/win32/wininet/wininet-vs-winhttp
+Go/Windows types, debugging DLLs, process enumeration, and user
+identity management.
 
 ## How to install
 
@@ -43,3 +41,6 @@ See each nested module's README for usage examples.
 
 - WinINet
     - FTP client
+
+[inet]: https://github.com/mjwhitta/inet
+[WinINet over WinHTTP]: https://docs.microsoft.com/en-us/windows/win32/wininet/wininet-vs-winhttp
