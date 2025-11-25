@@ -59,7 +59,7 @@ func CreateToolhelp32Snapshot(
 func HeapAlloc(
 	heapHndl uintptr,
 	dwFlags uintptr,
-	dwBytes int,
+	dwBytes uintptr,
 ) (uintptr, error) {
 	var e error
 	var addr uintptr
@@ -68,7 +68,7 @@ func HeapAlloc(
 	addr, _, e = kernel32.NewProc(proc).Call(
 		heapHndl,
 		dwFlags,
-		uintptr(dwBytes),
+		dwBytes,
 	)
 	if addr == 0 {
 		return 0, errors.Newf("%s: %w", proc, e)
@@ -80,8 +80,8 @@ func HeapAlloc(
 // HeapCreate from heapapi.h
 func HeapCreate(
 	flOptions uintptr,
-	dwInitialSize int,
-	dwMaximumSize int,
+	dwInitialSize uintptr,
+	dwMaximumSize uintptr,
 ) (uintptr, error) {
 	var e error
 	var hndl uintptr
@@ -89,8 +89,8 @@ func HeapCreate(
 
 	hndl, _, e = kernel32.NewProc(proc).Call(
 		flOptions,
-		uintptr(dwInitialSize),
-		uintptr(dwMaximumSize),
+		dwInitialSize,
+		dwMaximumSize,
 	)
 	if hndl == 0 {
 		return 0, errors.Newf("%s: %w", proc, e)
