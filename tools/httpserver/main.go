@@ -24,7 +24,7 @@ func init() {
 		&port,
 		"p",
 		"port",
-		8080, //nolint:mnd // default non-privileged http port
+		8080, //nolint:mnd // Default non-privileged HTTP port
 		"Listen on specified port (default: 8080).",
 	)
 	cli.Parse()
