@@ -24,7 +24,6 @@ const (
 
 // Flags
 var flags struct {
-	nocolor bool
 	verbose bool
 	version bool
 }
@@ -52,12 +51,6 @@ func init() {
 	cli.Title = "Get-Process"
 
 	// Parse cli flags
-	cli.Flag(
-		&flags.nocolor,
-		"no-color",
-		false,
-		"Disable colorized output.",
-	)
 	cli.Flag(
 		&flags.verbose,
 		"v",

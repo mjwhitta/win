@@ -87,3 +87,27 @@ func SwitchDesktop(desktop windows.Handle) error {
 
 	return nil
 }
+
+// SystemParametersInfoA from winuser.h
+func SystemParametersInfoA(
+	uiAction uintptr,
+	uiParam uintptr,
+	pvParam uintptr,
+	fWinIni uintptr,
+) error {
+	var e error
+	var proc string = "SystemParametersInfoA"
+	var success uintptr
+
+	success, _, e = user32.NewProc(proc).Call(
+		uiAction,
+		uiParam,
+		pvParam,
+		fWinIni,
+	)
+	if success == 0 {
+		return errors.Newf("%s: %w", proc, e)
+	}
+
+	return nil
+}

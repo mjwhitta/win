@@ -24,10 +24,7 @@ const (
 
 // Flags
 var flags struct {
-	all     bool
-	groups  bool
-	privs   bool
-	user    bool
+	style   string
 	verbose bool
 	version bool
 }
@@ -36,8 +33,8 @@ func init() {
 	// Configure cli package
 	cli.Align = true // Defaults to false
 	cli.Authors = []string{"Miles Whittaker <mj@whitta.dev>"}
-	cli.Banner = filepath.Base(os.Args[0]) + " [OPTIONS]"
-	cli.BugEmail = "id.bugs@whitta.dev"
+	cli.Banner = filepath.Base(os.Args[0]) + " [OPTIONS] [img]"
+	cli.BugEmail = "setwall.bugs@whitta.dev"
 
 	cli.ExitStatus(
 		"Normally the exit status is 0. In the event of an error the",
@@ -49,39 +46,22 @@ func init() {
 		fmt.Sprintf("  %d: Extra argument\n", ExtraArgument),
 		fmt.Sprintf("  %d: Exception", Exception),
 	)
-	cli.Info("Returns info very similar to the whoami command.")
+	cli.Info("Sets the user's desktop wallpaper.")
+	cli.Section(
+		"WALLPAPER STYLES",
+		"Supported wallpapers styles include: center, fill, fit,",
+		"span, stretch, and tile. The default is stretch.",
+	)
 
-	cli.SeeAlso = []string{"whoami"}
-	cli.Title = "ID"
+	cli.Title = "Set Desktop Wallpaper"
 
 	// Parse cli flags
 	cli.Flag(
-		&flags.all,
-		"a",
-		"all",
-		false,
-		"Display user info, groups info, and privs info.",
-	)
-	cli.Flag(
-		&flags.groups,
-		"g",
-		"groups",
-		false,
-		"Display groups info.",
-	)
-	cli.Flag(
-		&flags.privs,
-		"p",
-		"privs",
-		false,
-		"Display privs info.",
-	)
-	cli.Flag(
-		&flags.user,
-		"u",
-		"user",
-		false,
-		"Display user info.",
+		&flags.style,
+		"s",
+		"style",
+		"stretch",
+		"Set wallpaper style (default: stretch).",
 	)
 	cli.Flag(
 		&flags.verbose,
@@ -104,14 +84,12 @@ func validate() {
 		os.Exit(Good)
 	}
 
-	// Validate cli flags
-	if cli.NArg() > 0 {
-		cli.Usage(ExtraArgument)
+	if _, ok := styles[flags.style]; !ok {
+		cli.Usage(InvalidOption)
 	}
 
-	if flags.all {
-		flags.groups = true
-		flags.privs = true
-		flags.user = true
+	// Validate cli flags
+	if cli.NArg() > 1 {
+		cli.Usage(ExtraArgument)
 	}
 }
