@@ -10,4 +10,4 @@ require (
 	golang.org/x/sys v0.38.0
 )
 
-require github.com/mjwhitta/hilighter v1.14.4 // indirect
+require github.com/mjwhitta/hilighter v1.15.0 // indirect
