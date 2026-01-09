@@ -75,8 +75,10 @@ func SetWallpaper(img string, style uint) error {
 	}
 
 	// Set wallpaper
-	if e = k.SetStringValue("WallPaper", path); e != nil {
-		return errors.Newf("failed to set WallPaper value: %w", e)
+	if img == "" {
+		if e = k.SetStringValue("WallPaper", ""); e != nil {
+			return errors.Newf("failed to set WallPaper value: %w", e)
+		}
 	}
 
 	// Set wallpaper style
