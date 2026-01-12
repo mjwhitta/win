@@ -3,6 +3,8 @@
 package main
 
 import (
+	"bytes"
+	"fmt"
 	"image/gif"
 	"image/png"
 	"os"
@@ -66,27 +68,46 @@ func main() {
 
 //nolint:wrapcheck // Not wrapping errors in a main package
 func wallpaperSlideshow(img string) (e error) {
-	var fn string = filepath.Join("c:/", "windows", "temp", "mw.png")
-	var fr *os.File
-	var fw *os.File
+	var buf *bytes.Buffer = &bytes.Buffer{}
+	var f *os.File
+	var fn string = filepath.Join("c:/", "windows", "temp", "swframe")
+	var frame string
 	var g *gif.GIF
 	var sig chan os.Signal = make(chan os.Signal, 1)
 
-	if fr, e = os.Open(filepath.Clean(img)); e != nil {
+	if f, e = os.Open(filepath.Clean(img)); e != nil {
 		return e
 	}
 	defer func() {
-		if e2 := fr.Close(); (e == nil) && (e2 != nil) {
+		if e2 := f.Close(); (e == nil) && (e2 != nil) {
 			e = e2
 		}
 	}()
 
-	if g, e = gif.DecodeAll(fr); e != nil {
+	if g, e = gif.DecodeAll(f); e != nil {
 		return e
 	}
 
 	// Setup SIGINT for stopping
 	signal.Notify(sig, syscall.SIGINT, syscall.SIGTERM)
+
+	for i := range g.Image {
+		buf.Reset()
+
+		e = png.Encode(buf, g.Image[i].SubImage(g.Image[i].Bounds()))
+		if e != nil {
+			return e
+		}
+
+		frame = fmt.Sprintf("%s%d.png", fn, i)
+
+		// Write frame to c:/windows/temp/swframe#.png
+		//nolint:mnd // u=rw,go=-
+		e = os.WriteFile(filepath.Clean(frame), buf.Bytes(), 0o600)
+		if e != nil {
+			return e
+		}
+	}
 
 	for {
 		for i := range g.Image {
@@ -94,30 +115,17 @@ func wallpaperSlideshow(img string) (e error) {
 			case <-sig:
 				signal.Stop(sig)
 
-				_ = os.Remove(fn)
+				for i := range g.Image {
+					frame = fmt.Sprintf("%s%d.png", fn, i)
+					_ = os.Remove(frame)
+				}
 
 				return nil
 			default:
-				// Write frame to c:/windows/temp
-				if fw, e = os.Create(filepath.Clean(fn)); e != nil {
-					return e
-				}
-
-				e = png.Encode(
-					fw,
-					g.Image[i].SubImage(g.Image[i].Bounds()),
-				)
-				if e != nil {
-					_ = fw.Close()
-					return e
-				}
-
-				if e = fw.Close(); e != nil {
-					return e
-				}
+				frame = fmt.Sprintf("%s%d.png", fn, i)
 
 				// Set wallpaper to frame
-				e = desktop.SetWallpaper(fn, styles[flags.style])
+				e = desktop.SetWallpaper(frame, styles[flags.style])
 				if e != nil {
 					panic(e)
 				}
