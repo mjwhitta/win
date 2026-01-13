@@ -4,6 +4,7 @@
 /.tags
 /.vscode
 /build
+/cmd/*/*.syso
 /cover.out
 /local
 /tags

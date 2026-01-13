@@ -1,4 +1,4 @@
 package win
 
 // Version is the package version
-const Version string = "0.31.5"
+const Version string = "0.31.6"
