@@ -144,7 +144,7 @@ func HTTPSendRequestW(
 	var proc string = "HttpSendRequestW"
 
 	// Pointer to data if provided
-	if (data != nil) && (len(data) > 0) {
+	if len(data) > 0 {
 		body = uintptr(unsafe.Pointer(&data[0]))
 	}
 

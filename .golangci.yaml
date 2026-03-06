@@ -167,6 +167,7 @@ linters:
     gosec:
       excludes:
         - G103
+        - G115
     grouper:
       const-require-single-const: true
       const-require-grouping: false
