@@ -31,10 +31,11 @@ func init() {
 }
 
 func loginHandler(w http.ResponseWriter, req *http.Request) {
+	//nolint:gosec // G124 - No TLS while testing, so don't enable
 	var cookie *http.Cookie = &http.Cookie{
 		HttpOnly: true,
 		Path:     "/path",
-		// Secure:   true, // No TLS while testing, so don't enable
+		// Secure:   true,
 	}
 
 	if b, e := httputil.DumpRequest(req, true); e == nil {
@@ -97,10 +98,11 @@ func main() {
 }
 
 func rootHandler(w http.ResponseWriter, req *http.Request) {
+	//nolint:gosec // G124 - No TLS while testing, so don't enable
 	var cookie *http.Cookie = &http.Cookie{
 		HttpOnly: true,
 		Path:     "/path",
-		// Secure:   true, // No TLS while testing, so don't enable
+		// Secure:   true,
 	}
 
 	if b, e := httputil.DumpRequest(req, true); e == nil {

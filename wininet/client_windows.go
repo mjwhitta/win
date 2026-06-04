@@ -56,6 +56,7 @@ func NewClient(ua ...string) (*Client, error) {
 
 // Do will send the HTTP request and return an HTTP response.
 func (c *Client) Do(req *http.Request) (res *http.Response, e error) {
+	var location string
 	var redirect *url.URL
 	var reqHndl uintptr
 	var trans http.RoundTripper = c.Transport
@@ -105,6 +106,12 @@ func (c *Client) Do(req *http.Request) (res *http.Response, e error) {
 	// Store cookies into cookie jar
 	if e = storeCookies(c.Jar, req.URL, res.Cookies()); e != nil {
 		return nil, e
+	}
+
+	// Fix redirects with leading spaces
+	location = strings.TrimSpace(res.Header.Get("Location"))
+	if location != "" {
+		res.Header.Set("Location", location)
 	}
 
 	// Follow redirects
