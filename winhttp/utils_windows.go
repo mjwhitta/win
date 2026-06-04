@@ -244,6 +244,8 @@ func getHeaders(
 
 	for _, hdr := range strings.Split(string(b), "\r\n") {
 		if hdrName, hdrVal, ok := strings.Cut(hdr, ":"); ok {
+			hdrVal = strings.TrimSpace(hdrVal)
+
 			if _, ok := hdrs[hdrName]; !ok {
 				hdrs[hdrName] = []string{}
 			}
